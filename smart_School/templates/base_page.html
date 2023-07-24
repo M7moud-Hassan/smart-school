@@ -26,6 +26,10 @@
   <link rel="stylesheet" href="{% static  'AdminLTE/plugins/daterangepicker/daterangepicker.css' %}">
   <!-- summernote -->
   <link rel="stylesheet" href="{% static 'AdminLTE/plugins/summernote/summernote-bs4.min.css' %}">
+   <link rel="stylesheet" href="{% static 'css/index.css' %}">
+
+  {% block styles %}
+{% endblock %}
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -332,62 +336,27 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="#" class="nav-link {% if title == 'Persons' %}active{% endif %}">
               <i class="nav-icon fas fa-tree"></i>
               <p>
-                UI Elements
+                Persons
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="pages/UI/general.html" class="nav-link">
+              <li class="nav-item ">
+                <a href="{% url 'persons' %}" class="nav-link {% if sub_title == 'Persons' %}active{% endif %}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>General</p>
+                  <p>Persons</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="pages/UI/icons.html" class="nav-link">
+                <a href="{% url 'add_person' %}" class="nav-link {% if sub_title == 'Add Person' %}active{% endif %}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Icons</p>
+                  <p>Add Person</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="pages/UI/buttons.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Buttons</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="pages/UI/sliders.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Sliders</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="pages/UI/modals.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Modals & Alerts</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="pages/UI/navbar.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Navbar & Tabs</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="pages/UI/timeline.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Timeline</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="pages/UI/ribbons.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Ribbons</p>
-                </a>
-              </li>
+
             </ul>
           </li>
           <li class="nav-item">
