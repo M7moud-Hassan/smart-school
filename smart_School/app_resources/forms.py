@@ -23,20 +23,21 @@ class CamerasForm(forms.ModelForm):
 class PersonsForm(forms.ModelForm):
     class Meta:
         model = Persons
-        fields = ['name', 'gender', 'date_of_birth', 'image','status']
+        fields = ['name', 'gender', 'date_of_birth', 'image', 'status']
 
         widgets = {
-            'image': forms.ClearableFileInput(attrs={'class': 'dropify-face form-control'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'dropify-face form-control',"data-default-file":"",'required': True,}),
             'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'date_of_birth':forms.DateInput(attrs={
-            'class': 'form-control datetimepicker-input',
-            'data-target': '#reservationdate',
-            'required': True,
-        }),
+            'date_of_birth': forms.DateInput(attrs={
+                'class': 'form-control datetimepicker-input',
+                'data-target': '#reservationdate',
+                'required': True,
+
+            }),
 
         }
         labels = {
-            'image':'image person'
+            'image': 'image person'
         }
 
     # Customizing the gender field widget to use radio buttons
@@ -46,6 +47,7 @@ class PersonsForm(forms.ModelForm):
     ]
     gender = forms.ChoiceField(choices=GENDER_CHOICES, widget=forms.RadioSelect, initial='Male')
     status = forms.ChoiceField(choices=[('whitelist', 'whitelist'), ('blacklist', 'blacklist')])
+
     def __init__(self, *args, **kwargs):
         super(PersonsForm, self).__init__(*args, **kwargs)
         self.fields['date_of_birth'].widget.attrs['class'] = 'form-control'

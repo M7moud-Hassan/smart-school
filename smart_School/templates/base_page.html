@@ -312,6 +312,32 @@
               </li>
             </ul>
           </li>
+               <li class="nav-item">
+            <a href="#" class="nav-link {% if title == 'View Cameras' %}active{% endif %}">
+              <i class="nav-icon fas fa-edit"></i>
+              <p>
+                View Cameras
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'all' %}" class="nav-link {% if title == 'All' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>All</p>
+                </a>
+              </li>
+
+              {% for cam in cameras %}
+               <li class="nav-item">
+                <a href="{% url 'open_camera' cam.id %}" class="nav-link {% if title == 'All' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>{{cam.name}}</p>
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+          </li>
           <li class="nav-item">
             <a href="#" class="nav-link {% if title == 'Camera' %}active{% endif %}">
               <i class="nav-icon fas fa-chart-pie"></i>
@@ -359,41 +385,7 @@
 
             </ul>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-edit"></i>
-              <p>
-                Forms
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="pages/forms/general.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>General Elements</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="pages/forms/advanced.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Advanced Elements</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="pages/forms/editors.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Editors</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="pages/forms/validation.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Validation</p>
-                </a>
-              </li>
-            </ul>
-          </li>
+
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-table"></i>
@@ -859,6 +851,19 @@
 <!-- AdminLTE for demo purposes -->
 <script src="{% static 'AdminLTE/dist/js/demo.js' %}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script>
+  $.ajax({
+    url: "/cameras/release/",
+    type: "GET",
+    success: function(data) {
+
+    },
+    error: function(xhr, status, error) {
+
+      console.error(error);
+    }
+  });
+</script>
 {% block scripts %}
 {% endblock %}
 </body>

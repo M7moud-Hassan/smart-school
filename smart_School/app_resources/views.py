@@ -1,7 +1,7 @@
 import io
 
 from django.views.decorators import gzip
-
+from django.core.files import File
 from django.http import HttpResponse, StreamingHttpResponse, FileResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_GET
@@ -91,18 +91,23 @@ def add_person(request):
 def edit_person(request, id):
     person = Persons.objects.filter(id=id).first()
     if request.method == 'POST':
-        form = PersonsForm(request.POST, instance=person)
+        form = PersonsForm(request.POST, request.FILES, instance=person)
         if form.is_valid():
             form.save()
             return redirect('/persons/persons/')
     else:
         if person:
-            form = PersonsForm(instance=person)
+
+            form = PersonsForm(instance=person,
+                               initial={'image': '', 'date_of_birth': person.date_of_birth.strftime('%m/%d/%Y')})
+            form.fields['image'].widget.attrs['data-default-file'] = "http://127.0.0.1:8000/" + person.image.url
             return render(request, 'persons/add_persons.html', context={
                 "title": "Add Person",
                 "form": form,
                 "update_or_add": "update",
-                "cameras":Cameras.objects.all()
+                "cameras": Cameras.objects.all(),
+                "image": person.image
+
             })
         else:
             return redirect('/persons/persons')
@@ -114,6 +119,17 @@ def persons(request):
                                                             "sub_title": "Persons", })
 
 
+def delete_person(request, id):
+    person = Persons.objects.filter(id=id).first()
+    person.delete()
+    return redirect('/persons/persons')
+
+
+def view_person(request, id):
+    person = Persons.objects.filter(id=id).first()
+    return render(request, 'persons/profile_person.html', context={"person": person, "title": "Persons", })
+
+
 @gzip.gzip_page
 @require_GET
 def video_feed(request, camera_id):
@@ -122,7 +138,7 @@ def video_feed(request, camera_id):
     if connection_string == '0':
         connection_string = int(connection_string)
     camera = cv2.VideoCapture(connection_string)
-    cameras.append(camera)
+    cameras.append({"id":cam.id,"camera":camera})
 
     # Define the video codec and create a VideoWriter object
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
@@ -172,7 +188,14 @@ def capture_image(request):
 
 def release_resources(request):
     for camera in cameras:
-        camera.release()
+        camera['camera'].release()
     cv2.destroyAllWindows()
     cameras.clear()
+    return HttpResponse('done')
+
+
+def release_camera(request, id):
+    for camera in cameras:
+        if camera['id'] == id:
+            camera['camera'].release()
     return HttpResponse('done')

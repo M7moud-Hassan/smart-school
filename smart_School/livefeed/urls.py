@@ -15,18 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
-from django.conf.urls.static import static
-
-from smart_School import  settings
-from home import  urls
-from app_resources.urls import *
-from livefeed import urls as livefeed_urls
-
+from django.urls import path
+from .views import *
 urlpatterns = [
-    path('',include(urls)),
-    path('cameras/',include(url_cameras)),
-    path('persons/',include(url_persons)),
-    path('admin/',admin.site.urls),
-    path('livefeed/',include(livefeed_urls))
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+   path('all/',all_cameras,name="all"),
+   path('open_camera/<int:id>',open_camera,name="open_camera")
+]
