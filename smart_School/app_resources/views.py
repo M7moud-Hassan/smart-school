@@ -7,6 +7,7 @@ from .models import Cameras, Persons
 from .forms import CamerasForm, PersonsForm
 from .utils import cameras
 import cv2
+from livefeed.utils import image_of_person, image_update_person
 
 
 def add_camera(request):
@@ -66,7 +67,8 @@ def add_person(request):
     if request.method == 'POST':
         form = PersonsForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            person_instance=form.save()
+            image_of_person(person_instance)
             return redirect('/persons/persons/')
         else:
             return render(request, 'persons/add_persons.html', context={'form': form,
@@ -90,7 +92,8 @@ def edit_person(request, id):
     if request.method == 'POST':
         form = PersonsForm(request.POST, request.FILES, instance=person)
         if form.is_valid():
-            form.save()
+            person_instance=form.save()
+            image_update_person(person_instance)
             return redirect('/persons/persons/')
     else:
         if person:
