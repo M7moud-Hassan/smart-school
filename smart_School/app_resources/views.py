@@ -1,14 +1,11 @@
 import io
-
-from django.views.decorators import gzip
-from django.core.files import File
-from django.http import HttpResponse, StreamingHttpResponse, FileResponse
+from django.http import HttpResponse, FileResponse, StreamingHttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_GET
-
+from django.views.decorators import gzip
 from .models import Cameras, Persons
 from .forms import CamerasForm, PersonsForm
-from .utils import *
+from .utils import cameras
 import cv2
 
 
@@ -29,8 +26,8 @@ def add_camera(request):
 
 
 def all_cameras(request):
-    cameras = Cameras.objects.all()
-    return render(request, 'camera/cameras.html', context={"cameras": cameras,
+    camera_all = Cameras.objects.all()
+    return render(request, 'camera/cameras.html', context={"cameras": camera_all,
                                                            "title": "Camera",
                                                            "sub_title": "Cameras",
                                                            })
@@ -65,7 +62,7 @@ def delete_camera(request, id):
 
 
 def add_person(request):
-    cameras = Cameras.objects.all()
+    cameras_list = Cameras.objects.all()
     if request.method == 'POST':
         form = PersonsForm(request.POST, request.FILES)
         if form.is_valid():
@@ -76,7 +73,7 @@ def add_person(request):
                                                                         "title": "Persons",
                                                                         "sub_title": "Add Person",
                                                                         "update_or_add": "add",
-                                                                        "cameras": cameras
+                                                                        "cameras": cameras_list
                                                                         })
     else:
         form = PersonsForm()
@@ -84,7 +81,7 @@ def add_person(request):
                                                                     "title": "Persons",
                                                                     "sub_title": "Add Person",
                                                                     "update_or_add": "add",
-                                                                    "cameras": cameras
+                                                                    "cameras": cameras_list
                                                                     })
 
 
@@ -130,44 +127,8 @@ def view_person(request, id):
     return render(request, 'persons/profile_person.html', context={"person": person, "title": "Persons", })
 
 
-@gzip.gzip_page
-@require_GET
-def video_feed(request, camera_id):
-    cam = Cameras.objects.filter(id=camera_id).first()
-    connection_string = cam.connection_string
-    if connection_string == '0':
-        connection_string = int(connection_string)
-    camera = cv2.VideoCapture(connection_string)
-    cameras.append({"id":cam.id,"camera":camera})
-
-    # Define the video codec and create a VideoWriter object
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter('output.avi', fourcc, 20.0, (640, 480))
-
-    def generate():
-        while True:
-            # Read a frame from the camera
-            ret, frame = camera.read()
-
-            if not ret:
-                break
-
-            # Write the frame to the video file
-            out.write(frame)
-
-            # result = DeepFace.analyze(frame, actions=['emotion', 'age','detection'], enforce_detection=False)
-
-            ret, jpeg = cv2.imencode('.jpg', frame)
-            data = jpeg.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + data + b'\r\n\r\n')
-
-    return StreamingHttpResponse(generate(), content_type='multipart/x-mixed-replace; boundary=frame')
-
-
 def capture_image(request):
-    video = cameras[-1]
-
+    video = cameras[-1]['camera']
     ret, frame = video.read()
     if ret:
         ret, buffer = cv2.imencode('.jpg', frame)
@@ -199,3 +160,31 @@ def release_camera(request, id):
         if camera['id'] == id:
             camera['camera'].release()
     return HttpResponse('done')
+
+
+@gzip.gzip_page
+@require_GET
+def video_feed(request, camera_id):
+    cam = Cameras.objects.filter(id=camera_id).first()
+    connection_string = cam.connection_string
+    if connection_string == '0':
+        connection_string = int(connection_string)
+    camera = cv2.VideoCapture(connection_string)
+    cameras.append({"id": cam.id, "camera": camera})
+
+    def generate():
+        while True:
+            ret, frame = camera.read()
+
+            if not ret:
+                break
+
+            # write code of model
+            # result = DeepFace.analyze(frame, actions=['emotion', 'age','detection'], enforce_detection=False)
+
+            ret, jpeg = cv2.imencode('.jpg', frame)
+            data = jpeg.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + data + b'\r\n\r\n')
+
+    return StreamingHttpResponse(generate(), content_type='multipart/x-mixed-replace; boundary=frame')
