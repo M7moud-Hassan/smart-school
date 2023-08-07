@@ -47,8 +47,44 @@ def image_of_person(person):
     print(len(representations))
 
 
+
+
+
 def image_update_person(person):
     print(person)
+
+    # Assuming the 'person' parameter is a Persons model object
+
+    # Calculate the face representation for the person's image
+    image_path = person.image.path
+    representation = DeepFace.represent(img_path=image_path, model_name="VGG-Face")[0]["embedding"]
+
+    # Create an instance list containing the person's name, representation, ID, and status
+    instance = [person.name, representation, person.id, person.status]
+
+    # Load existing representations from 'representations.pkl' if it exists
+    pickle_file_path = os.path.join(settings.MEDIA_ROOT, 'representations.pkl')
+    try:
+        with open(pickle_file_path, "rb") as f:
+            representations = pickle.load(f)
+    except FileNotFoundError:
+        representations = []
+
+    # Find and update the instance for the current person (if it already exists)
+    for i, existing_instance in enumerate(representations):
+        if existing_instance[2] == person.id:  # Assuming the ID is unique for each person
+            representations[i] = instance
+            break
+    else:
+        # If the person's instance doesn't exist in the list, append it
+        representations.append(instance)
+
+    # Save the updated or new instance list to the 'representations.pkl' file
+    with open(pickle_file_path, "wb") as f:
+        pickle.dump(representations, f)
+
+    print(len(representations))
+
 
 
 def search_by_image_unknown_filter(image_file):
