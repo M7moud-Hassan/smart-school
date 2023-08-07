@@ -4,7 +4,7 @@ from django.views.decorators import gzip
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from app_resources.models import *
-from app_resources.utils import cameras
+from app_resources.utils import cameras, detect_person,detect_unknown
 
 
 def all_cameras(request):

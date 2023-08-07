@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home',
     'app_resources',
-    'livefeed'
+    'livefeed',
+    'reports'
 ]
 
 MIDDLEWARE = [
