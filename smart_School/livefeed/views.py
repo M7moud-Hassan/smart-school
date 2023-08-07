@@ -35,6 +35,10 @@ def open_camera(request, id):
 @gzip.gzip_page
 @require_GET
 def video_feed(request, camera_id):
+
+    with open(os.path.join(settings.MEDIA_ROOT, 'representations.pkl') , 'rb') as f:
+        representations = pickle.load(f)
+
     cam = Cameras.objects.filter(id=camera_id).first()
     connection_string = cam.connection_string
     if connection_string == '0':
@@ -63,8 +67,7 @@ def video_feed(request, camera_id):
 
                     # load representations of faces in database
                     
-                    with open(os.path.join(settings.MEDIA_ROOT, 'representations.pkl') , 'rb') as f:
-                        representations = pickle.load(f)
+                    
 
                     distances = []
                     for i in range(0, len(representations)):
