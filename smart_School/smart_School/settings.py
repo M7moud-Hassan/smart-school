@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home',
     'app_resources',
-    'livefeed'
+    'livefeed',
+    'reports'
 ]
 
 MIDDLEWARE = [
@@ -79,7 +80,7 @@ WSGI_APPLICATION = 'smart_School.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'facereko_db',
+        'NAME': 'test',
         'USER':'postgres',
         'PASSWORD':'1234',
         'HOST':'127.0.0.1',

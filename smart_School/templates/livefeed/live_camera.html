@@ -1,4 +1,8 @@
 {% extends 'base_page.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'AdminLTE/plugins/ekko-lightbox/ekko-lightbox.css' %}">
+{% endblock %}
 {% block content %}
 <div class="content-wrapper">
             <div class="card card-danger shadow-lg">
@@ -13,7 +17,23 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body wh-100">
-                <img id="video" width="100%" src="" alt="loading.." height="100%">
+                <img id="video" width="100%" src="" alt="loading.." height="70%">
+                   <div style="height:30%;overflow-y:hidden">
+                    <div>
+                  <div class="btn-group w-100 mb-2">
+                    <a class="btn btn-info active" href="javascript:void(0)" data-filter="all"> All</a>
+                    <a class="btn btn-info" href="javascript:void(0)" data-filter="1"> List (WHITE) </a>
+                    <a class="btn btn-info" href="javascript:void(0)" data-filter="2"> List (BLACK) </a>
+                    <a class="btn btn-info" href="javascript:void(0)" data-filter="3"> List (Unknown) </a>
+                    <a class="btn btn-info" href="javascript:void(0)" data-filter="4"> List (Know) </a>
+                  </div>
+                  <div class="mb-2">
+                    <a class="btn btn-secondary" href="javascript:void(0)" data-shuffle>Shuffle</a>
+                  </div>
+                </div>
+                  <div class="filter-container p-0 row" style="overflow-y:scroll" id="result{{camera.id}}">
+                 </div>
+               </div>
               </div>
               <!-- /.card-body -->
             </div>
@@ -22,9 +42,55 @@
 {% endblock %}
 
 {% block  scripts %}
+<script src="{% static 'AdminLTE/plugins/ekko-lightbox/ekko-lightbox.min.js' %}"></script>
+<script src="{% static 'AdminLTE/plugins/filterizr/jquery.filterizr.min.js' %}"></script>
  <script>
     $(function () {
     $('#video').attr("src","/livefeed/video/{{camera.id}}")
   });
+   $(function () {
+    $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+      event.preventDefault();
+      $(this).ekkoLightbox({
+        alwaysShowClose: true
+      });
+    });
+});
+
+
+ setInterval(()=>{
+    $.ajax({
+                url: '/result_cameras/',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                   data.data.forEach(function (obj) {
+                    console.log(obj);
+                    var newDiv = `
+      <div class="filtr-item col-sm-2" data-category="${obj.category}" data-sort="${obj.sort}" id="p${obj.id_person}">
+        <a href="http://localhost:8000${obj.img}?text=${obj.name}" data-toggle="lightbox" data-title="${obj.des}">
+          <img src="http://localhost:8000${obj.img}?text=${obj.name}" class="img-fluid mb-2" alt="${obj.name}"/>
+        </a>
+        <p><small>${obj.name}</small></p>
+      </div>
+    `;
+  if (!$("#result"+obj.id_camera+" #p"+obj.id_person).length > 0) {
+      $("#result"+obj.id_camera).append(newDiv);
+
+    $('.filter-container').filterizr({gutterPixels: 3});
+    $('.btn[data-filter]').on('click', function() {
+      $('.btn[data-filter]').removeClass('active');
+      $(this).addClass('active');
+    });
+    }
+            });
+                },
+                error: function (error) {
+
+                    console.log('Error:', error);
+                }
+            });
+   },500);
+
  </script>
 {% endblock %}

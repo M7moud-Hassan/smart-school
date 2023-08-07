@@ -4,6 +4,7 @@ from django.views.decorators import gzip
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from app_resources.models import *
+
 from app_resources.utils import cameras
 from deepface import DeepFace
 import cv2
@@ -12,6 +13,9 @@ import numpy as np
 import os
 from django.conf import settings
 from deepface.commons import functions, realtime, distance as dst
+
+from app_resources.utils import cameras, detect_person,detect_unknown
+
 
 def all_cameras(request):
     camears_lisy = Cameras.objects.all()

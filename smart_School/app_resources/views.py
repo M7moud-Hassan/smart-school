@@ -5,7 +5,7 @@ from django.views.decorators.http import require_GET
 from django.views.decorators import gzip
 from .models import Cameras, Persons
 from .forms import CamerasForm, PersonsForm
-from .utils import cameras
+from .utils import cameras, detect_person
 import cv2
 from livefeed.utils import image_of_person, image_update_person
 
@@ -27,6 +27,7 @@ def add_camera(request):
 
 
 def all_cameras(request):
+    detect_person(6,4)
     camera_all = Cameras.objects.all()
     return render(request, 'camera/cameras.html', context={"cameras": camera_all,
                                                            "title": "Camera",
@@ -99,15 +100,15 @@ def edit_person(request, id):
         if person:
 
             form = PersonsForm(instance=person,
-                               initial={'image': '', 'date_of_birth': person.date_of_birth.strftime('%m/%d/%Y')})
+                               initial={'image': '', 'date_of_birth': person.date_of_birth.strftime('%m/%d/%Y') if person.date_of_birth else ''})
             form.fields['image'].widget.attrs['data-default-file'] = "http://127.0.0.1:8000/" + person.image.url
             return render(request, 'persons/add_persons.html', context={
                 "title": "Add Person",
                 "form": form,
                 "update_or_add": "update",
                 "cameras": Cameras.objects.all(),
-                "image": person.image
-
+                "image": person.image,
+                'ids_camera':person.allowed_cameras.all().values_list('id', flat=True)
             })
         else:
             return redirect('/persons/persons')

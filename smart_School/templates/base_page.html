@@ -27,7 +27,12 @@
   <!-- summernote -->
   <link rel="stylesheet" href="{% static 'AdminLTE/plugins/summernote/summernote-bs4.min.css' %}">
    <link rel="stylesheet" href="{% static 'css/index.css' %}">
-
+<style>
+    .select2-selection__choice{
+    background-color: #2196f3 !important;
+border: none !important;
+    }
+</style>
   {% block styles %}
 {% endblock %}
 </head>
@@ -386,35 +391,47 @@
             </ul>
           </li>
 
-<!--          <li class="nav-item">-->
-<!--            <a href="#" class="nav-link">-->
-<!--              <i class="nav-icon fas fa-table"></i>-->
-<!--              <p>-->
-<!--                Tables-->
-<!--                <i class="fas fa-angle-left right"></i>-->
-<!--              </p>-->
-<!--            </a>-->
-<!--            <ul class="nav nav-treeview">-->
-<!--              <li class="nav-item">-->
-<!--                <a href="pages/tables/simple.html" class="nav-link">-->
-<!--                  <i class="far fa-circle nav-icon"></i>-->
-<!--                  <p>Simple Tables</p>-->
-<!--                </a>-->
-<!--              </li>-->
-<!--              <li class="nav-item">-->
-<!--                <a href="pages/tables/data.html" class="nav-link">-->
-<!--                  <i class="far fa-circle nav-icon"></i>-->
-<!--                  <p>DataTables</p>-->
-<!--                </a>-->
-<!--              </li>-->
-<!--              <li class="nav-item">-->
-<!--                <a href="pages/tables/jsgrid.html" class="nav-link">-->
-<!--                  <i class="far fa-circle nav-icon"></i>-->
-<!--                  <p>jsGrid</p>-->
-<!--                </a>-->
-<!--              </li>-->
-<!--            </ul>-->
-<!--          </li>-->
+          <li class="nav-item">
+            <a href="#" class="nav-link {% if title == 'reports' %}active{% endif %}">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Reports
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'reports_all_people' %}" class="nav-link {% if sub_title == 'all reports' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>All</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'reports_unknown_people' %}" class="nav-link {% if sub_title == 'unknown persons' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>unknown people</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'reports_known_people' %}" class="nav-link {% if sub_title == 'known persons' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Known people </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'reports_white_people' %}" class="nav-link {% if sub_title == 'white persons' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>White people</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'reports_black_people' %}" class="nav-link {% if sub_title == 'black persons' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Black people</p>
+                </a>
+              </li>
+            </ul>
+          </li>
 <!--          <li class="nav-header">EXAMPLES</li>-->
 <!--          <li class="nav-item">-->
 <!--            <a href="pages/calendar.html" class="nav-link">-->

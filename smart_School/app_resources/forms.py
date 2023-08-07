@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import Cameras, Persons
-
+from django_select2.forms import Select2MultipleWidget
 
 class CamerasForm(forms.ModelForm):
     class Meta:
@@ -23,11 +23,11 @@ class CamerasForm(forms.ModelForm):
 class PersonsForm(forms.ModelForm):
     class Meta:
         model = Persons
-        fields = ['name', 'gender', 'date_of_birth', 'image', 'status']
+        fields = ['name', 'gender', 'date_of_birth', 'image', 'status','allowed_cameras']
 
         widgets = {
             'image': forms.ClearableFileInput(attrs={'class': 'dropify-face form-control',"data-default-file":"",'required': True,}),
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control','required': True}),
             'date_of_birth': forms.DateInput(attrs={
                 'class': 'form-control datetimepicker-input',
                 'data-target': '#reservationdate',
@@ -35,10 +35,20 @@ class PersonsForm(forms.ModelForm):
 
             }),
 
+
         }
         labels = {
             'image': 'image person'
         }
+        allowed_cameras = forms.ModelMultipleChoiceField(
+            queryset=Cameras.objects.all(),
+            widget=Select2MultipleWidget(attrs={'style': 'width: 100%;',
+                                                'class': "select2", 'multiple': "multiple",
+                                                'data-placeholder': "Select a State"
+                                                }),
+            required=True,
+
+        )
 
     # Customizing the gender field widget to use radio buttons
     GENDER_CHOICES = [
@@ -46,7 +56,7 @@ class PersonsForm(forms.ModelForm):
         ('Female', 'Female'),
     ]
     gender = forms.ChoiceField(choices=GENDER_CHOICES, widget=forms.RadioSelect, initial='Male')
-    status = forms.ChoiceField(choices=[('whitelist', 'whitelist'), ('blacklist', 'blacklist')])
+    status = forms.ChoiceField(choices=[('whitelist', 'whitelist'), ('blacklist', 'blacklist'),('unknown', 'unknown')])
 
     def __init__(self, *args, **kwargs):
         super(PersonsForm, self).__init__(*args, **kwargs)

@@ -16,10 +16,21 @@ class Cameras(models.Model):
         return self.name
 
 
+def get_upload_path(instance, filename):
+    return f'persons/{instance.status}/{filename}'
+
+
 class Persons(models.Model):
-    name = models.CharField(max_length=300)
-    gender = models.CharField(max_length=100)
-    date_of_birth = models.DateField()
-    image= models.ImageField( upload_to='persons/')
-    status = models.CharField(max_length=100)
+    name = models.CharField(max_length=300, null=True, blank=True)
+    gender = models.CharField(max_length=100, null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
+    status = models.CharField(max_length=100, default='unknown')
     created_at = models.DateTimeField(default=datetime.now())
+    allowed_cameras = models.ManyToManyField(Cameras, blank=True)
+
+
+class PersonsDetect(models.Model):
+    detected_at = models.DateTimeField(default=datetime.now())
+    camera_id = models.ForeignKey(Cameras, on_delete=models.CASCADE)
+    person_id = models.ForeignKey(Persons, on_delete=models.CASCADE)
