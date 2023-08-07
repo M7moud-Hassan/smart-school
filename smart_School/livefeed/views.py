@@ -84,9 +84,12 @@ def video_feed(request, camera_id):
                     threshold = 0.5
                     if min_distance <= threshold:
                         matched_name = representations[idx][0]
+                        detect_person(representations[idx][2],camera_id)
+
                         print("Matched Name:", matched_name)
                     else:
                         matched_name = "Unknown"
+                        detect_unknown(temp_img_path,camera_id)
                         print(matched_name)
                     matched_names_all.append(matched_name)
                     #dfs = DeepFace.find(img_path = temp_img_path, db_path = os.path.join(settings.MEDIA_ROOT, 'representations_vgg.pkl')    )
