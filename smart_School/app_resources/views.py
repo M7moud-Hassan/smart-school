@@ -27,7 +27,7 @@ def add_camera(request):
 
 
 def all_cameras(request):
-    detect_person(6,4)
+    #detect_person(6,4)
     camera_all = Cameras.objects.all()
     return render(request, 'camera/cameras.html', context={"cameras": camera_all,
                                                            "title": "Camera",
