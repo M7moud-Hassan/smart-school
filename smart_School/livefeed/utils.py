@@ -14,6 +14,7 @@ object_data = [
 
 
 def image_of_person(person):
+    
     print(person)
 
 
