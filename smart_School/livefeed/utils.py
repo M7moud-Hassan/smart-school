@@ -28,11 +28,14 @@ def search_by_image_unknown_filter(image_file):
 def search_by_image_black_filter(image_file):
     return PersonsDetect.objects.all()
 
+
 def search_by_image_white_filter(image_file):
     return PersonsDetect.objects.all()
 
+
 def search_by_image_known_filter(image_file):
     return PersonsDetect.objects.all()
+
 
 def search_by_image_all_filter(image_file):
     return PersonsDetect.objects.all()
