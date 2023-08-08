@@ -80,9 +80,9 @@ WSGI_APPLICATION = 'smart_School.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'facereko_db',
+        'NAME': 'test',
         'USER':'postgres',
-        'PASSWORD':'mahm01142',
+        'PASSWORD':'1234',
         'HOST':'127.0.0.1',
         'PORT':5432
     }
