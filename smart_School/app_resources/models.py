@@ -26,11 +26,21 @@ class Persons(models.Model):
     date_of_birth = models.DateField(null=True, blank=True)
     image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
     status = models.CharField(max_length=100, default='unknown')
-    created_at = models.DateTimeField(default=datetime.now())
+    created_at = models.DateTimeField()
     allowed_cameras = models.ManyToManyField(Cameras, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.created_at:
+            self.created_at = datetime.now().replace(second=0, microsecond=0)
+        super().save(*args, **kwargs)
 
 
 class PersonsDetect(models.Model):
-    detected_at = models.DateTimeField(default=datetime.now())
+    detected_at = models.DateTimeField()
     camera_id = models.ForeignKey(Cameras, on_delete=models.CASCADE)
     person_id = models.ForeignKey(Persons, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        if not self.detected_at:
+            self.detected_at = datetime.now().replace(second=0, microsecond=0)
+        super().save(*args, **kwargs)
