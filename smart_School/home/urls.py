@@ -19,5 +19,6 @@ from django.urls import path
 from .views import *
 urlpatterns = [
    path('',index,name="index"),
-   path('result_cameras/',result_cameras,name="result_cameras")
+   path('result_cameras/',result_cameras,name="result_cameras"),
+   path('filter_camera/<str:filter_date>/<int:camera_id>',filter_camera,name="filter_camera")
 ]
