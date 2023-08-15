@@ -23,7 +23,7 @@ class CamerasForm(forms.ModelForm):
 class PersonsForm(forms.ModelForm):
     class Meta:
         model = Persons
-        fields = ['name', 'gender', 'date_of_birth', 'image', 'status','allowed_cameras']
+        fields = ['name', 'gender', 'date_of_birth', 'image', 'status','allowed_cameras','id_national_img','id_national','address']
 
         widgets = {
             'image': forms.ClearableFileInput(attrs={'class': 'dropify-face form-control',"data-default-file":"",'required': True,}),
@@ -34,11 +34,13 @@ class PersonsForm(forms.ModelForm):
                 'required': True,
 
             }),
-
-
+            'id_national_img':forms.ClearableFileInput(attrs={'class': 'dropify-face form-control',"data-default-file":""}),
+            'id_national': forms.TextInput(attrs={'class': 'form-control'}),
+            'address':forms.TextInput(attrs={'class': 'form-control'}),
         }
         labels = {
-            'image': 'image person'
+            'image': 'image person',
+            'id_national_img':'image national id'
         }
         allowed_cameras = forms.ModelMultipleChoiceField(
             queryset=Cameras.objects.all(),

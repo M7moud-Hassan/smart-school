@@ -31,11 +31,12 @@ def open_camera(request, id):
         "camera": camera
     })
 
-
+import face_recognition
 @gzip.gzip_page
 @require_GET
 def video_feed(request, camera_id):
-
+    
+    
     with open(os.path.join(settings.MEDIA_ROOT, 'representations.pkl') , 'rb') as f:
         representations = pickle.load(f)
 
@@ -47,6 +48,30 @@ def video_feed(request, camera_id):
     cameras.append({"id": cam.id, "camera": camera})
 
     def generate():
+            # Load a sample picture and learn how to recognize it.
+        mahmoud_image = face_recognition.load_image_file(os.path.join(settings.MEDIA_ROOT, 'persons', 'whitelist', '207200126_163023945858962_4456991363376213271_n.jpg'))
+        mahmoud_face_encoding = face_recognition.face_encodings(mahmoud_image)[0]
+
+        # Load a second sample picture and learn how to recognize it.
+        nada_image = face_recognition.load_image_file(os.path.join(settings.MEDIA_ROOT, 'persons', 'whitelist', 'face2.PNG'))
+        biden_face_encoding = face_recognition.face_encodings(nada_image)[0]
+
+        # Create arrays of known face encodings and their names
+        known_face_encodings = [
+            mahmoud_face_encoding,
+            biden_face_encoding
+        ]
+        known_face_names = [
+            "Mahmoud",
+            "Nada"
+        ]
+
+        # Initialize some variables
+        face_locations = []
+        face_encodings = []
+        face_names = []
+        process_this_frame = 29
+        i = 0
         while True:
             ret, frame = camera.read()
 
@@ -54,84 +79,99 @@ def video_feed(request, camera_id):
                 break
 
             # Save the frame as an image temporarily
-            temp_img_name = "temp_frame.jpg"
+            """temp_img_name = "temp_frame.jpg"
             temp_img_path = os.path.join(settings.MEDIA_ROOT, temp_img_name)
-            cv2.imwrite(temp_img_path, frame)
-            #try:
-                # Perform facial recognition using DeepFace
-            target_faces = DeepFace.extract_faces(img_path=temp_img_path, enforce_detection=False)
-            #print(len(target_faces))
-            matched_names_all=[]
-            if len(target_faces) > 0:
-                    target_representation = DeepFace.represent(img_path=temp_img_path, model_name="VGG-Face", enforce_detection=False)[0]["embedding"]
+            cv2.imwrite(temp_img_path, frame)"""
+            process_this_frame = process_this_frame + 1
+            if process_this_frame % 30 == 0:
+                # Resize frame of video to 1/4 size for faster face recognition processing
+                small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
 
-                    # load representations of faces in database
-                    
-                    
-
-                    distances = []
-                    for i in range(0, len(representations)):
-                        source_name = representations[i][0]
-                        source_representation = representations[i][1]
-                        distance = dst.findCosineDistance(source_representation, target_representation)
-                        distances.append(distance)
+                # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
+                rgb_small_frame = small_frame[:, :, ::-1]
                 
-                     # Find the minimum distance index
-                    idx = np.argmin(distances)
-                    min_distance = distances[idx]
-                    print(min_distance)
-                    # Check if the minimum distance is below a certain threshold (adjust threshold as needed)
-                    threshold = 0.5
-                    if min_distance <= threshold:
-                        matched_name = representations[idx][0]
-                        detect_person(representations[idx][2],camera_id)
+                # Find all the faces and face encodings in the current frame of video
+                face_locations = face_recognition.face_locations(rgb_small_frame)
+                face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
 
-                        print("Matched Name:", matched_name)
-                    else:
-                        matched_name = "Unknown"
-                        detect_unknown(temp_img_path,camera_id)
-                        print(matched_name)
-                    matched_names_all.append(matched_name)
-                    #dfs = DeepFace.find(img_path = temp_img_path, db_path = os.path.join(settings.MEDIA_ROOT, 'representations_vgg.pkl')    )
-                    
+                face_names = []
+                for face_encoding in face_encodings:
+                    # See if the face is a match for the known face(s)
+                    matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
+                    name = "Unknown"
 
-                    # Find the minimum distance index
-                    """idx = np.argmin(distances)
-                    matched_name = representations[idx][0]
-                    print("Matched Name:", matched_name)"""
+                    # # If a match was found in known_face_encodings, just use the first one.
+                    # if True in matches:
+                    #     first_match_index = matches.index(True)
+                    #     name = known_face_names[first_match_index]
 
-                # Remove the temporary image
-                #if os.path.exists(temp_img_path):
-                #    os.remove(temp_img_path)
-            #except:
-            #    print('exception')
-            """try:
-                resp = RetinaFace.detect_faces(temp_img_path)
-                i=0
-                for face_index, face_data in resp.items():
-                    score = face_data["score"]
-                    area = face_data["facial_area"]
-                    left, top, right, bottom = area
+                    # Or instead, use the known face with the smallest distance to the new face
+                    face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
+                    best_match_index = np.argmin(face_distances)
+                    if matches[best_match_index]:
+                        name = known_face_names[best_match_index]
 
-                    # Draw the box around the face
-                    cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+                    face_names.append(name)
 
-                    # Put the name as text above the box
-                    if i < len(matched_names_all):
-                        face_name = matched_names_all[i]
-                    else:
-                        face_name = "Unknown"
-                    i+=1
-                    font = cv2.FONT_HERSHEY_SIMPLEX
-                    font_scale = 1
-                    font_thickness = 2
-                    text_size = cv2.getTextSize(face_name, font, font_scale, font_thickness)[0]
-                    text_x = (left + right - text_size[0]) // 2
-                    text_y = top - 10
-                    cv2.putText(frame, face_name, (text_x, text_y), font, font_scale, (0, 255, 0), font_thickness, cv2.LINE_AA)
-            except:
-                print('exception')"""
+            #process_this_frame = not process_this_frame
 
+
+            # Display the results
+            for (top, right, bottom, left), name in zip(face_locations, face_names):
+                # Scale back up face locations since the frame we detected in was scaled to 1/4 size
+                top *= 4
+                right *= 4
+                bottom *= 4
+                left *= 4
+
+                # Draw a box around the face
+                cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+
+                # Draw a label with a name below the face
+                cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
+                font = cv2.FONT_HERSHEY_DUPLEX
+                cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+
+            try:
+                # Perform facial recognition using DeepFace
+
+                
+                """"if i ==0:
+                    target_faces = DeepFace.extract_faces(frame)
+                    if len(target_faces) > 0:
+                            print("face: ", len(target_faces))
+                            target_representation = DeepFace.represent(frame, model_name="VGG-Face", enforce_detection=False, detector_backend="opencv", align=True)[0]["embedding"]
+
+                            # load representations of faces in database
+                            distances = []
+                            for i in range(0, len(representations)):
+                                source_representation = representations[i][1]
+                                distance = dst.findCosineDistance(source_representation, target_representation)
+                                distances.append(distance)
+                        
+                            # Find the minimum distance index
+                            idx = np.argmin(distances)
+                            min_distance = distances[idx]
+                            print(min_distance)
+                            # Check if the minimum distance is below a certain threshold (adjust threshold as needed)
+                            threshold = 0.5
+                            if min_distance <= threshold:
+                                matched_name = representations[idx][0]
+                                detect_person(representations[idx][2],camera_id)
+
+                                print("Matched Name:", matched_name)
+                            else:
+                                matched_name = "Unknown"
+                                detect_unknown(frame,camera_id)
+                    i = i+1
+                else:
+                    i = i+1
+                if i ==20:
+                    i=0"""      
+            except Exception as e:
+                print(f"An exception occurred: {e}")
+    
+                pass
             ret, jpeg = cv2.imencode('.jpg', frame)
             data = jpeg.tobytes()
             yield (b'--frame\r\n'

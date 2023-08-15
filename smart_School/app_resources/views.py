@@ -1,12 +1,17 @@
+import base64
 import io
+import json
+from datetime import datetime
+
 from django.http import HttpResponse, FileResponse, StreamingHttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_GET
 from django.views.decorators import gzip
-from .models import Cameras, Persons
+from .models import Cameras, Persons, PersonsDetect
 from .forms import CamerasForm, PersonsForm
 from .utils import cameras, detect_person
 import cv2
+import requests
 from livefeed.utils import image_of_person, image_update_person
 
 
@@ -100,8 +105,9 @@ def edit_person(request, id):
         if person:
 
             form = PersonsForm(instance=person,
-                               initial={'image': '', 'date_of_birth': person.date_of_birth.strftime('%m/%d/%Y') if person.date_of_birth else ''})
+                               initial={'image': '','id_national_img':'', 'date_of_birth': person.date_of_birth.strftime('%m/%d/%Y') if person.date_of_birth else ''})
             form.fields['image'].widget.attrs['data-default-file'] = "http://127.0.0.1:8000/" + person.image.url
+            form.fields['id_national_img'].widget.attrs['data-default-file'] = "http://127.0.0.1:8000/" + person.id_national_img.url
             return render(request, 'persons/add_persons.html', context={
                 "title": "Add Person",
                 "form": form,
@@ -128,7 +134,19 @@ def delete_person(request, id):
 
 def view_person(request, id):
     person = Persons.objects.filter(id=id).first()
-    return render(request, 'persons/profile_person.html', context={"person": person, "title": "Persons", })
+    report=False
+    if request.method=='POST':
+        report=True
+        date_range = request.POST.get('date_renge')
+        start_date_str, end_date_str = date_range.split(' - ')
+
+        start_date = datetime.strptime(start_date_str, '%m/%d/%Y').date()
+        end_date = datetime.strptime(end_date_str, '%m/%d/%Y').date()
+
+        detections=PersonsDetect.objects.filter(person_id=person,detected_at__range=(start_date, end_date))
+    else:
+        detections=PersonsDetect.objects.filter(person_id=person)
+    return render(request, 'persons/profile_person.html', context={"person": person,"report":report, "title": "Persons",'detections':detections})
 
 
 def capture_image(request):
@@ -192,3 +210,24 @@ def video_feed(request, camera_id):
                    b'Content-Type: image/jpeg\r\n\r\n' + data + b'\r\n\r\n')
 
     return StreamingHttpResponse(generate(), content_type='multipart/x-mixed-replace; boundary=frame')
+
+
+
+
+
+def get_details_from_national_img(request):
+    if request.method == 'POST':
+        picture = request.FILES.get('image')
+        api_url = 'http://128.199.2.129:9090/api/'
+        files = {'file': ('filename.jpg', picture.read(), 'image/jpeg')}
+        response = requests.post(api_url, files=files)
+        image_url = "http://128.199.2.129:9090/static/WhatsApp_Image_2023-08-12_at_6.00.53_PM.jpeg"
+        headers = {'Origin': '*'}  # Replace with your domain
+
+        response2 = requests.get(image_url, headers=headers)
+
+        response_data = {
+            "response": response.text,
+            "image": base64.b64encode(response2.content).decode('utf-8')
+        }
+        return  HttpResponse (json.dumps(response_data), content_type="application/json")
