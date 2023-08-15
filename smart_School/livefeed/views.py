@@ -13,6 +13,18 @@ import numpy as np
 import os
 from django.conf import settings
 from deepface.commons import functions, realtime, distance as dst
+
+import cv2
+import math
+from sklearn import neighbors
+import os
+import os.path
+import pickle
+from PIL import Image, ImageDraw
+import face_recognition
+from face_recognition.face_recognition_cli import image_files_in_folder
+import numpy as np
+#from facerec_ipcamera_knn import show_prediction_labels_on_image,predict
 #from retinaface import RetinaFace
 
 def all_cameras(request):
@@ -31,7 +43,10 @@ def open_camera(request, id):
         "camera": camera
     })
 
-import face_recognition
+
+
+
+
 @gzip.gzip_page
 @require_GET
 def video_feed(request, camera_id):
@@ -45,6 +60,8 @@ def video_feed(request, camera_id):
     if connection_string == '0':
         connection_string = int(connection_string)
     camera = cv2.VideoCapture(connection_string)
+    buffer_size = 3  # Adjust the buffer size as needed
+    camera.set(cv2.CAP_PROP_BUFFERSIZE, buffer_size)
     cameras.append({"id": cam.id, "camera": camera})
 
     def generate():
@@ -72,17 +89,27 @@ def video_feed(request, camera_id):
         face_names = []
         process_this_frame = 29
         i = 0
+        
         while True:
             ret, frame = camera.read()
 
             if not ret:
                 break
+            """img = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
+            process_this_frame = process_this_frame + 1
+            if process_this_frame % 30 == 0:
+                predictions = predict(img, model_path=os.path.join(settings.MEDIA_ROOT, "trained_knn_model.clf") )
+            frame = show_prediction_labels_on_image(frame, predictions)"""
+            #cv2.imshow('camera', frame)
 
             # Save the frame as an image temporarily
             """temp_img_name = "temp_frame.jpg"
             temp_img_path = os.path.join(settings.MEDIA_ROOT, temp_img_name)
             cv2.imwrite(temp_img_path, frame)"""
-            process_this_frame = process_this_frame + 1
+
+
+            
+            """process_this_frame = process_this_frame + 1
             if process_this_frame % 30 == 0:
                 # Resize frame of video to 1/4 size for faster face recognition processing
                 small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
@@ -130,17 +157,19 @@ def video_feed(request, camera_id):
                 # Draw a label with a name below the face
                 cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
                 font = cv2.FONT_HERSHEY_DUPLEX
-                cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
-
+                cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)"""
+                 #####################################################################################################################################deep face###################################
             try:
+                
                 # Perform facial recognition using DeepFace
 
-                
-                """"if i ==0:
+                i =i+1
+                if i % 30 == 0:
+                    frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
                     target_faces = DeepFace.extract_faces(frame)
                     if len(target_faces) > 0:
                             print("face: ", len(target_faces))
-                            target_representation = DeepFace.represent(frame, model_name="VGG-Face", enforce_detection=False, detector_backend="opencv", align=True)[0]["embedding"]
+                            target_representation = DeepFace.represent(frame, model_name="VGG-Face", enforce_detection=False, detector_backend="ssd", align=True)[0]["embedding"]
 
                             # load representations of faces in database
                             distances = []
@@ -163,11 +192,7 @@ def video_feed(request, camera_id):
                             else:
                                 matched_name = "Unknown"
                                 detect_unknown(frame,camera_id)
-                    i = i+1
-                else:
-                    i = i+1
-                if i ==20:
-                    i=0"""      
+                    #i = i+1  
             except Exception as e:
                 print(f"An exception occurred: {e}")
     

@@ -1,8 +1,9 @@
 import base64
 import io
 import json
+import urllib
 from datetime import datetime
-
+import cv2
 from django.http import HttpResponse, FileResponse, StreamingHttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_GET
@@ -10,9 +11,10 @@ from django.views.decorators import gzip
 from .models import Cameras, Persons, PersonsDetect
 from .forms import CamerasForm, PersonsForm
 from .utils import cameras, detect_person
-import cv2
 import requests
 from livefeed.utils import image_of_person, image_update_person
+from django.views.decorators.gzip import gzip_page
+import numpy as np
 
 
 def add_camera(request):
@@ -183,37 +185,72 @@ def release_camera(request, id):
             camera['camera'].release()
     return HttpResponse('done')
 
+class VideoCamera(object):
+    def __init__(self):
+        self.video = cv2.VideoCapture(0)
 
+    def __del__(self):
+        self.video.release()
+
+
+    #This function is used in views
+    def get_frame(self):
+
+        success, image = self.video.read()
+        frame_flip = cv2.flip(image, 1)
+        ret, jpeg = cv2.imencode('.jpg', frame_flip)
+        return jpeg.tobytes()
+
+def gen(camera):
+	while True:
+		frame = camera.get_frame()
+		yield (b'--frame\r\n'
+				b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 @gzip.gzip_page
-@require_GET
-def video_feed(request, camera_id):
-    cam = Cameras.objects.filter(id=camera_id).first()
-    connection_string = cam.connection_string
-    if connection_string == '0':
-        connection_string = int(connection_string)
-    camera = cv2.VideoCapture(connection_string)
-    cameras.append({"id": cam.id, "camera": camera})
+def video_feed(request,camera_id):
+    return StreamingHttpResponse(gen(VideoCamera()),
+                                 # video type
+                                 content_type='multipart/x-mixed-replace; boundary=frame')
+def gen_frames(connection_string):
+    cap = cv2.VideoCapture(connection_string)
+    while True:
+        success, frame = cap.read()
+        if not success:
+            break
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-    def generate():
-        while True:
-            ret, frame = camera.read()
-
-            if not ret:
-                break
-
-            # write code of model
-            # result = DeepFace.analyze(frame, actions=['emotion', 'age','detection'], enforce_detection=False)
-
-            ret, jpeg = cv2.imencode('.jpg', frame)
-            data = jpeg.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + data + b'\r\n\r\n')
-
-    return StreamingHttpResponse(generate(), content_type='multipart/x-mixed-replace; boundary=frame')
-
-
-
-
+# @gzip_page
+# @require_GET
+# def video_feed(request, camera_id):
+#
+#
+#     camera = cv2.VideoCapture(connection_string)
+#     if not camera.isOpened():
+#         return HttpResponse("Camera connection failed", status=500)
+#
+#     cameras.append({"id": cam.id, "camera": camera})
+#     return StreamingHttpResponse(generate(camera), content_type='multipart/x-mixed-replace; boundary=frame')
+#
+# def generate(camera):
+#     while True:
+#         ret, frame = camera.read()
+#
+#         if not ret:
+#             break
+#
+#         # Add your code for model analysis here
+#         # result = DeepFace.analyze(frame, actions=['emotion', 'age', 'detection'], enforce_detection=False)
+#
+#         ret, jpeg = cv2.imencode('.jpg', frame)
+#         if not ret:
+#             break
+#
+#         data = jpeg.tobytes()
+#         yield (b'--frame\r\n'
+#                b'Content-Type: image/jpeg\r\n\r\n' + data + b'\r\n\r\n')
 
 def get_details_from_national_img(request):
     if request.method == 'POST':
