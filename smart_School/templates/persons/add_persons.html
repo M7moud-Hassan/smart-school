@@ -64,7 +64,7 @@
                     </button>
                     <div class="dropdown-menu" role="menu">
                         {% for camera in cameras %}
-                      <a class="dropdown-item" href="#"  data-toggle="modal" onclick="openCamera({{camera.id}})" data-target="#modal-info">{{camera.name}}</a>
+                      <a class="dropdown-item" href="#"  data-toggle="modal" onclick="openCamera(1,{{camera.id}})" data-target="#modal-info">{{camera.name}}</a>
                         {% endfor %}
                     </div>
                                   <div class="modal fade" id="modal-info">
@@ -77,7 +77,7 @@
               </button>
             </div>
             <div class="modal-body">
-               <img id="video"  width="100%" height="300"/>
+               <img id="video-1"  width="100%" height="300"/>
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
@@ -89,11 +89,53 @@
         <!-- /.modal-dialog -->
       </div>
                   </div>
+                            <div class="form-group">
+                    {{form.id_national_img.label_tag}}
+                    {{form.id_national_img}}
                   </div>
+                           <div class="btn-group w-100">
+                    <button type="button" class="btn btn-info" id="uploadButton">get Data</button>
+
+                    <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                      <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu" role="menu">
+                        {% for camera in cameras %}
+                      <a class="dropdown-item" href="#"  data-toggle="modal" onclick="openCamera(2,{{camera.id}})" data-target="#modal-info_2">{{camera.name}}</a>
+                        {% endfor %}
+                    </div>
+                                  <div class="modal fade" id="modal-info_2">
+        <div class="modal-dialog">
+          <div class="modal-content bg-info">
+            <div class="modal-header">
+              <h4 class="modal-title">Capture Image</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+               <img id="video-2"  width="100%" height="300"/>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-outline-light" id="captureImage-2" data-dismiss="modal">Capture</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+                  </div>
+                  </div>
+
                       <div class="card-body col-12 col-md-8">
                           <div class="form-group">
                    {{ form.name.label_tag }}
                       {{ form.name }}
+                  </div>
+                           <div class="form-group">
+                   {{ form.id_national.label_tag }}
+                      {{ form.id_national }}
                   </div>
                            <div class="form-group">
                                {{ form.gender.label_tag }}
@@ -118,6 +160,10 @@
                         </div>
                     </div>
                 </div>
+                          <div class="form-group">
+                   {{ form.address.label_tag }}
+                      {{ form.address }}
+                  </div>
                           <div class="form-group">
                    {{form.status.label_tag}}
                         {{form.status}}
@@ -175,8 +221,8 @@
     });
     $('.select2').select2()
 
-function openCamera(id){
-$("#video").attr("src","/cameras/video/"+id);
+function openCamera(index,id){
+$("#video-"+index).attr("src","/cameras/video/"+id);
 }
 
 $('#captureImage').click(function() {
@@ -188,7 +234,7 @@ $('#captureImage').click(function() {
             responseType: 'blob' // Set the response type to 'blob'
         },
         success: function(response) {
-          $('.dropify-clear').click();
+          $('.dropify-clear').eq(0).click();
           const fileInput = document.getElementById('id_image');
           var filename = 'captured_image.jpg';
               // Create a new file object from the blob response
@@ -197,32 +243,43 @@ $('#captureImage').click(function() {
               dataTransfer=new DataTransfer()
               dataTransfer.items.add(file);
               fileInput.files = dataTransfer.files;
-              addFileToDropify(file)
+              addFileToDropify(0,file);
+              $("#video-1").attr("src","");
         },
         error: function(error) {
             console.log(error);
         }
     });
             });
- function addFileToDropify(file) {
+
+ $('#captureImage-2').click(function() {
+
+                $.ajax({
+          url: '/cameras/capture_image/',
+          type: 'GET',
+          xhrFields: {
+            responseType: 'blob'
+        },
+        success: function(response) {
+          $('.dropify-clear').eq(1).click();
+          const fileInput = document.getElementById('id_id_national_img');
+          var filename = 'captured_image.jpg';
+
+              var file = new File([response], filename, { type: 'image/jpeg' });
+              // Add the file to the DataTransfer object
+              dataTransfer=new DataTransfer()
+              dataTransfer.items.add(file);
+              fileInput.files = dataTransfer.files;
+              addFileToDropify(1,file)
+               $("#video-2").attr("src","");
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+            });
 
 
-    var reader = new FileReader();
-
-    reader.onload = function(e) {
-      $('.dropify-preview').css('display', 'block');
-      var imageElement = $('<img>');
-      imageElement.attr('src', e.target.result);
-      // Change the display style of the element with class dropify-clear to block
-      $('.dropify-clear').css('display', 'block');
-      // Append the image element to the target element
-    $('.dropify-render').append(imageElement);
-      };
-
-    // Convert the File object to a data URL
-    reader.readAsDataURL(file);
-
-  }
 
 $(function () {
 
@@ -255,7 +312,7 @@ function onModalClosed() {
 $.ajax({
  url: '/cameras/release',
 });
-$("#video").attr("src","");
+//$("#video").attr("src","");
     }
     $(document).on('hidden.bs.modal', '.modal', onModalClosed);
  $(".dropify-face").dropify(
@@ -270,6 +327,70 @@ $("#video").attr("src","");
     );
 
 
+$("#uploadButton").click(function() {
+                var formData = new FormData();
+                formData.append("image", $("#id_id_national_img")[0].files[0]);
+                var csrfToken = $('[name=csrfmiddlewaretoken]').val(); // Extract CSRF token
+                formData.append("csrfmiddlewaretoken", csrfToken);
+                $.ajax({
+                    url: "/persons/get_details_from_national_img/",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success:async function(response) {
 
+                    data=JSON.parse(response['response']);
+                     console.log(data)
+                    const originalDate = data.Birthday;
+
+                    // Split the date into day, month, and year
+                    const dateComponents = originalDate.split('-');
+                    const day = dateComponents[0];
+                    const month = dateComponents[1];
+                    const year = dateComponents[2];
+
+                    // Create the new date in "mm/dd/yyyy" format
+                    const newDateFormat = `${month}/${day}/${year}`;
+                    $('#id_name').val(`${data.firstname} ${data.secondname}`)
+                    $('#id_id_national').val(`${data.id}`)
+                    $('#id_date_of_birth').val(newDateFormat)
+                    $('#id_address').val(`${data.address_1} - ${data.address_2}`)
+                    const fileInput = document.getElementById('id_image');
+          var filename = 'captured_image.jpg';
+              // Create a new file object from the blob response
+            const blob = new Blob([Uint8Array.from(atob(response['image']), c => c.charCodeAt(0))], { type: 'image/jpeg' });
+              var file = new File([blob], filename, { type: 'image/jpeg' });
+              // Add the file to the DataTransfer object
+              dataTransfer=new DataTransfer()
+              dataTransfer.items.add(file);
+              fileInput.files = dataTransfer.files;
+              addFileToDropify(0,file);
+
+                    },
+                    error: function() {
+                        alert("Error connecting to the server.");
+                    }
+                });
+            });
+
+ function addFileToDropify(index,file) {
+console.log(index)
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      $('.dropify-preview').eq(index).css('display', 'block');
+      var imageElement = $('<img>');
+      imageElement.attr('src', e.target.result);
+      // Change the display style of the element with class dropify-clear to block
+      $('.dropify-clear').eq(index).css('display', 'block');
+      // Append the image element to the target element
+    $('.dropify-render').eq(index).append(imageElement);
+      };
+
+    // Convert the File object to a data URL
+    reader.readAsDataURL(file);
+
+  }
 </script>
 {% endblock %}

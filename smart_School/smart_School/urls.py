@@ -24,11 +24,13 @@ from app_resources.urls import *
 from livefeed import urls as livefeed_urls
 from reports import urls as reporst_urls
 
+
 urlpatterns = [
     path('',include(urls)),
     path('cameras/',include(url_cameras)),
     path('persons/',include(url_persons)),
     path('admin/',admin.site.urls),
     path('livefeed/',include(livefeed_urls)),
-    path('reports/',include(reporst_urls))
+    path('reports/',include(reporst_urls)),
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -85,3 +85,4 @@ def filter_camera(request, filter_date,camera_id):
         "detection_count_black": detection_count_black,
         "detection_count_unknown": detection_count_unknown
     })
+

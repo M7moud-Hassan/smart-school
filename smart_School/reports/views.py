@@ -11,6 +11,7 @@ def reports_all_people(request):
         uploaded_file = request.FILES['image']
         if isinstance(uploaded_file, InMemoryUploadedFile):
             persons = search_by_image_all_filter(uploaded_file)
+            print(persons)
             return render(request, 'reports/all_persons.html', context={'persons': persons, 'title': 'reports',
                                                                            'sub_title': 'known persons',
                                                                            'cameras': Cameras.objects.all()})

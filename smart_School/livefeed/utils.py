@@ -1,9 +1,14 @@
-from app_resources.models import PersonsDetect
+from app_resources.models import PersonsDetect,Persons
 from deepface import DeepFace
 from django.conf import settings
 import pickle
 import os
 
+from deepface.commons import functions, realtime, distance as dst
+import pickle
+import numpy as np
+import os
+import cv2
 object_data = [
     {
         "id_camera": "5",
@@ -28,13 +33,14 @@ def image_of_person(person):
 
     # Create an instance list containing the person's name, representation, and image URL
     instance = [person.name, representation, person.id, person.status]  # , person.image.url
-    print(instance)
-    # Save the instance to the 'representations.pkl' file
+
+
     pickle_file_path = os.path.join(settings.MEDIA_ROOT, 'representations.pkl')
-    try:
+
+    if os.path.exists(pickle_file_path):
         with open(pickle_file_path, "rb") as f:
             representations = pickle.load(f)
-    except FileNotFoundError:
+    else:
         representations = []
 
     representations.append(instance)
@@ -43,6 +49,10 @@ def image_of_person(person):
         pickle.dump(representations, f)
 
     print(len(representations))
+
+
+
+
 
 
 def image_update_person(person):
@@ -82,6 +92,7 @@ def image_update_person(person):
 
 
 def search_by_image_unknown_filter(image_file):
+    
     return PersonsDetect.objects.all()
 
 
@@ -96,6 +107,58 @@ def search_by_image_white_filter(image_file):
 def search_by_image_known_filter(image_file):
     return PersonsDetect.objects.all()
 
-
 def search_by_image_all_filter(image_file):
     return PersonsDetect.objects.all()
+"""def search_by_image_all_filter(image_file):
+    with open(os.path.join(settings.MEDIA_ROOT, 'representations.pkl') , 'rb') as f:
+        representations = pickle.load(f)
+    # Save the frame as an image temporarily
+    print("//////////////////////////////////////////////////",image_file)
+    print("image_file.name:", image_file.name)
+    print("image_file.size:", image_file.size)
+    print("image_file.content_type:", image_file.content_type)
+    print(image_file.path)
+    temp_img_name = image_file.name
+    temp_img_path = os.path.join(settings.MEDIA_ROOT, temp_img_name)
+    cv2.imwrite(temp_img_path, temp_img_name)
+            #try:
+                # Perform facial recognition using DeepFace
+    target_faces = DeepFace.extract_faces(img_path=temp_img_path, enforce_detection=False)
+            #print(len(target_faces))
+    matched_names_all=[]
+    if len(target_faces) > 0:
+                    
+        target_representation = DeepFace.represent(img_path=temp_img_path, model_name="VGG-Face", enforce_detection=False)[0]["embedding"]
+
+                    # load representations of faces in database
+                    
+                    
+
+        distances = []
+        for i in range(0, len(representations)):
+            source_name = representations[i][0]
+            source_representation = representations[i][1]
+            distance = dst.findCosineDistance(source_representation, target_representation)
+            distances.append(distance)
+                
+                     # Find the minimum distance index
+            idx = np.argmin(distances)
+            min_distance = distances[idx]
+            print(min_distance)
+                    # Check if the minimum distance is below a certain threshold (adjust threshold as needed)
+            threshold = 0.5
+            if min_distance <= threshold:
+                matched_name = representations[idx][0]
+                #detect_person(representations[idx][2],camera_id)
+
+                print("Matched Name:", matched_name)
+            else:
+                matched_name = "Unknown"
+                #detect_unknown(temp_img_path,camera_id)
+                print(matched_name)
+                matched_names_all.append(matched_name)   
+    return PersonsDetect.objects.all()
+
+"""
+   
+
