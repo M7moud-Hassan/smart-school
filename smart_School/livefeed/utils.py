@@ -49,6 +49,7 @@ def image_of_person(person):
         pickle.dump(representations, f)
 
     print(len(representations))
+    print(representations)
 
 
 

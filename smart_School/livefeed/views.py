@@ -50,20 +50,54 @@ def video_feed(request, camera_id):
     cameras.append({"id": cam.id, "camera": camera})
     # buffer_size = 3
     # camera.set(cv2.CAP_PROP_BUFFERSIZE, buffer_size)
-    cameras.append({"id": cam.id, "camera": camera})
+    #cameras.append({"id": cam.id, "camera": camera})
+    i = 0
     def generate():
-        try:
+        with open(os.path.join(settings.MEDIA_ROOT, 'representations.pkl') , 'rb') as f:
+
+            representations = pickle.load(f)
+       
             while True:
                 frame = camera.read()
                 if frame is None:
                     continue
-                frame = imutils.resize(frame, width=1000, height=1000)
+                try:
+                    frame = imutils.resize(frame, width=1000, height=1000)
+                    target_faces = DeepFace.extract_faces(frame)
+                    if len(target_faces) > 0:
+                                
+                                print("face: ", len(target_faces))
+                                target_representation = DeepFace.represent(frame, model_name="VGG-Face", enforce_detection=False, detector_backend="ssd", align=True)[0]["embedding"]
+
+                                # load representations of faces in database
+                                distances = []
+                                for i in range(0, len(representations)):
+                                    source_representation = representations[i][1]
+                                    distance = dst.findCosineDistance(source_representation, target_representation)
+                                    distances.append(distance)
+                            
+                                # Find the minimum distance index
+                                idx = np.argmin(distances)
+                                min_distance = distances[idx]
+                                print(min_distance)
+                                # Check if the minimum distance is below a certain threshold (adjust threshold as needed)
+                                threshold = 0.5
+                                if min_distance <= threshold:
+                                    matched_name = representations[idx][0]
+                                    detect_person(representations[idx][2],camera_id)
+
+                                    print("Matched Name:", matched_name)
+                                else:
+                                    matched_name = "Unknown"
+                                    detect_unknown(frame,camera_id)
+                except Exception as e:
+                        print(f"An exception occurred: {e}")
                 _, jpeg = cv2.imencode('.jpg', frame)
                 data = jpeg.tobytes()
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' + data + b'\r\n')
-        except GeneratorExit:
-            camera.stop()
+        
+            #camera.stop()
     return StreamingHttpResponse(generate(), content_type='multipart/x-mixed-replace; boundary=frame')
 
     # Load a sample picture and learn how to recognize it.
