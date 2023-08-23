@@ -23,15 +23,15 @@ def index(request):
     detectPersons = PersonsDetect.objects.filter(person_id__status="unknown")
 
     detection_count = PersonsDetect.objects.filter(detected_at=today,
-                                                   camera_id__id=cameras.first().id).count()
+                                                   camera_id__id=cameras.first().id if cameras.first() else 0).count()
     detection_count_white = PersonsDetect.objects.filter(detected_at=today,
-                                                         camera_id__id=cameras.first().id,
+                                                         camera_id__id=cameras.first().id if cameras.first() else 0,
                                                          person_id__status='whitelist').count()
     detection_count_black = PersonsDetect.objects.filter(detected_at=today,
-                                                         camera_id__id=cameras.first().id,
+                                                         camera_id__id=cameras.first().id if cameras.first() else 0,
                                                          person_id__status='blacklist').count()
     detection_count_unknown = PersonsDetect.objects.filter(detected_at=today,
-                                                           camera_id__id=cameras.first().id,
+                                                           camera_id__id=cameras.first().id if cameras.first() else 0,
                                                            person_id__status='unknown').count()
     return render(request, 'home/index.html', context={"registers": registers.count(),
                                                        "unknownDetect": detectPersons.count(),
