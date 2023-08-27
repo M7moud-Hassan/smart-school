@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 import cv2
 from django.http import HttpResponse, FileResponse, StreamingHttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from .models import Cameras, Persons, PersonsDetect
 from .forms import CamerasForm, PersonsForm
@@ -251,7 +251,8 @@ def get_details_from_national_img(request):
         api_url = 'http://128.199.2.129:9090/api/'
         files = {'file': ('filename.jpg', picture.read(), 'image/jpeg')}
         response = requests.post(api_url, files=files)
-        image_url = "http://128.199.2.129:9090/static/WhatsApp_Image_2023-08-12_at_6.00.53_PM.jpeg"
+        response_json = json.loads(response.text)
+        image_url = "http://128.199.2.129:9090/"+response_json.get('face_photo')[1:]
         headers = {'Origin': '*'}
 
         response2 = requests.get(image_url, headers=headers)
