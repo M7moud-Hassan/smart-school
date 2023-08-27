@@ -13,6 +13,10 @@ import requests
 from livefeed.utils import image_of_person, image_update_person
 import imutils
 from imutils.video import VideoStream
+import os
+import pickle
+from django.conf import settings
+from django.shortcuts import redirect
 
 
 def add_camera(request):
@@ -128,10 +132,32 @@ def persons(request):
                                                             "sub_title": "Persons", })
 
 
-def delete_person(request, id):
+"""def delete_person(request, id):
+    
     person = Persons.objects.filter(id=id).first()
     person.delete()
+    return redirect('/persons/persons')"""
+def delete_person(request, id):
+    person = Persons.objects.filter(id=id).first()
+
+    if person:
+        # Delete the person's representation from the list
+        delete_representation(person)
+
+        # Delete the person from the database
+        person.delete()
+
     return redirect('/persons/persons')
+def delete_representation(person):
+    pickle_file_path = os.path.join(settings.MEDIA_ROOT, 'representations.pkl')
+
+    if os.path.exists(pickle_file_path):
+        with open(pickle_file_path, "rb") as f:
+            representations = pickle.load(f)
+            representations = [rep for rep in representations if rep[2] != person.id]  # Remove person's representation
+        with open(pickle_file_path, "wb") as f:
+            pickle.dump(representations, f)
+            print(len(representations))
 
 
 def view_person(request, id):

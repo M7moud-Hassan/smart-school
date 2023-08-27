@@ -96,7 +96,7 @@ def video_feed(request, camera_id):
                 data = jpeg.tobytes()
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' + data + b'\r\n')
-        return StreamingHttpResponse(generate(), content_type='multipart/x-mixed-replace; boundary=frame')
+    return StreamingHttpResponse(generate(), content_type='multipart/x-mixed-replace; boundary=frame')
 
     # Load a sample picture and learn how to recognize it.
     #  mahmoud_image = face_recognition.load_image_file(os.path.join(settings.MEDIA_ROOT, 'persons', 'whitelist', '207200126_163023945858962_4456991363376213271_n.jpg'))
