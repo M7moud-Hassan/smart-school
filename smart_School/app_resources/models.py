@@ -41,6 +41,7 @@ class Persons(models.Model):
 
 class PersonsDetect(models.Model):
     detected_at = models.DateTimeField()
+    outed_at=models.DateTimeField(null=True,blank=True)
     camera_id = models.ForeignKey(Cameras, on_delete=models.CASCADE)
     person_id = models.ForeignKey(Persons, on_delete=models.CASCADE)
     spend_time=models.CharField(max_length=100,null=True,blank=True)
@@ -49,7 +50,7 @@ class PersonsDetect(models.Model):
         if not self.detected_at:
             self.detected_at = datetime.now().replace(second=0, microsecond=0)
         if self.camera_id.camera_type == 'outdoor':
-
+            self.outed_at=datetime.now().replace(second=0, microsecond=0)
             indoor_detection = PersonsDetect.objects.filter(person_id=self.person_id,
                                                             camera_id__camera_type='indoor').last()
             if indoor_detection:

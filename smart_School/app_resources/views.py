@@ -3,6 +3,7 @@ import io
 import json
 from datetime import datetime
 import cv2
+from django.db.models import Q
 from django.http import HttpResponse, FileResponse, StreamingHttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
@@ -127,8 +128,8 @@ def edit_person(request, id):
 
 
 def persons(request):
-    persons_lis = Persons.objects.all()
-    return render(request, 'persons/persons.html', context={"persons": persons_lis, "title": "Persons",
+    persons_list = Persons.objects.filter(~Q(status='unknown'))
+    return render(request, 'persons/persons.html', context={"persons": persons_list, "title": "Persons",
                                                             "sub_title": "Persons", })
 
 

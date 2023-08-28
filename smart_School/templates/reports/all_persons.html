@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="{% static 'AdminLTE/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
   <link rel="stylesheet" href="{% static 'AdminLTE/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
   <link rel="stylesheet" href="{% static 'css/dropify.min.css' %}">
+<link rel="stylesheet" href="{% static  'AdminLTE/plugins/daterangepicker/daterangepicker.css' %}">
 {% endblock %}
 {% block content %}
 <div class="content-wrapper">
@@ -27,11 +28,13 @@
 
     <!-- Main content -->
     <section class="content">
-<div class="card text-center">
+    <div class="card text-center">
               <div class="card-body">
-                  <form  method="POST" enctype="multipart/form-data">
+                  <div class="row d-flex align-items-end mb-4">
+
+                  <form  method="POST" enctype="multipart/form-data" class="col-12 col-md-6">
                       {% csrf_token %}
-                      <div class=" col-12 col-md-4 mb-4">
+                      <div class="">
                 <div class="form-group">
                    <label for="id_image">Search By Image:</label>
                     <input type="file" id="id_image" name="image" class="dropify-face form-control" data-default-file="" required>
@@ -72,15 +75,35 @@
                   </div>
                   </div>
                   </form>
+                        <form method="POST" class="col-12 col-md-6">
+                   {% csrf_token %}
+                  <div class="input-group input-group-sm" style="">
+<!--                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">-->
+<div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="far fa-calendar-alt"></i>
+                      </span>
+                    </div>
+                    <input type="text" class="form-control float-right" name="date_renge" id="reservation">
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-default">
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                    </form>
+                  </div>
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th>id</th>
                     <th>name</th>
                     <th>status</th>
-                    <th>camera</th>
-                    <th>detected at</th>
+                    <th>entered at</th>
+                    <th>outed at</th>
+                      <th>spend</th>
                     <th>image</th>
+                      <th>action</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -89,22 +112,54 @@
                     <td>{{person.person_id.id}}</td>
                     <td>{{person.person_id.name}}</td>
                     <td>{{person.person_id.status}}</td>
-                    <td>{{person.camera_id.name}}</td>
                     <td>{{person.detected_at}}</td>
+                      <td>{{person.outed_at}}</td>
+                      <td>{{person.spend_time}}</td>
                     <td>
-                      <img src="http://localhost:8000/media/{{person.person_id.image}}" width="100px"height="100px">
+                      <img src="http://localhost:8000/media/{{person.person_id.image}}" width="100px" height="100px">
                     </td>
+                       <td class="project-actions text-right">
+                          <a class="btn btn-primary btn-sm" href="{% url 'view_person' person.person_id.id %}">
+                              <i class="fas fa-folder">
+                              </i>
+                              View
+                          </a>
+
+                            <div class="modal fade" id="modal-delete{{person.id}}">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Delete Person</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p class="text-center">are you sure to delete {{person.name}} ?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <a href="{% url 'delete_person' person.id %}" type="button" class="btn btn-primary">delete </a>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+                      </td>
                   </tr>
                   {% endfor %}
                   </tbody>
                   <tfoot>
                   <tr>
-                    <th>id</th>
+                  <th>id</th>
                     <th>name</th>
                     <th>status</th>
-                    <th>camera</th>
-                    <th>detected at</th>
+                    <th>entered at</th>
+                    <th>outed at</th>
+                      <th>spend</th>
                     <th>image</th>
+                      <th>action</th>
                   </tr>
                   </tfoot>
                 </table>
@@ -129,6 +184,10 @@
 <script src="{% static 'AdminLTE/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
 <script src="{% static 'AdminLTE/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
 <script src="{% static 'js/dropify.min.js' %}"></script>
+<script src="{% static  'AdminLTE/plugins/daterangepicker/daterangepicker.js' %}"></script>
+<script>
+   $('#reservation').daterangepicker()
+</script>
 <script>
   $(function () {
     $("#example1").DataTable({

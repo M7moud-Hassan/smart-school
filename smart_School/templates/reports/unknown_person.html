@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="{% static 'AdminLTE/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
   <link rel="stylesheet" href="{% static 'AdminLTE/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
 <link rel="stylesheet" href="{% static 'css/dropify.min.css' %}">
-
+<link rel="stylesheet" href="{% static  'AdminLTE/plugins/daterangepicker/daterangepicker.css' %}">
 {% endblock %}
 {% block content %}
 <div class="content-wrapper">
@@ -31,9 +31,11 @@
     <section class="content">
 <div class="card">
               <div class="card-body">
-                  <form  method="POST" enctype="multipart/form-data">
+                     <div class="row d-flex align-items-end mb-4">
+
+                  <form  method="POST" enctype="multipart/form-data" class="col-12 col-md-6">
                       {% csrf_token %}
-                      <div class=" col-12 col-md-4 mb-4">
+                      <div class="">
                 <div class="form-group">
                    <label for="id_image">Search By Image:</label>
                     <input type="file" id="id_image" name="image" class="dropify-face form-control" data-default-file="" required>
@@ -74,6 +76,24 @@
                   </div>
                   </div>
                   </form>
+                        <form method="POST" class="col-12 col-md-6">
+                   {% csrf_token %}
+                  <div class="input-group input-group-sm" style="">
+<!--                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">-->
+<div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="far fa-calendar-alt"></i>
+                      </span>
+                    </div>
+                    <input type="text" class="form-control float-right" name="date_renge" id="reservation">
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-default">
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                    </form>
+                  </div>
                 <table id="example1" class="table table-bordered table-striped text-center mt-4">
                   <thead>
                   <tr>
@@ -164,6 +184,10 @@
 <script src="{% static 'AdminLTE/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
 <script src="{% static 'AdminLTE/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
 <script src="{% static 'js/dropify.min.js' %}"></script>
+<script src="{% static  'AdminLTE/plugins/daterangepicker/daterangepicker.js' %}"></script>
+<script>
+   $('#reservation').daterangepicker()
+</script>
 <script>
   $(function () {
     $("#example1").DataTable({
