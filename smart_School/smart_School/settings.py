@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'smart_School.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'test',
-        'USER':'postgres',
-        'PASSWORD':'mahm01142',
-        'HOST':'127.0.0.1',
-        'PORT':5432
+        'NAME': os.getenv('POSTGRES_DB', 'postgres'),
+        'USER':os.getenv('POSTGRES_USER', 'postgres'),
+        'PASSWORD':os.getenv('POSTGRES_PASSWORD', 'postgres'),
+        'HOST': os.getenv('DB_HOST', 'db'),
+        'PORT':os.getenv('DB_PORT', '5432'),
     }
 }
 
