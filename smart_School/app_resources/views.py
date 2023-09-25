@@ -8,18 +8,19 @@ from django.http import HttpResponse, FileResponse, StreamingHttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from .models import Cameras, Persons, PersonsDetect
-from .forms import CamerasForm, PersonsForm
+from .forms import CamerasForm, InformationsForm, PersonsForm
 from .utils import cameras
 import requests
-from livefeed.utils import image_of_person, image_update_person
+# from livefeed.utils import image_of_person, image_update_person
 import imutils
 from imutils.video import VideoStream
 import os
 import pickle
 from django.conf import settings
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def add_camera(request):
     if request.method == 'POST':
         form = CamerasForm(request.POST)
@@ -35,7 +36,7 @@ def add_camera(request):
             "add_or_update": "add"
         })
 
-
+@login_required
 def all_cameras(request):
     camera_all = Cameras.objects.all()
     return render(request, 'camera/cameras.html', context={"cameras": camera_all,
@@ -43,7 +44,7 @@ def all_cameras(request):
                                                            "sub_title": "Cameras",
                                                            })
 
-
+@login_required
 def edit_camera(request, id):
     camera = Cameras.objects.filter(id=id).first()
     if request.method == 'POST':
@@ -62,7 +63,7 @@ def edit_camera(request, id):
         else:
             return redirect('/cameras/cameras')
 
-
+@login_required
 def delete_camera(request, id):
     camera = Cameras.objects.filter(id=id).first()
     if camera:
@@ -71,14 +72,23 @@ def delete_camera(request, id):
     else:
         return redirect('/cameras/cameras/')
 
-
+@login_required
 def add_person(request):
     cameras_list = Cameras.objects.all()
     if request.method == 'POST':
         form = PersonsForm(request.POST, request.FILES)
         if form.is_valid():
-            person_instance = form.save()
-            image_of_person(person_instance)
+            if form.cleaned_data['type_register']=='Visitor':
+                inforForm=InformationsForm(request.POST)
+                if inforForm.is_valid():
+                    person_instance = form.save(commit=False)
+                    info_intsance=inforForm.save()
+                    person_instance.info=info_intsance
+                    person_instance.save()
+            else:
+                person_instance = form.save()
+            
+            # image_of_person(person_instance)
             return redirect('/persons/persons/')
         else:
             return render(request, 'persons/add_persons.html', context={'form': form,
@@ -89,32 +99,35 @@ def add_person(request):
                                                                         })
     else:
         form = PersonsForm()
+        inforForm=InformationsForm()
         return render(request, 'persons/add_persons.html', context={'form': form,
                                                                     "title": "Persons",
                                                                     "sub_title": "Add Person",
                                                                     "update_or_add": "add",
-                                                                    "cameras": cameras_list
+                                                                    "cameras": cameras_list,
+                                                                    'info_form':inforForm
                                                                     })
 
-
+@login_required
 def edit_person(request, id):
     person = Persons.objects.filter(id=id).first()
     if request.method == 'POST':
         form = PersonsForm(request.POST, request.FILES, instance=person)
         if form.is_valid():
             person_instance = form.save()
-            image_update_person(person_instance)
+            
+            # image_update_person(person_instance)
             return redirect('/persons/persons/')
     else:
         if person:
 
             form = PersonsForm(instance=person,
-                               initial={'image': '', 'id_national_img': '',
+                               initial={'image': '', 'front_national_img': '',
                                         'date_of_birth': person.date_of_birth.strftime(
                                             '%m/%d/%Y') if person.date_of_birth else ''})
             form.fields['image'].widget.attrs['data-default-file'] = "http://127.0.0.1:8000/" + person.image.url
-            form.fields['id_national_img'].widget.attrs[
-                'data-default-file'] = "http://127.0.0.1:8000/" + person.id_national_img.url
+            form.fields['front_national_img'].widget.attrs[
+                'data-default-file'] = "http://127.0.0.1:8000/" + person.front_national_img.url
             return render(request, 'persons/add_persons.html', context={
                 "title": "Add Person",
                 "form": form,
@@ -126,7 +139,7 @@ def edit_person(request, id):
         else:
             return redirect('/persons/persons')
 
-
+@login_required
 def persons(request):
     persons_list = Persons.objects.filter(~Q(status='unknown'))
     return render(request, 'persons/persons.html', context={"persons": persons_list, "title": "Persons",
@@ -138,6 +151,7 @@ def persons(request):
     person = Persons.objects.filter(id=id).first()
     person.delete()
     return redirect('/persons/persons')"""
+@login_required
 def delete_person(request, id):
     person = Persons.objects.filter(id=id).first()
 
@@ -149,6 +163,7 @@ def delete_person(request, id):
         person.delete()
 
     return redirect('/persons/persons')
+@login_required
 def delete_representation(person):
     pickle_file_path = os.path.join(settings.MEDIA_ROOT, 'representations.pkl')
 
@@ -160,7 +175,7 @@ def delete_representation(person):
             pickle.dump(representations, f)
             print(len(representations))
 
-
+@login_required
 def view_person(request, id):
     person = Persons.objects.filter(id=id).first()
     report = False
@@ -178,7 +193,7 @@ def view_person(request, id):
     return render(request, 'persons/profile_person.html',
                   context={"person": person, "report": report, "title": "Persons", 'detections': detections})
 
-
+@login_required
 def capture_image(request):
     video = cameras[-1]['camera']
     frame = video.read()
@@ -198,28 +213,27 @@ def capture_image(request):
     else:
         return HttpResponse(status=204)
 
-
+@login_required
 def release_resources(request):
     for camera in cameras:
-        camera['camera'].stop()
-    cv2.destroyAllWindows()
+        print(camera['camera'])
+        camera['camera'].stream.stream.release()
     cameras.clear()
     return HttpResponse('done')
 
-
+@login_required
 def release_camera(request, id):
     for camera in cameras:
         if camera['id'] == id:
-            camera['camera'].stop()
+            camera['camera'].stream.stream.release()
     return HttpResponse('done')
 
-
+@login_required
 @require_GET
 def video_feed(request, camera_id):
     cam = Cameras.objects.filter(id=camera_id).first()
     if not cam:
         return HttpResponse("Camera not found", status=404)
-
     connection_string = cam.connection_string
     if connection_string == '0':
         connection_string = 0
@@ -245,7 +259,7 @@ def video_feed(request, camera_id):
 
     return StreamingHttpResponse(stream_generator(), content_type='multipart/x-mixed-replace; boundary=frame')
 
-
+@login_required
 def get_details_from_national_img(request):
     if request.method == 'POST':
         picture = request.FILES.get('image')
@@ -261,5 +275,18 @@ def get_details_from_national_img(request):
         response_data = {
             "response": response.text,
             "image": base64.b64encode(response2.content).decode('utf-8')
+        }
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+def get_details_from_back_national_img(request):
+    if request.method == 'POST':
+        picture = request.FILES.get('image')
+        api_url = 'http://128.199.2.129:9090/api_back/'
+        files = {'file': ('filename.jpg', picture.read(), 'image/jpeg')}
+        response = requests.post(api_url, files=files)
+        response_json = json.loads(response.text)
+        print(response_json)
+        response_data = {
+            "response": response.text,
+           
         }
         return HttpResponse(json.dumps(response_data), content_type="application/json")

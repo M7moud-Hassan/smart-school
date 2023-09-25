@@ -1,15 +1,19 @@
 from django import forms
 
-from .models import Cameras, Persons
+from .models import *
 from django_select2.forms import Select2MultipleWidget
+
 
 class CamerasForm(forms.ModelForm):
     class Meta:
         model = Cameras
-        fields = ['name', 'camera_type', 'status', 'description', 'connection_string']
+        fields = ['name', 'camera_type', 'status',
+                  'description', 'connection_string']
 
-    camera_type = forms.ChoiceField(choices=[('indoor', 'Indoor'), ('outdoor', 'Outdoor')])
-    status = forms.ChoiceField(choices=[('enable', 'Enable'), ('disable', 'Disable')])
+    camera_type = forms.ChoiceField(
+        choices=[('indoor', 'Indoor'), ('outdoor', 'Outdoor')])
+    status = forms.ChoiceField(
+        choices=[('enable', 'Enable'), ('disable', 'Disable')])
 
     def __init__(self, *args, **kwargs):
         super(CamerasForm, self).__init__(*args, **kwargs)
@@ -17,36 +21,45 @@ class CamerasForm(forms.ModelForm):
             field.widget.attrs['class'] = 'form-control'
         self.fields['name'].widget.attrs['placeholder'] = 'Name of Camera'
         self.fields['connection_string'].widget.attrs['placeholder'] = 'connection string'
-        self.fields['description'].widget = forms.Textarea(attrs={'class': 'form-control', 'rows': 5})
+        self.fields['description'].widget = forms.Textarea(
+            attrs={'class': 'form-control', 'rows': 5})
 
 
 class PersonsForm(forms.ModelForm):
     class Meta:
         model = Persons
-        fields = ['name', 'gender', 'date_of_birth', 'image', 'status','allowed_cameras','id_national_img','id_national','address']
-
+        fields = ['name', 'gender', 'date_of_birth', 'image', 'status', 'allowed_cameras', 'front_national_img',
+                  'back_national_img',
+                  'id_national', 'address', 'nationalID', 'job_title','type_register']
         widgets = {
-            'image': forms.ClearableFileInput(attrs={'class': 'dropify-face form-control',"data-default-file":"",'required': True,}),
-            'name': forms.TextInput(attrs={'class': 'form-control','required': True}),
+            'image': forms.ClearableFileInput(
+                attrs={'class': 'dropify-face form-control', "data-default-file": "", 'required': True, }),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
             'date_of_birth': forms.DateInput(attrs={
                 'class': 'form-control datetimepicker-input',
                 'data-target': '#reservationdate',
                 'required': True,
-
             }),
-            'id_national_img':forms.ClearableFileInput(attrs={'class': 'dropify-face form-control',"data-default-file":""}),
-            'id_national': forms.TextInput(attrs={'class': 'form-control'}),
-            'address':forms.TextInput(attrs={'class': 'form-control'}),
+            'front_national_img': forms.ClearableFileInput(
+                attrs={'class': 'dropify-front form-control', "data-default-file": "", 'required': True}),
+            'back_national_img': forms.ClearableFileInput(
+                attrs={'class': 'dropify-back form-control', "data-default-file": "", 'required': True}),
+            'id_national': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
+            'job_title': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
+            'address': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
         }
         labels = {
             'image': 'image person',
-            'id_national_img':'image national id'
+            'front_national_img': 'front image national id',
+            'back_national_img': 'back image national id',
+            'job_title': 'job Title'
         }
         allowed_cameras = forms.ModelMultipleChoiceField(
             queryset=Cameras.objects.all(),
             widget=Select2MultipleWidget(attrs={'style': 'width: 100%;',
                                                 'class': "select2", 'multiple': "multiple",
-                                                'data-placeholder': "Select a State"
+                                                'data-placeholder': "Select a State",
+
                                                 }),
             required=True,
 
@@ -57,10 +70,62 @@ class PersonsForm(forms.ModelForm):
         ('Male', 'Male'),
         ('Female', 'Female'),
     ]
-    gender = forms.ChoiceField(choices=GENDER_CHOICES, widget=forms.RadioSelect, initial='Male')
-    status = forms.ChoiceField(choices=[('whitelist', 'whitelist'), ('blacklist', 'blacklist'),('unknown', 'unknown')])
+    TYPE_CHOICES = [
+             ('Visitor', 'Visitor'),
+            ('Employee', 'Employee'),
+]
+    gender = forms.ChoiceField(
+        choices=GENDER_CHOICES, widget=forms.RadioSelect, initial='Male')
+    type_register = forms.ChoiceField(
+        choices=TYPE_CHOICES,
+        widget=forms.RadioSelect,
+        initial='Visitor'
+    )
+    status = forms.ChoiceField(choices=[(
+        'whitelist', 'whitelist'), ('blacklist', 'blacklist'), ('unknown', 'unknown')])
 
     def __init__(self, *args, **kwargs):
         super(PersonsForm, self).__init__(*args, **kwargs)
         self.fields['date_of_birth'].widget.attrs['class'] = 'form-control'
         self.fields['status'].widget.attrs['class'] = 'form-control'
+
+
+class InformationsForm(forms.ModelForm):
+    class Meta:
+        model = Information
+        fields = ['department', 'type', 'reason', 'other', 'visior_type']
+    department = forms.ModelChoiceField(
+        label='department',
+        queryset=Department.objects.all(),
+        widget=forms.Select(
+            attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
+        required=True
+    )
+    type = forms.ModelChoiceField(
+        label='type',
+        queryset=Type.objects.all(),
+        widget=forms.Select(
+            attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
+        required=True
+    )
+    reason = forms.ModelChoiceField(
+        label='reason',
+        queryset=Reason.objects.all(),
+        widget=forms.Select(
+            attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
+        required=True
+    )
+    other = forms.ModelChoiceField(
+        label='other',
+        queryset=Other.objects.all(),
+        widget=forms.Select(
+            attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
+        required=True
+    )
+    visior_type = forms.ModelChoiceField(
+        label='visior type',
+        queryset=VisiTortype.objects.all(),
+        widget=forms.Select(
+            attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
+        required=True
+    )

@@ -1,6 +1,8 @@
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
-from livefeed.utils import object_data
+#from livefeed.utils import object_data
 from django.db.models import Q
 from django.utils import timezone
 from datetime import timedelta, datetime
@@ -9,7 +11,7 @@ from app_resources.models import Persons, PersonsDetect, Cameras
 
 
 # Create your views here.
-
+@login_required
 def index(request):
     today = timezone.now().date()
     yesterday = today - timedelta(days=1)
@@ -55,15 +57,15 @@ def index(request):
                                                        "cameras": cameras, "detection_count": detection_count,
                                                        "detection_count_white": detection_count_white,
                                                        "detection_count_black": detection_count_black,
-                                                       "detection_count_unknown": detection_count_unknown})
-
+                                                       "detection_count_unknown": detection_count_unknown,
+                                                       })
 
 def result_cameras(request):
     return JsonResponse({
-        "data": object_data
+        "data": 'object_data'
     })
 
-
+@login_required
 def filter_camera(request, filter_date,camera_id):
     start_date_str, end_date_str = filter_date.split(" - ")
     start_date = datetime.strptime(start_date_str, "%B %d, %Y")
@@ -80,9 +82,9 @@ def filter_camera(request, filter_date,camera_id):
                                                            camera_id__id=camera_id,
                                                            person_id__status='unknown').count()
     return JsonResponse({
-        "detection_count": detection_count,
-        "detection_count_white": detection_count_white,
-        "detection_count_black": detection_count_black,
-        "detection_count_unknown": detection_count_unknown
+        "detection_count": "detection_count",
+        "detection_count_white": "detection_count_white",
+        "detection_count_black": "detection_count_black",
+        "detection_count_unknown": "detection_count_unknown"
     })
 

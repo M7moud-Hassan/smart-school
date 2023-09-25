@@ -17,6 +17,7 @@ url_persons= [
     path('edit_person/<int:id>',edit_person,name="edit_person"),
     path('delete_person/<int:id>',delete_person,name='delete_person'),
     path('view_person/<int:id>',view_person,name="view_person"),
-    path('get_details_from_national_img/',get_details_from_national_img,name="get_details_from_national_img")
+    path('get_details_from_national_img/',get_details_from_national_img,name="get_details_from_national_img"),
+    path('get_details_from_back_national_img/',get_details_from_back_national_img,name="get_details_from_back_national_img")
 ]
 

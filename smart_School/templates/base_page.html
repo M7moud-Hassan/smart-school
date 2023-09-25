@@ -32,11 +32,47 @@
     background-color: #2196f3 !important;
 border: none !important;
     }
+
+  .loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid blue;
+    border-bottom: 16px solid blue;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+  }
+  
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .page-load{
+    background-color: rgba(128, 128, 128, 0.3);
+   
+    z-index: 30000;width: 100%; height: 100%;
+  }
+
+.show{
+display: flex !important;
+}
+.hide{
+  display: none !important;
+}
 </style>
   {% block styles %}
 {% endblock %}
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
+  <div id="page-loader" style=" display: none !important;" class="position-fixed page-load d-flex justify-content-center align-items-center">
+    <div class="loader"></div>
+  </div>
 <div class="wrapper">
 
   <!-- Preloader -->
@@ -219,35 +255,45 @@ border: none !important;
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-<!--          <li class="nav-item menu-open">-->
-<!--            <a href="#" class="nav-link {% if title == 'Dashboard' %}active{% endif %}">-->
-<!--              <i class="nav-icon fas fa-tachometer-alt"></i>-->
-<!--              <p>-->
-<!--                Dashboard-->
-<!--                <i class="right fas fa-angle-left"></i>-->
-<!--              </p>-->
-<!--            </a>-->
-<!--            <ul class="nav nav-treeview">-->
-<!--              <li class="nav-item">-->
-<!--                <a href="./index.html" class="nav-link {% if sub_title == 'Dashboard v1' %}active{% endif %}">-->
-<!--                  <i class="far fa-circle nav-icon"></i>-->
-<!--                  <p>Dashboard v1</p>-->
-<!--                </a>-->
-<!--              </li>-->
-<!--              <li class="nav-item">-->
-<!--                <a href="./index2.html" class="nav-link">-->
-<!--                  <i class="far fa-circle nav-icon"></i>-->
-<!--                  <p>Dashboard v2</p>-->
-<!--                </a>-->
-<!--              </li>-->
-<!--              <li class="nav-item">-->
-<!--                <a href="./index3.html" class="nav-link">-->
-<!--                  <i class="far fa-circle nav-icon"></i>-->
-<!--                  <p>Dashboard v3</p>-->
-<!--                </a>-->
-<!--              </li>-->
-<!--            </ul>-->
-<!--          </li>-->
+          <li class="nav-item menu-open">
+            <a href="#" class="nav-link {% if title == 'Dashboard' %}active{% endif %}">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Dashboard
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+
+              <li class="nav-item">
+                <a href="{% url 'dashboard' %}" class="nav-link  {% if sub_title == 'Dashboard' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>DASHBOARD</p>
+                </a>
+              </li>
+              
+              <!-- <li class="nav-item">
+                <a href="" class="nav-link {% if sub_title == 'add-visitor' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>ADD VISITOR</p>
+                </a>
+              </li> -->
+              
+              <li class="nav-item">
+                <a href="{% url 'search_id' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>SEARCH ID</p>
+                </a>
+              </li>
+
+               <li class="nav-item">
+                <a href="{% url 'face_id' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>FACE ID</p>
+                </a>
+              </li>
+            </ul>
+          </li>
 <!--          <li class="nav-item">-->
 <!--            <a href="pages/widgets.html" class="nav-link">-->
 <!--              <i class="nav-icon fas fa-th"></i>-->
@@ -869,6 +915,7 @@ border: none !important;
 <script src="{% static 'AdminLTE/dist/js/demo.js' %}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script>
+  $('#page-loader').hide()
   $.ajax({
     url: "/cameras/release/",
     type: "GET",
