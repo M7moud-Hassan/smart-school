@@ -11,7 +11,7 @@ from .models import Cameras, Persons, PersonsDetect
 from .forms import CamerasForm, InformationsForm, PersonsForm
 from .utils import cameras
 import requests
-# from livefeed.utils import image_of_person, image_update_person
+from livefeed.utils import image_of_person, image_update_person
 import imutils
 from imutils.video import VideoStream
 import os
@@ -88,7 +88,7 @@ def add_person(request):
             else:
                 person_instance = form.save()
             
-            # image_of_person(person_instance)
+            image_of_person(person_instance)
             return redirect('/persons/persons/')
         else:
             return render(request, 'persons/add_persons.html', context={'form': form,

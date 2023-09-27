@@ -9,6 +9,11 @@ import pickle
 import numpy as np
 import os
 import cv2
+
+import face_recognition
+from django.conf import settings
+
+
 object_data = [
     {
         "id_camera": "5",
@@ -21,13 +26,23 @@ object_data = [
     },
 ]
 
+import shutil
 
 def image_of_person(person):
+    print("aaaaaaaaaaaaaaaaaaaa")
     print(person)
 
     # Assuming the 'person' parameter is a Persons model object
-
     # Calculate the face representation for the person's image
+    image_path = person.image.path
+    print(image_path)
+    shutil.copy(image_path, "./media/faces/"+person.id_national+".jpg")
+    image = face_recognition.load_image_file(image_path)
+    face_encoding = face_recognition.face_encodings(image)[0]
+    settings.KNOW_FACE_ENCODINGS.append(face_encoding)
+    settings.KNOW_FACE_NAMES.append(person.id_national)
+    print('Learned encoding for', len(settings.KNOW_FACE_ENCODINGS), 'images.')
+    """# Calculate the face representation for the person's image
     image_path = person.image.path
     representation = DeepFace.represent(img_path=image_path, model_name="VGG-Face")[0]["embedding"]
 
@@ -49,10 +64,7 @@ def image_of_person(person):
         pickle.dump(representations, f)
 
     print(len(representations))
-    print(representations)
-
-
-
+    print(representations)"""
 
 
 
@@ -61,9 +73,11 @@ def image_update_person(person):
 
     # Assuming the 'person' parameter is a Persons model object
 
-    # Calculate the face representation for the person's image
-    image_path = person.image.path
-    representation = DeepFace.represent(img_path=image_path, model_name="VGG-Face")[0]["embedding"]
+    
+
+
+
+    """representation = DeepFace.represent(img_path=image_path, model_name="VGG-Face")[0]["embedding"]
 
     # Create an instance list containing the person's name, representation, ID, and status
     instance = [person.name, representation, person.id, person.status]
@@ -89,7 +103,7 @@ def image_update_person(person):
     with open(pickle_file_path, "wb") as f:
         pickle.dump(representations, f)
 
-    print(len(representations))
+    print(len(representations))"""
 
 
 def search_by_image_unknown_filter(image_file):
