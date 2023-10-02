@@ -79,9 +79,9 @@ WSGI_APPLICATION = 'smart_School.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'test'),
+        'NAME': os.getenv('POSTGRES_DB', 'test2'),
         'USER': os.getenv('POSTGRES_USER', 'postgres'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'mahm01142'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', '1234'),
         'HOST': os.getenv('DB_HOST', 'localhost'),
         'PORT': os.getenv('DB_PORT', '5432'),
     }
@@ -132,3 +132,33 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+import face_recognition
+import numpy as np
+from PIL import Image, ImageDraw
+
+# This is an example of running face recognition on a single image
+# and drawing a box around each person that was identified.
+
+
+# Load a sample picture and learn how to recognize it.
+# Create arrays of known face encodings and their names
+KNOW_FACE_ENCODINGS = [
+    
+]
+
+KNOW_FACE_NAMES = [
+
+]
+from PIL import Image
+import glob
+image_list = []
+for Imagename in glob.glob('./media/faces/*.jpg'):
+   
+    image = face_recognition.load_image_file(Imagename)
+    face_encoding = face_recognition.face_encodings(image)[0]
+    KNOW_FACE_ENCODINGS.append(face_encoding)
+    KNOW_FACE_NAMES.append(Imagename.split('\\')[-1].split('.')[0])
+
+
+
+print('Learned encoding for', len(KNOW_FACE_ENCODINGS), 'images.')

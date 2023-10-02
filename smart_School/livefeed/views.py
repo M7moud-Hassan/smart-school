@@ -15,6 +15,8 @@ import pickle
 import numpy as np
 from imutils.video import VideoStream
 import imutils
+import face_recognition
+from django.conf import settings
 
 
 def all_cameras(request):
@@ -47,23 +49,37 @@ def video_feed(request, camera_id):
     camera.start()
     cameras.append({"id": cam.id, "camera": camera})
 
-    # buffer_size = 3
-    # camera.set(cv2.CAP_PROP_BUFFERSIZE, buffer_size)
-
-    #cameras.append({"id": cam.id, "camera": camera})
-    i = 0
-    def generate():
-        with open(os.path.join(settings.MEDIA_ROOT, 'representations.pkl') , 'rb') as f:
-
-            representations = pickle.load(f)
-       
-            while True:
+    def generate():   
+        while True:
                 frame = camera.read()
                 if frame is None:
                     continue
                 try:
-                    frame = imutils.resize(frame, width=1000, height=1000)
-                    target_faces = DeepFace.extract_faces(frame)
+                    #frame = imutils.resize(frame, width=1000, height=1000)
+                    face_locations = face_recognition.face_locations(frame)
+                    face_encodings = face_recognition.face_encodings(frame, face_locations)[0]
+
+                    name = []
+                    # Loop through each face found in the unknown image
+                    for face_encoding in  face_encodings:
+                        # See if the face is a match for the known face(s)
+                        matches = face_recognition.compare_faces(settings.KNOW_FACE_ENCODINGS, face_encoding)
+
+                        
+
+                        # Or instead, use the known face with the smallest distance to the new face
+                        face_distances = face_recognition.face_distance(settings.KNOW_FACE_ENCODINGS, face_encoding)
+                        best_match_index = np.argmin(face_distances)
+                        if matches[best_match_index]:
+                            name.append(settings.KNOW_FACE_NAMES[best_match_index])
+                    
+                    if len(name) >0 :
+                        print(name[0])
+                        #detect_person(name,camera_id)
+                    else:
+                        print('unknow')
+                        #detect_unknown(frame,camera_id)
+                    """target_faces = DeepFace.extract_faces(frame)
                     if len(target_faces) > 0:
                                 
                                 print("face: ", len(target_faces))
@@ -89,7 +105,7 @@ def video_feed(request, camera_id):
                                     print("Matched Name:", matched_name)
                                 else:
                                     matched_name = "Unknown"
-                                    detect_unknown(frame,camera_id)
+                                    detect_unknown(frame,camera_id)"""
                 except Exception as e:
                         print(f"An exception occurred: {e}")
                 _, jpeg = cv2.imencode('.jpg', frame)
