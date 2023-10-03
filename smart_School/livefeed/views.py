@@ -35,6 +35,13 @@ def open_camera(request, id):
         "camera": camera
     })
 
+####################################################### 
+MODEL = "hog"  #hog
+TOLERANCE = 0.55 
+######################################################
+
+
+
 
 @gzip.gzip_page
 @require_GET
@@ -52,18 +59,21 @@ def video_feed(request, camera_id):
     def generate():   
         while True:
                 frame = camera.read()
+                #frame = imutils.resize(frame, WIDTH_SCALE = 320)
                 if frame is None:
                     continue
                 try:
+                    frame = imutils.resize(frame, width=320, height=320)
                     #frame = imutils.resize(frame, width=1000, height=1000)
-                    face_locations = face_recognition.face_locations(frame)
-                    face_encodings = face_recognition.face_encodings(frame, face_locations)[0]
+                    rgb_frame = frame#[:, :, ::-1]
+                    face_locations = face_recognition.face_locations(rgb_frame, model = MODEL )#))
+                    face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
 
                     name = []
                     # Loop through each face found in the unknown image
                     for face_encoding in  face_encodings:
                         # See if the face is a match for the known face(s)
-                        matches = face_recognition.compare_faces(settings.KNOW_FACE_ENCODINGS, face_encoding)
+                        matches = face_recognition.compare_faces(settings.KNOW_FACE_ENCODINGS, face_encoding,tolerance=TOLERANCE)
 
                         
 
