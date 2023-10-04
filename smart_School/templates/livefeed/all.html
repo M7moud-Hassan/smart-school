@@ -109,18 +109,6 @@ border: none !important;
       <div class="card-body" style="height: 600px;"> \
         <img id="video'+id+'" src="/livefeed/video/' + id + '" width="100%" height="60%"/> \
           <div style="height:40%;overflow-y:hidden">\
-                    <div>\
-                  <div class="btn-group w-100 mb-2">\
-                    <a class="btn btn-info btns-'+id+' active" href="javascript:void(0)" data-filter="all"> All</a>\
-                    <a class="btn btn-info btns-'+id+'" href="javascript:void(0)" data-filter="1"> List (WHITE) </a>\
-                    <a class="btn btn-info btns-'+id+'" href="javascript:void(0)" data-filter="2"> List (BLACK) </a>\
-                    <a class="btn btn-info btns-'+id+'" href="javascript:void(0)" data-filter="3"> List (Unknown) </a>\
-                    <a class="btn btn-info btns-'+id+'" href="javascript:void(0)" data-filter="4"> List (Know) </a>\
-                  </div>\
-                  <div class="mb-2">\
-                    <a class="btn btn-secondary" href="javascript:void(0)" data-shuffle>Shuffle</a>\
-                  </div>\
-                </div>\
                   <div class="filter-container'+id+' p-0 row" style="overflow-y:scroll" id="result'+id+'">\
                  </div>\
                </div>\
@@ -162,20 +150,30 @@ border: none !important;
                    data.data.forEach(function (obj) {
                     console.log(obj);
                     var newDiv = `
-      <div class="filtr-item col-sm-2" data-category="${obj.category}" data-sort="${obj.sort}" id="p${obj.id_person}">
-        <a href="http://localhost:8000${obj.img}?text=${obj.name}" data-toggle="lightbox" data-title="${obj.des}">
-          <img src="http://localhost:8000${obj.img}?text=${obj.name}" class="img-fluid mb-2" alt="${obj.name}"/>
-        </a>
-        <p><small>${obj.name}</small></p>
-      </div>
+                    <div class="col-12 col-md-6">
+            <!-- small box -->
+            <div class="small-box bg-${obj.category}">
+              <div class="inner" >
+                <h3>${obj.name}</h3>
+                <p>${obj.sort}</p>
+              </div>
+              <div class="icon">
+                <i class="mb-2">
+                <a href="http://localhost:8000${obj.img}?text=${obj.name}" data-toggle="lightbox" data-title="${obj.des}">
+                <img src="http://localhost:8000${obj.img}?text=${obj.name}" width="70" height="70" class="img-fluid mb-2" alt="${obj.name}"/>
+                </a>
+              </i>
+              </div>
+            </div>
+          </div>
     `;
   if (!$("#result"+obj.id_camera+" #p"+obj.id_person).length > 0) {
       $("#result"+obj.id_camera).append(newDiv);
-    $('.filter-container'+obj.id_camera).filterizr({gutterPixels: 0});
-    $('.btns-'+obj.id_camera+'[data-filter]').on('click', function() {
-      $('.btns-'+obj.id_camera+'[data-filter]').removeClass('active');
-      $(this).addClass('active');
-    });
+    // $('.filter-container'+obj.id_camera).filterizr({gutterPixels: 0});
+    // $('.btns-'+obj.id_camera+'[data-filter]').on('click', function() {
+    //   $('.btns-'+obj.id_camera+'[data-filter]').removeClass('active');
+    //   $(this).addClass('active');
+    // });
     }
             });
                 },

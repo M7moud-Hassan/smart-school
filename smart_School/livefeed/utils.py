@@ -1,10 +1,8 @@
 from app_resources.models import PersonsDetect,Persons
-from deepface import DeepFace
 from django.conf import settings
 import pickle
 import os
 
-from deepface.commons import functions, realtime, distance as dst
 import pickle
 import numpy as np
 import os
@@ -13,18 +11,6 @@ import cv2
 import face_recognition
 from django.conf import settings
 
-
-object_data = [
-    {
-        "id_camera": "5",
-        "category": "1,4",
-        "sort": "white",
-        "id_person": "1",
-        "name": "mahmoud",
-        "img": "/media/persons/ae0e11e897def7d83f973e029a7d7340.png",
-        "des": "mahmoud hassan ahmed",
-    },
-]
 
 import shutil
 

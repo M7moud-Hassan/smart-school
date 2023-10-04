@@ -1,7 +1,4 @@
 from io import BytesIO
-
-from django.db import transaction
-
 from .models import PersonsDetect, Persons, Cameras
 from datetime import datetime
 from PIL import Image
@@ -9,11 +6,22 @@ from django.core.files.base import ContentFile
 import numpy as np
 cameras = []
 
+object_data = []
 
-def detect_person(person_id, camera_id):
+def detect_person(national_id,camera_id):
     try:
         camera = Cameras.objects.get(id=camera_id)
-        person = Persons.objects.get(id=person_id)
+        person = Persons.objects.get(id_national=national_id)
+        
+        object_data.append({
+            "id_camera":camera_id,
+            "category":'success' if person.status=='whitelist' else 'danger',
+            "sort":'white' if person.status=='whitelist' else 'black',
+            "id_person":person.id,
+            "name":person.name,
+            "img":person.image.url,
+            "des":"description about person"
+        })
         detected_at = datetime.now().replace(second=0, microsecond=0)
         created, p = PersonsDetect.objects.get_or_create(
             camera_id=camera,
@@ -44,6 +52,16 @@ def detect_unknown(image_frame, camera_id):
         image=ContentFile(image_data, name='image.jpg'),
         created_at=created_at
     )
+    print('add')
+    object_data.append({
+            "id_camera":camera_id,
+            "category":'warning',
+            "sort":'unknown',
+            "id_person":person.id,
+            "name":person.name,
+            "img":person.image.url,
+            "des":"description about person"
+        })
     PersonsDetect.objects.create(
         camera_id=Cameras.objects.get(id=camera_id),
         person_id=person

@@ -5,9 +5,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from app_resources.models import *
 from app_resources.utils import cameras, detect_person, detect_unknown
-from deepface import *
 from django.conf import settings
-from deepface.commons import functions, realtime, distance as dst
 import cv2
 import os
 import os.path
@@ -75,10 +73,10 @@ def video_feed(request, camera_id):
                     
                     if len(name) >0 :
                         print(name[0])
-                        #detect_person(name,camera_id)
+                        detect_person(name[0],camera_id)
                     else:
                         print('unknow')
-                        #detect_unknown(frame,camera_id)
+                        detect_unknown(frame,camera_id)
                     """target_faces = DeepFace.extract_faces(frame)
                     if len(target_faces) > 0:
                                 

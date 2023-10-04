@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf.urls.static import static
 
-from smart_School import  settings
+# from smart_School import  settings
 from home import  urls
 from app_resources.urls import *
 from livefeed import urls as livefeed_urls

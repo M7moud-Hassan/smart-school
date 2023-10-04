@@ -2,7 +2,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
-#from livefeed.utils import object_data
+from app_resources.utils import object_data
 from django.db.models import Q
 from django.utils import timezone
 from datetime import timedelta, datetime
@@ -62,7 +62,7 @@ def index(request):
 
 def result_cameras(request):
     return JsonResponse({
-        "data": 'object_data'
+        "data": object_data
     })
 
 @login_required
