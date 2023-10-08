@@ -577,9 +577,7 @@ $.ajax({
       $('.dropify-preview').eq(index).css('display', 'block');
       var imageElement = $('<img>');
       imageElement.attr('src', e.target.result);
-      // Change the display style of the element with class dropify-clear to block
       $('.dropify-clear').eq(index).css('display', 'block');
-      // Append the image element to the target element
       $('.dropify-render').eq(index).append(imageElement);
     };
 
