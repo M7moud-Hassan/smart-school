@@ -5,9 +5,9 @@ from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from app_resources.models import *
 from app_resources.utils import cameras, detect_person, detect_unknown
-from deepface import *
+# from deepface import *
 from django.conf import settings
-from deepface.commons import functions, realtime, distance as dst
+# from deepface.commons import functions, realtime, distance as dst
 import cv2
 import os
 import os.path

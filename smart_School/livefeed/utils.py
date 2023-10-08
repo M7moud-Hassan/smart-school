@@ -1,10 +1,10 @@
 from app_resources.models import PersonsDetect,Persons
-from deepface import DeepFace
+# from deepface import DeepFace
 from django.conf import settings
 import pickle
 import os
 
-from deepface.commons import functions, realtime, distance as dst
+# from deepface.commons import functions, realtime, distance as dst
 import pickle
 import numpy as np
 import os
