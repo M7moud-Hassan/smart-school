@@ -65,7 +65,8 @@ def video_feed(request, camera_id):
                     #frame = imutils.resize(frame, width=1000, height=1000)
                     rgb_frame = frame#[:, :, ::-1]
                     face_locations = face_recognition.face_locations(rgb_frame, model = MODEL )#))
-                    face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
+                    face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)[0]
+                    
 
                     name = []
                     # Loop through each face found in the unknown image
@@ -84,9 +85,11 @@ def video_feed(request, camera_id):
                     if len(name) >0 :
                         print(name[0])
                         detect_person(name[0],camera_id)
+                        print("////////////////////////////////////////////")
                     else:
                         print('unknow')
                         detect_unknown(frame,camera_id)
+                        print("////////////////////////////////////////////")
                     """target_faces = DeepFace.extract_faces(frame)
                     if len(target_faces) > 0:
                                 
