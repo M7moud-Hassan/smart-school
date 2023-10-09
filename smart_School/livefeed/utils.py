@@ -15,8 +15,6 @@ from django.conf import settings
 import shutil
 
 def image_of_person(person):
-    print("aaaaaaaaaaaaaaaaaaaa")
-    print(person)
 
     # Assuming the 'person' parameter is a Persons model object
     # Calculate the face representation for the person's image

@@ -157,7 +157,7 @@ def delete_person(request, id):
 
     if person:
         # Delete the person's representation from the list
-        delete_representation(person)
+        #delete_representation(person)
 
         # Delete the person from the database
         person.delete()
@@ -215,17 +215,23 @@ def capture_image(request):
 
 @login_required
 def release_resources(request):
-    for camera in cameras:
-        print(camera['camera'])
-        camera['camera'].stream.stream.release()
-    cameras.clear()
+    try:
+        for camera in cameras:
+            print(camera['camera'])
+            camera['camera'].stream.stream.release()
+        cameras.clear()
+    except:
+        pass
     return HttpResponse('done')
 
 @login_required
 def release_camera(request, id):
-    for camera in cameras:
-        if camera['id'] == id:
-            camera['camera'].stream.stream.release()
+    try:
+        for camera in cameras:
+            if camera['id'] == id:
+                camera['camera'].stream.stream.release()
+    except:
+        pass
     return HttpResponse('done')
 
 @login_required
@@ -277,6 +283,7 @@ def get_details_from_national_img(request):
             "image": base64.b64encode(response2.content).decode('utf-8')
         }
         return HttpResponse(json.dumps(response_data), content_type="application/json")
+@login_required
 def get_details_from_back_national_img(request):
     if request.method == 'POST':
         picture = request.FILES.get('image')

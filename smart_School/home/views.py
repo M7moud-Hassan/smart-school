@@ -1,3 +1,4 @@
+import copy
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -61,9 +62,12 @@ def index(request):
                                                        })
 
 def result_cameras(request):
+    resu=copy.deepcopy(object_data)
+    object_data.clear()
     return JsonResponse({
-        "data": object_data
+        "data": resu
     })
+
 
 @login_required
 def filter_camera(request, filter_date,camera_id):

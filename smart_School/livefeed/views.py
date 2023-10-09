@@ -85,7 +85,6 @@ def video_feed(request, camera_id):
                         print(name[0])
                         detect_person(name[0],camera_id)
                     else:
-                        print('unknow')
                         detect_unknown(frame,camera_id)
                     """target_faces = DeepFace.extract_faces(frame)
                     if len(target_faces) > 0:
