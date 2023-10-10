@@ -30,7 +30,7 @@ class PersonsForm(forms.ModelForm):
         model = Persons
         fields = ['name', 'gender', 'date_of_birth', 'image', 'status', 'allowed_cameras', 'front_national_img',
                   'back_national_img',
-                  'id_national', 'address', 'nationalID', 'job_title','type_register']
+                  'id_national', 'address', 'job_title','type_register']
         widgets = {
             'image': forms.ClearableFileInput(
                 attrs={'class': 'dropify-face form-control', "data-default-file": "", 'required': True, }),

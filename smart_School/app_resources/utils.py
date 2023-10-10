@@ -7,21 +7,24 @@ import numpy as np
 cameras = []
 
 object_data = []
+ids=[]
 
 def detect_person(national_id,camera_id):
     try:
         camera = Cameras.objects.get(id=camera_id)
         person = Persons.objects.get(id_national=national_id)
-        object_data.clear()
-        object_data.append({
-            "id_camera":camera_id,
-            "category":'success' if person.status=='whitelist' else 'danger',
-            "sort":'white' if person.status=='whitelist' else 'black',
-            "id_person":person.id,
-            "name":person.name,
-            "img":person.image.url,
-            "des":"description about person"
-        })
+        if not camera_id+""+national_id in ids:
+            ids.append(camera_id+""+national_id)
+            object_data.append({
+                "id_camera":camera_id,
+                "category":'success' if person.status=='whitelist' else 'danger',
+                "sort":'white' if person.status=='whitelist' else 'black',
+                "id_person":person.id,
+                "id":person.id_national,
+                "name":person.name,
+                "img":person.image.url,
+                "des":"description about person"
+            })
         detected_at = datetime.now().replace(second=0, microsecond=0)
         created, p = PersonsDetect.objects.get_or_create(
             camera_id=camera,
@@ -64,9 +67,10 @@ def detect_unknown(image_frame, camera_id):
         object_data.append({
                     "id_camera":camera_id,
                     "category":'warning',
-                    "sort":'unknown',
+                    "sort":'',
+                    'id':'',
                     "id_person":person.id,
-                    "name":person.name,
+                    "name":'Unkonwn',
                     "img":person.image.url,
                     "des":"description about person"
             })

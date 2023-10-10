@@ -2,6 +2,31 @@
 {% load static %}
 {% block styles %}
 <link rel="stylesheet" href="{% static 'AdminLTE/plugins/ekko-lightbox/ekko-lightbox.css' %}">
+<style>
+  
+  .small-box .icon > i{
+  top: 0 !important;
+  right: 0 !important;
+  }
+
+  .scroll-container {
+  max-height: 400px;
+  overflow-y: scroll; 
+  overflow-x: hidden;
+}
+.bg-warning{
+  background-color: rgb(242, 204, 89) !important;
+}
+.bg-success{
+  background-color: rgba(134, 222, 91) !important;
+}
+.bg-danger{
+  background-color: rgba(214, 92, 112) !important;
+}
+
+
+
+</style>
 {% endblock %}
 {% block content %}
 <div class="content-wrapper">
@@ -16,11 +41,11 @@
                 <!-- /.card-tools -->
               </div>
               <!-- /.card-header -->
-              <div class="card-body wh-100">
-                <img id="video" width="100%" src="" alt="loading.." height="700px">
-                   <div style="height:30%;overflow-y:hidden">
+              <div class="card-body wh-100 row p-0 m-0">
+                <img id="video" width="100%" src="" alt="loading.." height="100%" class="col-6 border mt-1">
+                   <div  class="col-6">
                    
-                  <div class="p-0 row w-100" style="overflow-x:scroll;height: 400px;" id="result{{camera.id}}">
+                  <div class="row w-100 p-0 m-2 scroll-container" id="result{{camera.id}}">
                     
                   </div>
                </div>
@@ -36,6 +61,8 @@
 <script src="{% static 'AdminLTE/plugins/filterizr/jquery.filterizr.min.js' %}"></script>
  <script>
     $(function () {
+      var screenHeight = $(window).height()/1.5;
+      $('.scroll-container').css('max-height', screenHeight + 'px');
     $('#video').attr("src","/livefeed/video/{{camera.id}}")
     $(document).on('click', '[data-toggle="lightbox"]', function(event) {
       event.preventDefault();
@@ -53,17 +80,18 @@
                    data.data.forEach(function (obj) {
                   
                     var newDiv = `
-                    <div class="col-12 col-md-4">
+                    <div class="col-11 p-0 m-0 mt-2">
             <!-- small box -->
-            <div class="small-box bg-${obj.category}">
-              <div class="inner" >
+            <div class="row p-0 m-0  bg-${obj.category}">
+              <div class="col-8 pt-2" >
                 <h3>${obj.name}</h3>
+                <p>${obj.id}</p>
                 <p>${obj.sort}</p>
               </div>
-              <div class="icon">
-                <i class="mb-2">
+              <div class="col-4">
+                <i class="">
                 <a href="http://localhost:8000${obj.img}?text=${obj.name}" data-toggle="lightbox" data-title="${obj.des}">
-                <img src="http://localhost:8000${obj.img}?text=${obj.name}" width="70" height="70" class="img-fluid mb-2" alt="${obj.name}"/>
+                <img src="http://localhost:8000${obj.img}?text=${obj.name}" width="95%" height="100%" class="img-fluid m-2" alt="${obj.name}"/>
                 </a>
               </i>
               </div>
