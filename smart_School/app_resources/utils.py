@@ -12,7 +12,7 @@ def detect_person(national_id,camera_id):
     try:
         camera = Cameras.objects.get(id=camera_id)
         person = Persons.objects.get(id_national=national_id)
-        
+        object_data.clear()
         object_data.append({
             "id_camera":camera_id,
             "category":'success' if person.status=='whitelist' else 'danger',
@@ -48,21 +48,26 @@ def detect_unknown(image_frame, camera_id):
     image_buffer = BytesIO()
     pil_image.save(image_buffer, format='JPEG')
     image_data = image_buffer.getvalue()
-    person = Persons.objects.create(
-        image=ContentFile(image_data, name='image.jpg'),
-        created_at=created_at
-    )
-    print('add')
-    object_data.append({
-            "id_camera":camera_id,
-            "category":'warning',
-            "sort":'unknown',
-            "id_person":person.id,
-            "name":person.name,
-            "img":person.image.url,
-            "des":"description about person"
-        })
-    PersonsDetect.objects.create(
-        camera_id=Cameras.objects.get(id=camera_id),
-        person_id=person
-    )
+    f=Persons.objects.filter(created_at=created_at)
+    if len(f)>0:
+       pass
+    else:
+        person = Persons.objects.create(
+                image=ContentFile(image_data, name='image.jpg'),
+                created_at=created_at,
+        )
+        PersonsDetect.objects.create(
+                camera_id=Cameras.objects.get(id=camera_id),
+                person_id=person,
+                
+        )
+        object_data.append({
+                    "id_camera":camera_id,
+                    "category":'warning',
+                    "sort":'unknown',
+                    "id_person":person.id,
+                    "name":person.name,
+                    "img":person.image.url,
+                    "des":"description about person"
+            })
+    

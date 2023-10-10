@@ -34,7 +34,7 @@ def open_camera(request, id):
     })
 
 ####################################################### 
-MODEL = "hog"  #hog
+MODEL = "cnn" #"hog"  #hog
 TOLERANCE = 0.55 
 ######################################################
 
@@ -65,7 +65,7 @@ def video_feed(request, camera_id):
                     #frame = imutils.resize(frame, width=1000, height=1000)
                     rgb_frame = frame#[:, :, ::-1]
                     face_locations = face_recognition.face_locations(rgb_frame, model = MODEL )#))
-                    face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)[0]
+                    face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
                     
 
                     name = []
@@ -82,14 +82,13 @@ def video_feed(request, camera_id):
                         if matches[best_match_index]:
                             name.append(settings.KNOW_FACE_NAMES[best_match_index])
                     
-                    if len(name) >0 :
-                        print(name[0])
-                        detect_person(name[0],camera_id)
-                        print("////////////////////////////////////////////")
-                    else:
-                        print('unknow')
-                        detect_unknown(frame,camera_id)
-                        print("////////////////////////////////////////////")
+                        if matches[best_match_index] :
+                            print(matches[best_match_index])
+                            detect_person(matches[best_match_index],camera_id)
+                            print("////////////////////////////////////////////")
+                        else:
+                            detect_unknown(frame,camera_id)
+                            print("unknow !!!!!!!!!!!!!!!!!!!!!")
                     """target_faces = DeepFace.extract_faces(frame)
                     if len(target_faces) > 0:
                                 

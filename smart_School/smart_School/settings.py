@@ -158,7 +158,8 @@ for Imagename in glob.glob('./media/faces/*.jpg'):
     image = face_recognition.load_image_file(Imagename)
     face_encoding = face_recognition.face_encodings(image)[0]
     KNOW_FACE_ENCODINGS.append(face_encoding)
-    KNOW_FACE_NAMES.append(Imagename.split('\\')[-1].split('.')[0])
+    KNOW_FACE_NAMES.append(Imagename.split('/')[-1].split('.')[0])
+print(KNOW_FACE_NAMES)    
 
 
 

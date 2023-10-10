@@ -3,7 +3,7 @@ from django.utils import timezone
 import pytz
 from django.db import models
 from dashboard.models import *
-
+from django.utils import timezone
 
 
 class Cameras(models.Model):
@@ -39,15 +39,15 @@ class Persons(models.Model):
     job_title = models.CharField(max_length=300, null=True, blank=True)
     address = models.CharField(max_length=300, null=True, blank=True)
     status = models.CharField(max_length=100, default='unknown')
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(default= timezone.now())
     allowed_cameras = models.ManyToManyField(Cameras, blank=True)
     info = models.ForeignKey(
         'Information', on_delete=models.CASCADE, null=True)
 
-    def save(self, *args, **kwargs):
-        if not self.created_at:
-            self.created_at = datetime.now().replace(second=0, microsecond=0)
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if not self.created_at:
+    #         self.created_at = datetime.now().replace(second=0, microsecond=0)
+    #     super().save(*args, **kwargs)
 
 
 class PersonsDetect(models.Model):
