@@ -1,38 +1,26 @@
 {% extends 'base_page.html' %}
 {% load static %}
-{% block styles %}
+{% block mystyles %}
 <link rel="stylesheet" href="{% static 'css/dropify.min.css' %}">
 {% endblock %}
 {% block content %}
-<div class="content-wrapper">
-  <section class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>Serach ID</h1>
-        </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">DASHBOARD</a></li>
-            <li class="breadcrumb-item active">Sarch Id</li>
-          </ol>
-        </div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb breadcrumb-example1 pt-2">
+      <li class="breadcrumb-item"><a href="/">الرئسية</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Sarch Id</li>
+    </ol>
+  </nav>
+  <div class="card custom-card">
+    <div class="card-header justify-content-between">
+      <div class="card-title">
+        اضافة شخص
       </div>
-    </div><!-- /.container-fluid -->
-  </section>
-
-<section class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <!-- left column -->
-      <div class="col-md-12">
-        <!-- jquery validation -->
-        <div class="card card-primary">
-          <div class="card-header">
-            <h3 class="card-title">Serach Id <small>Upload National ID</small></h3>
-          </div>
-          <!-- /.card-header -->
-          <!-- form start -->
+      <div class="prism-toggle">
+        <!-- <button class="btn btn-sm btn-primary-light">Show Code<i
+            class="ri-code-line ms-2 d-inline-block align-middle"></i></button> -->
+      </div>
+    </div>
+    <div class="card-body">
           <form  method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% if form.errors %}
@@ -49,49 +37,23 @@
             {% endif %}
             <div class="row d-flex justify-content-center align-items-center">
               <div class="card-body col-12 col-md-4">
-                <div class="form-group">
+                <div class="form-group w-50 mx-auto">
                   {{form.frontImage.label_tag}}
                   {{form.frontImage}}
                 </div>
-                <button class="btn btn-primary w-100">Serach</button>
+                <div class="form-group w-50 mx-auto">
+                <button class="btn btn-primary mt-3">Serach</button>
+                </div>
               </div>
             </div>
           </form>
         </div>
-      </div>
     </div>
   </div>
-</section>
-</div>
 {% endblock %}
 {% block scripts %}
 <script src="{% static 'js/dropify.min.js' %}"></script>
-<script src="{% static 'AdminLTE/plugins/jquery-validation/jquery.validate.min.js' %}"></script>
 <script>
-  $(function () {
-
-    $('#quickForm').validate({
-      rules: {
-        image: {
-          required: true
-        },
-      },
-      messages: {
-
-      },
-      errorElement: 'span',
-      errorPlacement: function (error, element) {
-        error.addClass('invalid-feedback');
-        element.closest('.form-group').append(error);
-      },
-      highlight: function (element, errorClass, validClass) {
-        $(element).addClass('is-invalid');
-      },
-      unhighlight: function (element, errorClass, validClass) {
-        $(element).removeClass('is-invalid');
-      }
-    });
-  });
 
   $(".dropify-front").dropify(
     {
