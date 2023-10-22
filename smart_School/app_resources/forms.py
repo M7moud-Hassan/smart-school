@@ -79,7 +79,7 @@ class PersonsForm(forms.ModelForm):
     type_register = forms.ChoiceField(
         choices=TYPE_CHOICES,
         widget=forms.RadioSelect,
-        initial='Visitor'
+        initial='Employee'
     )
     status = forms.ChoiceField(choices=[(
         'whitelist', 'whitelist'), ('blacklist', 'blacklist'), ('unknown', 'unknown')])

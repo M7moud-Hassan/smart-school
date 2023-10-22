@@ -216,10 +216,11 @@ def capture_image(request):
 @login_required
 def release_resources(request):
     try:
-        for camera in cameras:
-            print(camera['camera'])
-            camera['camera'].stream.stream.release()
-        cameras.clear()
+        # for camera in cameras:
+        #     print(camera['camera'])
+        #     camera['camera'].stream.stream.release()
+        # cameras.clear()
+        pass
     except:
         pass
     return HttpResponse('done')
@@ -269,11 +270,11 @@ def video_feed(request, camera_id):
 def get_details_from_national_img(request):
     if request.method == 'POST':
         picture = request.FILES.get('image')
-        api_url = 'http://128.199.2.129:9090/api/'
+        api_url = 'http://24.144.84.0:9090/api/'
         files = {'file': ('filename.jpg', picture.read(), 'image/jpeg')}
         response = requests.post(api_url, files=files)
         response_json = json.loads(response.text)
-        image_url = "http://128.199.2.129:9090/"+response_json.get('face_photo')[1:]
+        image_url = "http://24.144.84.0:9090/"+response_json.get('face_photo')[1:]
         headers = {'Origin': '*'}
 
         response2 = requests.get(image_url, headers=headers)
@@ -287,7 +288,7 @@ def get_details_from_national_img(request):
 def get_details_from_back_national_img(request):
     if request.method == 'POST':
         picture = request.FILES.get('image')
-        api_url = 'http://128.199.2.129:9090/api_back/'
+        api_url = 'http://24.144.84.0:9090/api_back/'
         files = {'file': ('filename.jpg', picture.read(), 'image/jpeg')}
         response = requests.post(api_url, files=files)
         response_json = json.loads(response.text)
