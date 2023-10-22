@@ -1,69 +1,78 @@
 {% extends 'base_page.html' %}
 {% load static %}
 {% block styles %}
-<link rel="stylesheet" href="{% static 'AdminLTE/plugins/ekko-lightbox/ekko-lightbox.css' %}">
-<style>
-  
-  .small-box .icon > i{
-  top: 0 !important;
-  right: 0 !important;
-  }
 
-  .scroll-container {
-  max-height: 400px;
-  overflow-y: scroll; 
-  overflow-x: hidden;
-}
-.bg-warning{
-  background-color: rgb(242, 204, 89) !important;
-}
-.bg-success{
-  background-color: rgba(134, 222, 91) !important;
-}
-.bg-danger{
-  background-color: rgba(214, 92, 112) !important;
-}
-
-
-
-</style>
 {% endblock %}
 {% block content %}
-<div class="content-wrapper">
-            <div class="card card-danger shadow-lg">
-              <div class="card-header">
-                <h3 class="card-title">{{camera.name}} <span class="small text-success">Live</span></h3>
+<div class="row mt-4">
 
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i>
-                  </button>
-                </div>
-                <!-- /.card-tools -->
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body wh-100 row p-0 m-0">
-                <img id="video" width="100%" src="" alt="loading.." height="100%" class="col-6 border mt-1">
-                   <div  class="col-6">
-                   
-                  <div class="row w-100 p-0 m-2 scroll-container" id="result{{camera.id}}">
-                    
-                  </div>
-               </div>
-              </div>
-              <!-- /.card-body -->
+  <div class="col-xl-3">
+    <div class="team-groups">
+        <div class="card custom-card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <span class="card-title">{{camera.name}} <span class="small text-success">Live</span></span>
             </div>
-            <!-- /.card -->
+            <div class="card-body p-0 pb-4">
+                <div class="teams-nav" id="teams-nav">
+                    <ul class="list-unstyled mb-0 mt-2 " id="resultCamera">
+                        <!-- <li>
+                            <a href="javascript:void(0);">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-2 d-flex align-items-center">
+                                        <span class="avatar avatar-lg avatar-rounded" style="border: 3px solid green;">
+                                            <img src="../assets/images/faces/3.jpg" alt="">
+                                        </span>
+                                    </div>
+                                    <div class="flex-fill">
+                                        <span>Angelica Hale</span>
+                                    </div>
+                                    <div>
+                                        <span class="fs-10 fw-semibold text-muted">
+                                            
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li> -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+  <div class="col-xl-9">
+      <div class="team-members" id="team-members">
+          <div class="row">
+              <div class="col-xl-12">
+                  <div class="card custom-card">
+                      <div class="card-body">
+                          <!-- <div class="team-header">
+                              <div class="d-flex flex-wrap align-items-center justify-content-between">
+                                  <div class="h5 fw-semibold mb-0"><span class="card-title">{{camera.name}} <span class="small text-success">Live</span></span>
+                                  </div>
+                                 
+                              </div>
+                          </div> -->
+                          
+                            <img id="video" style="width: 100%; height: 100% !important;" src="/livefeed/video/{{camera.id}}" alt="loading.."  class="border rounded mt-2">
+                          
+                      </div>
+                  </div>
+              </div>
           </div>
+      </div>
+  </div>
+ 
+</div>
 {% endblock %}
 
 {% block  scripts %}
-<script src="{% static 'AdminLTE/plugins/ekko-lightbox/ekko-lightbox.min.js' %}"></script>
-<script src="{% static 'AdminLTE/plugins/filterizr/jquery.filterizr.min.js' %}"></script>
+<script src="{% static 'dist/js/team.js' %}"></script>
  <script>
     $(function () {
-      var screenHeight = $(window).height()/1.5;
-      $('.scroll-container').css('max-height', screenHeight + 'px');
-    $('#video').attr("src","/livefeed/video/{{camera.id}}")
+      // var screenHeight = $(window).height()/1.5;
+      // $('.scroll-container').css('max-height', screenHeight + 'px');
+    // $('#video').attr("src","/livefeed/video/{{camera.id}}")
     $(document).on('click', '[data-toggle="lightbox"]', function(event) {
       event.preventDefault();
       $(this).ekkoLightbox({
@@ -79,27 +88,48 @@
                   
                    data.data.forEach(function (obj) {
                   
+    //                 var newDiv = `
+    //                 <div class="col-11 p-0 m-0 mt-2">
+    //         <!-- small box -->
+    //         <div class="row p-0 m-0  bg-${obj.category}">
+    //           <div class="col-8 pt-2" >
+    //             <h3>${obj.name}</h3>
+    //             <p>${obj.id}</p>
+    //             <p>${obj.sort}</p>
+    //           </div>
+    //           <div class="col-4">
+    //             <i class="">
+    //             <a href="http://localhost:8000${obj.img}?text=${obj.name}" data-toggle="lightbox" data-title="${obj.des}">
+    //             <img src="http://localhost:8000${obj.img}?text=${obj.name}" width="95%" height="100%" class="img-fluid m-2" alt="${obj.name}"/>
+    //             </a>
+    //           </i>
+    //           </div>
+    //         </div>
+    //       </div>
+    // `;
                     var newDiv = `
-                    <div class="col-11 p-0 m-0 mt-2">
-            <!-- small box -->
-            <div class="row p-0 m-0  bg-${obj.category}">
-              <div class="col-8 pt-2" >
-                <h3>${obj.name}</h3>
-                <p>${obj.id}</p>
-                <p>${obj.sort}</p>
-              </div>
-              <div class="col-4">
-                <i class="">
-                <a href="http://localhost:8000${obj.img}?text=${obj.name}" data-toggle="lightbox" data-title="${obj.des}">
-                <img src="http://localhost:8000${obj.img}?text=${obj.name}" width="95%" height="100%" class="img-fluid m-2" alt="${obj.name}"/>
-                </a>
-              </i>
-              </div>
-            </div>
-          </div>
-    `;
-  if (!$("#result"+obj.id_camera+" #p"+obj.id_person).length > 0) {
-      $("#result"+obj.id_camera).append(newDiv);
+                    <li>
+                            <a href="javascript:void(0);">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-2 d-flex align-items-center">
+                                        <span class="avatar avatar-lg avatar-rounded" style="border: 3px solid ${obj.category};">
+                                            <img src="http://localhost:8000${obj.img}" alt="">
+                                        </span>
+                                    </div>
+                                    <div class="flex-fill">
+                                        <span style="color:${obj.category}">${obj.name}</span>
+                                    </div>
+                                    <div>
+                                        <span class="fs-10 fw-semibold text-muted">
+                                            
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                            `;
+//   if (!$("#result"+obj.id_camera+" #p"+obj.id_person).length > 0) {
+      $("#resultCamera").append(newDiv);
 
    
     // $('.btn[data-filter]').on('click', function() {
@@ -107,7 +137,7 @@
     //   $(this).addClass('active');
     // });
     // $('.filter-container').filterizr({gutterPixels: 3});
-    }
+    // }
             });
                 },
                 error: function (error) {

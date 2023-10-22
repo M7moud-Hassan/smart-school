@@ -17,7 +17,7 @@ def detect_person(national_id,camera_id):
             ids.append(str(camera_id)+""+str(national_id))
             object_data.append({
                 "id_camera":camera_id,
-                "category":'success' if person.status=='whitelist' else 'danger',
+                "category":'green' if person.status=='whitelist' else 'red',
                 "sort":'white' if person.status=='whitelist' else 'black',
                 "id_person":person.id,
                 "id":person.id_national,
@@ -66,7 +66,7 @@ def detect_unknown(image_frame, camera_id):
         )
         object_data.append({
                     "id_camera":camera_id,
-                    "category":'warning',
+                    "category":'yellow',
                     "sort":'',
                     'id':'',
                     "id_person":person.id,

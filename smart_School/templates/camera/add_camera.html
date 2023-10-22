@@ -1,48 +1,38 @@
 {% extends 'base_page.html' %}
 {% load static %}
 {% block content %}
-<div class="hold-transition sidebar-mini">
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>{{ add_or_update }} camera</h1>
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">{{ add_or_update }} camera</li>
-            </ol>
-          </div>
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb breadcrumb-example1 pt-2">
+    <li class="breadcrumb-item"><a href="/">الرئسية</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ add_or_update }} camera</li>
+  </ol>
+</nav>
+
 
     <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <!-- left column -->
-          <div class="col-md-12">
-            <!-- jquery validation -->
-            <div class="card card-primary">
-              <div class="card-header">
-                <h3 class="card-title">{{ add_or_update }} camera <small> details camera</small></h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
+
+    <div class="card custom-card">
+      <div class="card-header justify-content-between">
+        <div class="card-title">
+          {{ add_or_update }} camera
+        </div>
+        <div class="prism-toggle">
+          <!-- <button class="btn btn-sm btn-primary-light">Show Code<i
+              class="ri-code-line ms-2 d-inline-block align-middle"></i></button> -->
+        </div>
+      </div>
+        <div class="card-body p-0">
               <form id="quickForm" method="POST">
                   {% csrf_token %}
-               <div class="row">
+               <div class="row ">
                  <div class="col-12 col-md-6">
                     <div class="card-body">
                   <div class="form-group">
                    {{ form.name.label_tag }}
                       {{ form.name }}
                   </div>
-                  <div class="form-group">
+                  <div class="form-group mt-2">
                       {{form.camera_type.label_tag }}
                       {{ form.camera_type }}
                   </div>
@@ -55,7 +45,7 @@
                       {{ form.connection_string.label_tag }}
                       {{form.connection_string}}
                   </div>
-                  <div class="form-group">
+                  <div class="form-group mt-2">
                    {{form.status.label_tag}}
                         {{form.status}}
                                     </div>
@@ -63,7 +53,7 @@
                 </div>
                  </div>
                </div>
-                  <div  class="form-group">
+                  <div  class="form-group px-4">
                       {{form.description.label_tag}}
                       {{form.description}}
                   </div>
@@ -73,21 +63,9 @@
                 </div>
               </form>
             </div>
-            <!-- /.card -->
-            </div>
-          <!--/.col (left) -->
-          <!-- right column -->
-          <div class="col-md-6">
-
-          </div>
-          <!--/.col (right) -->
         </div>
-        <!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-  </div>
-  </div>
+  
+ 
 {% endblock %}
 {% block scripts %}
 

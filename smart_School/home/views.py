@@ -7,7 +7,7 @@ from app_resources.utils import object_data
 from django.db.models import Q
 from django.utils import timezone
 from datetime import timedelta, datetime
-
+from datetime import date
 from app_resources.models import Persons, PersonsDetect, Cameras
 
 
@@ -36,6 +36,10 @@ def index(request):
     detection_count_unknown = PersonsDetect.objects.filter(detected_at=today,
                                                            camera_id__id=cameras.first().id if cameras.first() else 0,
                                                            person_id__status='unknown').count()
+    today = date.today()
+
+    # Filter the PersonsDetect model for records detected today
+    persons_result = PersonsDetect.objects.filter(detected_at__date=today)
     return render(request, 'home/index.html', context={"registers": registers.count(),
                                                        "unknownDetect": detectPersons.count(),
                                                        'today': PersonsDetect.objects.filter(
@@ -59,6 +63,7 @@ def index(request):
                                                        "detection_count_white": detection_count_white,
                                                        "detection_count_black": detection_count_black,
                                                        "detection_count_unknown": detection_count_unknown,
+                                                       "detected_today":persons_result
                                                        })
 
 def result_cameras(request):

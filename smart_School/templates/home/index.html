@@ -1,777 +1,666 @@
 {% extends 'base_page.html' %}
 {% load static %}
 {% block content %}
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Dashboard</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Dashboard v1</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+  <!-- Start::page-header -->
+
+  <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
+    <div>
+        <p class="fw-semibold fs-18 mb-0">Welcome back, Json Taylor !</p>
+        <span class="fs-semibold text-muted">Track your sales activity, leads and deals here.</span>
     </div>
-    <!-- /.content-header -->
+    <div class="btn-list mt-md-0 mt-2">
+        <button type="button" class="btn btn-primary btn-wave">
+            <i class="ri-filter-3-fill me-2 align-middle d-inline-block"></i>Filters
+        </button>
+        <button type="button" class="btn btn-outline-secondary btn-wave">
+            <i class="ri-upload-cloud-line me-2 align-middle d-inline-block"></i>Export
+        </button>
+    </div>
+</div>
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
+ <!-- End::page-header -->
+
+<!-- Start::row-1 -->
+<div class="row">
+    <div class="col-xxl-9 col-xl-12">
         <div class="row">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>{{registers}}</h3>
-
-                <p>User Registrations</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-person-add"></i>
-              </div>
-<!--              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>-->
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>{{unknownDetect}}</h3>
-
-                <p>unknown Person</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-person"></i>
-              </div>
-<!--              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>-->
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>{{today}}</h3>
-
-                <p>detections today</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-person"></i>
-              </div>
-<!--              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>-->
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>{{yesterday}}</h3>
-
-                <p>Detections yesterday</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-person"></i>
-              </div>
-<!--              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>-->
-            </div>
-          </div>
-          <!-- ./col -->
-        </div>
-        <div class="row">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>{{this_month}}</h3>
-
-                <p>Detections this month</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-person"></i>
-              </div>
-<!--              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>-->
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>{{last_month}}</h3>
-
-                <p>Detections last month</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-person"></i>
-              </div>
-<!--              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>-->
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>{{this_year}}</h3>
-
-                <p>Detections this year</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-person"></i>
-              </div>
-<!--              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>-->
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>{{last_year}}</h3>
-
-                <p>Detections last year</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-person"></i>
-              </div>
-<!--              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>-->
-            </div>
-          </div>
-          <!-- ./col -->
-        </div>
-        <!-- /.row -->
-        <!-- Main row -->
-        <div class="row">
-          <!-- Left col -->
-          <section class="col-lg-7 connectedSortable">
-            <!-- Custom tabs (Charts with tabs)-->
-<!--            <div class="card">-->
-<!--              <div class="card-header">-->
-<!--                <h3 class="card-title">-->
-<!--                  <i class="fas fa-chart-pie mr-1"></i>-->
-<!--                  Sales-->
-<!--                </h3>-->
-<!--                <div class="card-tools">-->
-<!--                  <ul class="nav nav-pills ml-auto">-->
-<!--                    <li class="nav-item">-->
-<!--                      <a class="nav-link active" href="#revenue-chart" data-toggle="tab">Area</a>-->
-<!--                    </li>-->
-<!--                    <li class="nav-item">-->
-<!--                      <a class="nav-link" href="#sales-chart" data-toggle="tab">Donut</a>-->
-<!--                    </li>-->
-<!--                  </ul>-->
-<!--                </div>-->
-<!--              </div>&lt;!&ndash; /.card-header &ndash;&gt;-->
-<!--              <div class="card-body">-->
-<!--                <div class="tab-content p-0">-->
-<!--                  &lt;!&ndash; Morris chart - Sales &ndash;&gt;-->
-<!--                  <div class="chart tab-pane active" id="revenue-chart"-->
-<!--                       style="position: relative; height: 300px;">-->
-<!--                      <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas>-->
-<!--                   </div>-->
-<!--                  <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;">-->
-<!--                    <canvas id="sales-chart-canvas" height="300" style="height: 300px;"></canvas>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>&lt;!&ndash; /.card-body &ndash;&gt;-->
-<!--            </div>-->
-            <!-- /.card -->
-
-            <!-- DIRECT CHAT -->
-<!--            <div class="card direct-chat direct-chat-primary">-->
-<!--              <div class="card-header">-->
-<!--                <h3 class="card-title">Direct Chat</h3>-->
-
-<!--                <div class="card-tools">-->
-<!--                  <span title="3 New Messages" class="badge badge-primary">3</span>-->
-<!--                  <button type="button" class="btn btn-tool" data-card-widget="collapse">-->
-<!--                    <i class="fas fa-minus"></i>-->
-<!--                  </button>-->
-<!--                  <button type="button" class="btn btn-tool" title="Contacts" data-widget="chat-pane-toggle">-->
-<!--                    <i class="fas fa-comments"></i>-->
-<!--                  </button>-->
-<!--                  <button type="button" class="btn btn-tool" data-card-widget="remove">-->
-<!--                    <i class="fas fa-times"></i>-->
-<!--                  </button>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              &lt;!&ndash; /.card-header &ndash;&gt;-->
-<!--              <div class="card-body">-->
-<!--                &lt;!&ndash; Conversations are loaded here &ndash;&gt;-->
-<!--                <div class="direct-chat-messages">-->
-<!--                  &lt;!&ndash; Message. Default to the left &ndash;&gt;-->
-<!--                  <div class="direct-chat-msg">-->
-<!--                    <div class="direct-chat-infos clearfix">-->
-<!--                      <span class="direct-chat-name float-left">Alexander Pierce</span>-->
-<!--                      <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>-->
-<!--                    </div>-->
-<!--                    &lt;!&ndash; /.direct-chat-infos &ndash;&gt;-->
-<!--                    <img class="direct-chat-img" src="{% static 'AdminLTE/dist/img/user1-128x128.jpg' %}" alt="message user image">-->
-<!--                    &lt;!&ndash; /.direct-chat-img &ndash;&gt;-->
-<!--                    <div class="direct-chat-text">-->
-<!--                      Is this template really for free? That's unbelievable!-->
-<!--                    </div>-->
-<!--                    &lt;!&ndash; /.direct-chat-text &ndash;&gt;-->
-<!--                  </div>-->
-<!--                  &lt;!&ndash; /.direct-chat-msg &ndash;&gt;-->
-
-<!--                  &lt;!&ndash; Message to the right &ndash;&gt;-->
-<!--                  <div class="direct-chat-msg right">-->
-<!--                    <div class="direct-chat-infos clearfix">-->
-<!--                      <span class="direct-chat-name float-right">Sarah Bullock</span>-->
-<!--                      <span class="direct-chat-timestamp float-left">23 Jan 2:05 pm</span>-->
-<!--                    </div>-->
-<!--                    &lt;!&ndash; /.direct-chat-infos &ndash;&gt;-->
-<!--                    <img class="direct-chat-img" src="{% static 'AdminLTE/dist/img/user3-128x128.jpg' %}" alt="message user image">-->
-<!--                    &lt;!&ndash; /.direct-chat-img &ndash;&gt;-->
-<!--                    <div class="direct-chat-text">-->
-<!--                      You better believe it!-->
-<!--                    </div>-->
-<!--                    &lt;!&ndash; /.direct-chat-text &ndash;&gt;-->
-<!--                  </div>-->
-<!--                  &lt;!&ndash; /.direct-chat-msg &ndash;&gt;-->
-
-<!--                  &lt;!&ndash; Message. Default to the left &ndash;&gt;-->
-<!--                  <div class="direct-chat-msg">-->
-<!--                    <div class="direct-chat-infos clearfix">-->
-<!--                      <span class="direct-chat-name float-left">Alexander Pierce</span>-->
-<!--                      <span class="direct-chat-timestamp float-right">23 Jan 5:37 pm</span>-->
-<!--                    </div>-->
-<!--                    &lt;!&ndash; /.direct-chat-infos &ndash;&gt;-->
-<!--                    <img class="direct-chat-img" src="{% static 'AdminLTE/dist/img/user1-128x128.jpg' %}" alt="message user image">-->
-<!--                    &lt;!&ndash; /.direct-chat-img &ndash;&gt;-->
-<!--                    <div class="direct-chat-text">-->
-<!--                      Working with AdminLTE on a great new app! Wanna join?-->
-<!--                    </div>-->
-<!--                    &lt;!&ndash; /.direct-chat-text &ndash;&gt;-->
-<!--                  </div>-->
-<!--                  &lt;!&ndash; /.direct-chat-msg &ndash;&gt;-->
-
-<!--                  &lt;!&ndash; Message to the right &ndash;&gt;-->
-<!--                  <div class="direct-chat-msg right">-->
-<!--                    <div class="direct-chat-infos clearfix">-->
-<!--                      <span class="direct-chat-name float-right">Sarah Bullock</span>-->
-<!--                      <span class="direct-chat-timestamp float-left">23 Jan 6:10 pm</span>-->
-<!--                    </div>-->
-<!--                    &lt;!&ndash; /.direct-chat-infos &ndash;&gt;-->
-<!--                    <img class="direct-chat-img" src="{% static 'AdminLTE/dist/img/user3-128x128.jpg' %}" alt="message user image">-->
-<!--                    &lt;!&ndash; /.direct-chat-img &ndash;&gt;-->
-<!--                    <div class="direct-chat-text">-->
-<!--                      I would love to.-->
-<!--                    </div>-->
-<!--                    &lt;!&ndash; /.direct-chat-text &ndash;&gt;-->
-<!--                  </div>-->
-<!--                  &lt;!&ndash; /.direct-chat-msg &ndash;&gt;-->
-
-<!--                </div>-->
-<!--                &lt;!&ndash;/.direct-chat-messages&ndash;&gt;-->
-
-<!--                &lt;!&ndash; Contacts are loaded here &ndash;&gt;-->
-<!--                <div class="direct-chat-contacts">-->
-<!--                  <ul class="contacts-list">-->
-<!--                    <li>-->
-<!--                      <a href="#">-->
-<!--                        <img class="contacts-list-img" src="{% static 'AdminLTE/dist/img/user1-128x128.jpg' %}" alt="User Avatar">-->
-
-<!--                        <div class="contacts-list-info">-->
-<!--                          <span class="contacts-list-name">-->
-<!--                            Count Dracula-->
-<!--                            <small class="contacts-list-date float-right">2/28/2015</small>-->
-<!--                          </span>-->
-<!--                          <span class="contacts-list-msg">How have you been? I was...</span>-->
-<!--                        </div>-->
-<!--                        &lt;!&ndash; /.contacts-list-info &ndash;&gt;-->
-<!--                      </a>-->
-<!--                    </li>-->
-<!--                    &lt;!&ndash; End Contact Item &ndash;&gt;-->
-<!--                    <li>-->
-<!--                      <a href="#">-->
-<!--                        <img class="contacts-list-img" src="{% static 'AdminLTE/dist/img/user7-128x128.jpg' %} " alt="User Avatar">-->
-
-<!--                        <div class="contacts-list-info">-->
-<!--                          <span class="contacts-list-name">-->
-<!--                            Sarah Doe-->
-<!--                            <small class="contacts-list-date float-right">2/23/2015</small>-->
-<!--                          </span>-->
-<!--                          <span class="contacts-list-msg">I will be waiting for...</span>-->
-<!--                        </div>-->
-<!--                        &lt;!&ndash; /.contacts-list-info &ndash;&gt;-->
-<!--                      </a>-->
-<!--                    </li>-->
-<!--                    &lt;!&ndash; End Contact Item &ndash;&gt;-->
-<!--                    <li>-->
-<!--                      <a href="#">-->
-<!--                        <img class="contacts-list-img" src="{% static 'AdminLTE/dist/img/user3-128x128.jpg' %}" alt="User Avatar">-->
-
-<!--                        <div class="contacts-list-info">-->
-<!--                          <span class="contacts-list-name">-->
-<!--                            Nadia Jolie-->
-<!--                            <small class="contacts-list-date float-right">2/20/2015</small>-->
-<!--                          </span>-->
-<!--                          <span class="contacts-list-msg">I'll call you back at...</span>-->
-<!--                        </div>-->
-<!--                        &lt;!&ndash; /.contacts-list-info &ndash;&gt;-->
-<!--                      </a>-->
-<!--                    </li>-->
-<!--                    &lt;!&ndash; End Contact Item &ndash;&gt;-->
-<!--                    <li>-->
-<!--                      <a href="#">-->
-<!--                        <img class="contacts-list-img" src="{% static 'AdminLTE/dist/img/user5-128x128.jpg' %}" alt="User Avatar">-->
-
-<!--                        <div class="contacts-list-info">-->
-<!--                          <span class="contacts-list-name">-->
-<!--                            Nora S. Vans-->
-<!--                            <small class="contacts-list-date float-right">2/10/2015</small>-->
-<!--                          </span>-->
-<!--                          <span class="contacts-list-msg">Where is your new...</span>-->
-<!--                        </div>-->
-<!--                        &lt;!&ndash; /.contacts-list-info &ndash;&gt;-->
-<!--                      </a>-->
-<!--                    </li>-->
-<!--                    &lt;!&ndash; End Contact Item &ndash;&gt;-->
-<!--                    <li>-->
-<!--                      <a href="#">-->
-<!--                        <img class="contacts-list-img" src="{% static 'AdminLTE/dist/img/user6-128x128.jpg' %}" alt="User Avatar">-->
-
-<!--                        <div class="contacts-list-info">-->
-<!--                          <span class="contacts-list-name">-->
-<!--                            John K.-->
-<!--                            <small class="contacts-list-date float-right">1/27/2015</small>-->
-<!--                          </span>-->
-<!--                          <span class="contacts-list-msg">Can I take a look at...</span>-->
-<!--                        </div>-->
-<!--                        &lt;!&ndash; /.contacts-list-info &ndash;&gt;-->
-<!--                      </a>-->
-<!--                    </li>-->
-<!--                    &lt;!&ndash; End Contact Item &ndash;&gt;-->
-<!--                    <li>-->
-<!--                      <a href="#">-->
-<!--                        <img class="contacts-list-img" src="{% static 'AdminLTE/dist/img/user8-128x128.jpg' %}" alt="User Avatar">-->
-
-<!--                        <div class="contacts-list-info">-->
-<!--                          <span class="contacts-list-name">-->
-<!--                            Kenneth M.-->
-<!--                            <small class="contacts-list-date float-right">1/4/2015</small>-->
-<!--                          </span>-->
-<!--                          <span class="contacts-list-msg">Never mind I found...</span>-->
-<!--                        </div>-->
-<!--                        &lt;!&ndash; /.contacts-list-info &ndash;&gt;-->
-<!--                      </a>-->
-<!--                    </li>-->
-<!--                    &lt;!&ndash; End Contact Item &ndash;&gt;-->
-<!--                  </ul>-->
-<!--                  &lt;!&ndash; /.contacts-list &ndash;&gt;-->
-<!--                </div>-->
-<!--                &lt;!&ndash; /.direct-chat-pane &ndash;&gt;-->
-<!--              </div>-->
-<!--              &lt;!&ndash; /.card-body &ndash;&gt;-->
-<!--              <div class="card-footer">-->
-<!--                <form action="#" method="post">-->
-<!--                  <div class="input-group">-->
-<!--                    <input type="text" name="message" placeholder="Type Message ..." class="form-control">-->
-<!--                    <span class="input-group-append">-->
-<!--                      <button type="button" class="btn btn-primary">Send</button>-->
-<!--                    </span>-->
-<!--                  </div>-->
-<!--                </form>-->
-<!--              </div>-->
-<!--              &lt;!&ndash; /.card-footer&ndash;&gt;-->
-<!--            </div>-->
-            <!--/.direct-chat -->
-
-            <!-- TO DO List -->
-<!--            <div class="card">-->
-<!--              <div class="card-header">-->
-<!--                <h3 class="card-title">-->
-<!--                  <i class="ion ion-clipboard mr-1"></i>-->
-<!--                  To Do List-->
-<!--                </h3>-->
-
-<!--                <div class="card-tools">-->
-<!--                  <ul class="pagination pagination-sm">-->
-<!--                    <li class="page-item"><a href="#" class="page-link">&laquo;</a></li>-->
-<!--                    <li class="page-item"><a href="#" class="page-link">1</a></li>-->
-<!--                    <li class="page-item"><a href="#" class="page-link">2</a></li>-->
-<!--                    <li class="page-item"><a href="#" class="page-link">3</a></li>-->
-<!--                    <li class="page-item"><a href="#" class="page-link">&raquo;</a></li>-->
-<!--                  </ul>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              &lt;!&ndash; /.card-header &ndash;&gt;-->
-<!--              <div class="card-body">-->
-<!--                <ul class="todo-list" data-widget="todo-list">-->
-<!--                  <li>-->
-<!--                    &lt;!&ndash; drag handle &ndash;&gt;-->
-<!--                    <span class="handle">-->
-<!--                      <i class="fas fa-ellipsis-v"></i>-->
-<!--                      <i class="fas fa-ellipsis-v"></i>-->
-<!--                    </span>-->
-<!--                    &lt;!&ndash; checkbox &ndash;&gt;-->
-<!--                    <div  class="icheck-primary d-inline ml-2">-->
-<!--                      <input type="checkbox" value="" name="todo1" id="todoCheck1">-->
-<!--                      <label for="todoCheck1"></label>-->
-<!--                    </div>-->
-<!--                    &lt;!&ndash; todo text &ndash;&gt;-->
-<!--                    <span class="text">Design a nice theme</span>-->
-<!--                    &lt;!&ndash; Emphasis label &ndash;&gt;-->
-<!--                    <small class="badge badge-danger"><i class="far fa-clock"></i> 2 mins</small>-->
-<!--                    &lt;!&ndash; General tools such as edit or delete&ndash;&gt;-->
-<!--                    <div class="tools">-->
-<!--                      <i class="fas fa-edit"></i>-->
-<!--                      <i class="fas fa-trash-o"></i>-->
-<!--                    </div>-->
-<!--                  </li>-->
-<!--                  <li>-->
-<!--                    <span class="handle">-->
-<!--                      <i class="fas fa-ellipsis-v"></i>-->
-<!--                      <i class="fas fa-ellipsis-v"></i>-->
-<!--                    </span>-->
-<!--                    <div  class="icheck-primary d-inline ml-2">-->
-<!--                      <input type="checkbox" value="" name="todo2" id="todoCheck2" checked>-->
-<!--                      <label for="todoCheck2"></label>-->
-<!--                    </div>-->
-<!--                    <span class="text">Make the theme responsive</span>-->
-<!--                    <small class="badge badge-info"><i class="far fa-clock"></i> 4 hours</small>-->
-<!--                    <div class="tools">-->
-<!--                      <i class="fas fa-edit"></i>-->
-<!--                      <i class="fas fa-trash-o"></i>-->
-<!--                    </div>-->
-<!--                  </li>-->
-<!--                  <li>-->
-<!--                    <span class="handle">-->
-<!--                      <i class="fas fa-ellipsis-v"></i>-->
-<!--                      <i class="fas fa-ellipsis-v"></i>-->
-<!--                    </span>-->
-<!--                    <div  class="icheck-primary d-inline ml-2">-->
-<!--                      <input type="checkbox" value="" name="todo3" id="todoCheck3">-->
-<!--                      <label for="todoCheck3"></label>-->
-<!--                    </div>-->
-<!--                    <span class="text">Let theme shine like a star</span>-->
-<!--                    <small class="badge badge-warning"><i class="far fa-clock"></i> 1 day</small>-->
-<!--                    <div class="tools">-->
-<!--                      <i class="fas fa-edit"></i>-->
-<!--                      <i class="fas fa-trash-o"></i>-->
-<!--                    </div>-->
-<!--                  </li>-->
-<!--                  <li>-->
-<!--                    <span class="handle">-->
-<!--                      <i class="fas fa-ellipsis-v"></i>-->
-<!--                      <i class="fas fa-ellipsis-v"></i>-->
-<!--                    </span>-->
-<!--                    <div  class="icheck-primary d-inline ml-2">-->
-<!--                      <input type="checkbox" value="" name="todo4" id="todoCheck4">-->
-<!--                      <label for="todoCheck4"></label>-->
-<!--                    </div>-->
-<!--                    <span class="text">Let theme shine like a star</span>-->
-<!--                    <small class="badge badge-success"><i class="far fa-clock"></i> 3 days</small>-->
-<!--                    <div class="tools">-->
-<!--                      <i class="fas fa-edit"></i>-->
-<!--                      <i class="fas fa-trash-o"></i>-->
-<!--                    </div>-->
-<!--                  </li>-->
-<!--                  <li>-->
-<!--                    <span class="handle">-->
-<!--                      <i class="fas fa-ellipsis-v"></i>-->
-<!--                      <i class="fas fa-ellipsis-v"></i>-->
-<!--                    </span>-->
-<!--                    <div  class="icheck-primary d-inline ml-2">-->
-<!--                      <input type="checkbox" value="" name="todo5" id="todoCheck5">-->
-<!--                      <label for="todoCheck5"></label>-->
-<!--                    </div>-->
-<!--                    <span class="text">Check your messages and notifications</span>-->
-<!--                    <small class="badge badge-primary"><i class="far fa-clock"></i> 1 week</small>-->
-<!--                    <div class="tools">-->
-<!--                      <i class="fas fa-edit"></i>-->
-<!--                      <i class="fas fa-trash-o"></i>-->
-<!--                    </div>-->
-<!--                  </li>-->
-<!--                  <li>-->
-<!--                    <span class="handle">-->
-<!--                      <i class="fas fa-ellipsis-v"></i>-->
-<!--                      <i class="fas fa-ellipsis-v"></i>-->
-<!--                    </span>-->
-<!--                    <div  class="icheck-primary d-inline ml-2">-->
-<!--                      <input type="checkbox" value="" name="todo6" id="todoCheck6">-->
-<!--                      <label for="todoCheck6"></label>-->
-<!--                    </div>-->
-<!--                    <span class="text">Let theme shine like a star</span>-->
-<!--                    <small class="badge badge-secondary"><i class="far fa-clock"></i> 1 month</small>-->
-<!--                    <div class="tools">-->
-<!--                      <i class="fas fa-edit"></i>-->
-<!--                      <i class="fas fa-trash-o"></i>-->
-<!--                    </div>-->
-<!--                  </li>-->
-<!--                </ul>-->
-<!--              </div>-->
-<!--              &lt;!&ndash; /.card-body &ndash;&gt;-->
-<!--              <div class="card-footer clearfix">-->
-<!--                <button type="button" class="btn btn-primary float-right"><i class="fas fa-plus"></i> Add item</button>-->
-<!--              </div>-->
-<!--            </div>-->
-            <!-- /.card -->
-                 <div class="card bg-gradient-primary">
-              <div class="card-header border-0">
-                <h3 class="card-title">
-<!--                 <i class="fas fa-th mr-1"></i>-->
-
-                   <div class="form-group">
-                        <select class="form-control" onchange="changeSelect(event)">
-                        {% for cam in cameras %}
-                          <option value="{{cam.id}}">{{cam.name}}</option>
-                          {% endfor %}
-                        </select>
-                      </div>
-
-                </h3>
-                <!-- card tools -->
-                <div class="card-tools">
-                  <button type="button" class="btn btn-primary btn-sm daterange" title="Date range">
-                    <i class="far fa-calendar-alt"></i>
-                  </button>
-                  <button type="button" class="btn btn-primary btn-sm" data-card-widget="collapse" title="Collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
+            <div class="col-xl-4">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card custom-card crm-highlight-card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <div class="fw-semibold fs-18 text-fixed-white mb-2">Your target is incomplete</div>
+                                        <span class="d-block fs-12 text-fixed-white"><span class="op-7">You have completed</span> <span class="fw-semibold text-warning">48%</span> <span class="op-7">of the given target, you can also check your status</span>.</span>
+                                        <span class="d-block fw-semibold mt-1"><a class="text-fixed-white" href="javascript:void(0);"><u>Click here</u></a></span>
+                                    </div>
+                                    <div>
+                                        <div id="crm-main"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <!-- /.card-tools -->
-              </div>
-              <div class="card-body">
-                 <div class="info-box">
-              <span class="info-box-icon bg-success"><i class="ion ion-person"></i></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text text-success">All Detection</span>
-                <span class="info-box-number text-info" id="all">{{detection_count}}</span>
-              </div>
-
-              <!-- /.info-box-content -->
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-header  justify-content-between">
+                            <div class="card-title">
+                                Top Deals
+                            </div>
+                            <div class="dropdown">
+                                <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fe fe-more-vertical"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="javascript:void(0);">Week</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);">Month</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);">Year</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled crm-top-deals mb-0">
+                                <li>
+                                    <div class="d-flex align-items-top flex-wrap">
+                                        <div class="me-2">
+                                            <span class="avatar avatar-sm avatar-rounded">
+                                                <img src="{% static 'dist/images/faces/10.jpg' %}" alt="">
+                                            </span>
+                                        </div>
+                                        <div class="flex-fill">
+                                            <p class="fw-semibold mb-0">Michael Jordan</p>
+                                            <span class="text-muted fs-12">michael.jordan@example.com</span>
+                                        </div>
+                                        <div class="fw-semibold fs-15">$2,893</div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="d-flex align-items-top flex-wrap">
+                                        <div class="me-2">
+                                            <span class="avatar avatar-sm avatar-rounded bg-warning-transparent fw-semibold">
+                                                EK
+                                            </span>
+                                        </div>
+                                        <div class="flex-fill">
+                                            <p class="fw-semibold mb-0">Emigo Kiaren</p>
+                                            <span class="text-muted fs-12">emigo.kiaren@gmail.com</span>
+                                        </div>
+                                        <div class="fw-semibold fs-15">$4,289</div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="d-flex align-items-top flex-wrap">
+                                        <div class="me-2">
+                                            <span class="avatar avatar-sm avatar-rounded">
+                                                <img src="{% static 'dist/images/faces/12.jpg' %}" alt="">
+                                            </span>
+                                        </div>
+                                        <div class="flex-fill">
+                                            <p class="fw-semibold mb-0">Randy Origoan</p>
+                                            <span class="text-muted fs-12">randy.origoan@gmail.com</span>
+                                        </div>
+                                        <div class="fw-semibold fs-15">$6,347</div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="d-flex align-items-top flex-wrap">
+                                        <div class="me-2">
+                                            <span class="avatar avatar-sm avatar-rounded bg-success-transparent fw-semibold">
+                                                GP
+                                            </span>
+                                        </div>
+                                        <div class="flex-fill">
+                                            <p class="fw-semibold mb-0">George Pieterson</p>
+                                            <span class="text-muted fs-12">george.pieterson@gmail.com</span>
+                                        </div>
+                                        <div class="fw-semibold fs-15">$3,894</div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="d-flex align-items-top flex-wrap">
+                                        <div class="me-2">
+                                            <span class="avatar avatar-sm avatar-rounded bg-primary-transparent fw-semibold">
+                                                KA
+                                            </span>
+                                        </div>
+                                        <div class="flex-fill">
+                                            <p class="fw-semibold mb-0">Kiara Advain</p>
+                                            <span class="text-muted fs-12">kiaraadvain214@gmail.com</span>
+                                        </div>
+                                        <div class="fw-semibold fs-15">$2,679</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="card custom-card">
+                        <div class="card-header justify-content-between">
+                            <div class="card-title">Profit Earned</div>
+                            <div class="dropdown">
+                                <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown" aria-expanded="false">
+                                    View All<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a class="dropdown-item" href="javascript:void(0);">Today</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);">This Week</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);">Last Week</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body py-0 ps-0">
+                            <div id="crm-profits-earned"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-                 <div class="info-box">
-              <span class="info-box-icon bg-success"><i class="ion ion-person"></i></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text text-success">White Detections</span>
-                <span class="info-box-number text-info"id="white">{{detection_count_white}}</span>
-              </div>
-
-              <!-- /.info-box-content -->
+            <div class="col-xl-8">
+                <div class="row">
+                    <div class="col-xxl-6 col-lg-6 col-md-6">
+                        <div class="card custom-card overflow-hidden">
+                            <div class="card-body">
+                                <div class="d-flex align-items-top justify-content-between">
+                                    <div>
+                                        <span class="avatar avatar-md avatar-rounded bg-primary">
+                                            <i class="ti ti-users fs-16"></i>
+                                        </span>
+                                    </div>
+                                    <div class="flex-fill ms-3">
+                                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                            <div>
+                                                <p class="text-muted mb-0">Total Customers</p>
+                                                <h4 class="fw-semibold mt-1">{{registers}}</h4>
+                                            </div>
+                                            <div id="crm-total-customers"></div>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between mt-1">
+                                            <div>
+                                                <a class="text-primary" href="javascript:void(0);">View All<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
+                                            </div>
+                                            <div class="text-end">
+                                                <p class="mb-0 text-success fw-semibold">+40%</p>
+                                                <span class="text-muted op-7 fs-11">this month</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6">
+                        <div class="card custom-card overflow-hidden">
+                            <div class="card-body">
+                                <div class="d-flex align-items-top justify-content-between">
+                                    <div>
+                                        <span class="avatar avatar-md avatar-rounded bg-secondary">
+                                            <i class="ti ti-wallet fs-16"></i>
+                                        </span>
+                                    </div>
+                                    <div class="flex-fill ms-3">
+                                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                            <div>
+                                                <p class="text-muted mb-0">Total unknown</p>
+                                                <h4 class="fw-semibold mt-1">{{unknownDetect}}</h4>
+                                            </div>
+                                            <div id="crm-total-revenue"></div>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between mt-1">
+                                            <div>
+                                                <a class="text-secondary" href="javascript:void(0);">View All<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
+                                            </div>
+                                            <div class="text-end">
+                                                <p class="mb-0 text-success fw-semibold">+25%</p>
+                                                <span class="text-muted op-7 fs-11">this month</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6">
+                        <div class="card custom-card overflow-hidden">
+                            <div class="card-body">
+                                <div class="d-flex align-items-top justify-content-between">
+                                    <div>
+                                        <span class="avatar avatar-md avatar-rounded bg-success">
+                                            <i class="ti ti-wave-square fs-16"></i>
+                                        </span>
+                                    </div>
+                                    <div class="flex-fill ms-3">
+                                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                            <div>
+                                                <p class="text-muted mb-0">detection count</p>
+                                                <h4 class="fw-semibold mt-1">{{detection_count}}</h4>
+                                            </div>
+                                            <div id="crm-conversion-ratio"></div>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between mt-1">
+                                            <div>
+                                                <a class="text-success" href="javascript:void(0);">View All<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
+                                            </div>
+                                            <div class="text-end">
+                                                <p class="mb-0 text-danger fw-semibold">-12%</p>
+                                        <span class="text-muted op-7 fs-11">this month</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6">
+                        <div class="card custom-card overflow-hidden">
+                            <div class="card-body">
+                                <div class="d-flex align-items-top justify-content-between">
+                                    <div>
+                                        <span class="avatar avatar-md avatar-rounded bg-warning">
+                                            <i class="ti ti-briefcase fs-16"></i>
+                                        </span>
+                                    </div>
+                                    <div class="flex-fill ms-3">
+                                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                            <div>
+                                                <p class="text-muted mb-0">Total Camera</p>
+                                                <h4 class="fw-semibold mt-1">{{cameras.count}}</h4>
+                                            </div>
+                                            <div id="crm-total-deals"></div>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between mt-1">
+                                            <div>
+                                                <a class="text-warning" href="javascript:void(0);">View All<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
+                                            </div>
+                                            <div class="text-end">
+                                                <p class="mb-0 text-success fw-semibold">+19%</p>
+                                                <span class="text-muted op-7 fs-11">this month</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-12">
+                        <div class="card custom-card">
+                            <div class="card-header justify-content-between">
+                                <div class="card-title">
+                                    Revenue Analytics
+                                </div>
+                                <div class="dropdown">
+                                    <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        View All<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a class="dropdown-item" href="javascript:void(0);">Today</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">This Week</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">Last Week</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="content-wrapper">
+                                    <div id="crm-revenue-analytics"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-                 <div class="info-box">
-              <span class="info-box-icon bg-info"><i class="ion ion-person"></i></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text text-info">Black Detections</span>
-                <span class="info-box-number text-info" id="black">{{detection_count_black}}</span>
-              </div>
-
-              <!-- /.info-box-content -->
+            <div class="col-xl-12">
+                <div class="card custom-card">
+                    <div class="card-header justify-content-between">
+                        <div class="card-title">
+                           جدول الدخول والخروج
+                        </div>
+                        
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="file-export" class="table table-bordered text-nowrap w-100">
+                                <thead>
+                                    <tr>
+                                        <th>Employee Name</th>
+                                        <th>Time in</th>
+                                        <th>Time out</th>
+                                        <th>Total Hours</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for per in detected_today %}
+                                    <tr>
+                                        <td>{{per.person_id.name}}</td>
+                                        <td>{{per.detected_at}}</td>
+                                        <td>{{per.outed_at}}</td>
+                                        <td>{{per.spend_time}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- <div class="card-footer">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                Showing 5 Entries <i class="bi bi-arrow-right ms-2 fw-semibold"></i>
+                            </div>
+                            <div class="ms-auto">
+                                <nav aria-label="Page navigation" class="pagination-style-4">
+                                    <ul class="pagination mb-0">
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="javascript:void(0);">
+                                                Prev
+                                            </a>
+                                        </li>
+                                        <li class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link text-primary" href="javascript:void(0);">
+                                                next
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
             </div>
-                 <div class="info-box">
-              <span class="info-box-icon bg-danger"><i class="ion ion-person"></i></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text text-danger">Unknown Detections</span>
-                <span class="info-box-number text-info" id="unknown">{{detection_count_unknown}}</span>
-              </div>
-
-              <!-- /.info-box-content -->
-            </div>
-              </div>
-              <!-- /.card-body-->
-<!--              <div class="card-footer bg-transparent">-->
-<!--                <div class="row">-->
-<!--                  <div class="col-4 text-center">-->
-<!--                    <div id="sparkline-1"></div>-->
-<!--                    <div class="text-white">Visitors</div>-->
-<!--                  </div>-->
-<!--                  &lt;!&ndash; ./col &ndash;&gt;-->
-<!--                  <div class="col-4 text-center">-->
-<!--                    <div id="sparkline-2"></div>-->
-<!--                    <div class="text-white">Online</div>-->
-<!--                  </div>-->
-<!--                  &lt;!&ndash; ./col &ndash;&gt;-->
-<!--                  <div class="col-4 text-center">-->
-<!--                    <div id="sparkline-3"></div>-->
-<!--                    <div class="text-white">Sales</div>-->
-<!--                  </div>-->
-<!--                  &lt;!&ndash; ./col &ndash;&gt;-->
-<!--                </div>-->
-<!--                &lt;!&ndash; /.row &ndash;&gt;-->
-<!--              </div>-->
-            </div>
-          </section>
-          <!-- /.Left col -->
-          <!-- right col (We are only adding the ID to make the widgets sortable)-->
-          <section class="col-lg-5 connectedSortable">
-
-            <!-- Map card -->
-
-            <!-- /.card -->
-
-            <!-- solid sales graph -->
-<!--            <div class="card bg-gradient-info">-->
-<!--              <div class="card-header border-0">-->
-<!--                <h3 class="card-title">-->
-<!--                  <i class="fas fa-th mr-1"></i>-->
-<!--                  Sales Graph-->
-<!--                </h3>-->
-
-<!--                <div class="card-tools">-->
-<!--                  <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">-->
-<!--                    <i class="fas fa-minus"></i>-->
-<!--                  </button>-->
-<!--                  <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">-->
-<!--                    <i class="fas fa-times"></i>-->
-<!--                  </button>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div class="card-body">-->
-<!--                <canvas class="chart" id="line-chart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>-->
-<!--              </div>-->
-<!--              &lt;!&ndash; /.card-body &ndash;&gt;-->
-<!--              <div class="card-footer bg-transparent">-->
-<!--                <div class="row">-->
-<!--                  <div class="col-4 text-center">-->
-<!--                    <input type="text" class="knob" data-readonly="true" value="20" data-width="60" data-height="60"-->
-<!--                           data-fgColor="#39CCCC">-->
-
-<!--                    <div class="text-white">Mail-Orders</div>-->
-<!--                  </div>-->
-<!--                  &lt;!&ndash; ./col &ndash;&gt;-->
-<!--                  <div class="col-4 text-center">-->
-<!--                    <input type="text" class="knob" data-readonly="true" value="50" data-width="60" data-height="60"-->
-<!--                           data-fgColor="#39CCCC">-->
-
-<!--                    <div class="text-white">Online</div>-->
-<!--                  </div>-->
-<!--                  &lt;!&ndash; ./col &ndash;&gt;-->
-<!--                  <div class="col-4 text-center">-->
-<!--                    <input type="text" class="knob" data-readonly="true" value="30" data-width="60" data-height="60"-->
-<!--                           data-fgColor="#39CCCC">-->
-
-<!--                    <div class="text-white">In-Store</div>-->
-<!--                  </div>-->
-<!--                  &lt;!&ndash; ./col &ndash;&gt;-->
-<!--                </div>-->
-<!--                &lt;!&ndash; /.row &ndash;&gt;-->
-<!--              </div>-->
-<!--              &lt;!&ndash; /.card-footer &ndash;&gt;-->
-<!--            </div>-->
-            <!-- /.card -->
-
-            <!-- Calendar -->
-<!--            <div class="card bg-gradient-success">-->
-<!--              <div class="card-header border-0">-->
-
-<!--                <h3 class="card-title">-->
-<!--                  <i class="far fa-calendar-alt"></i>-->
-<!--                  Calendar-->
-<!--                </h3>-->
-<!--                &lt;!&ndash; tools card &ndash;&gt;-->
-<!--                <div class="card-tools">-->
-<!--                  &lt;!&ndash; button with a dropdown &ndash;&gt;-->
-<!--                  <div class="btn-group">-->
-<!--                    <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" data-offset="-52">-->
-<!--                      <i class="fas fa-bars"></i>-->
-<!--                    </button>-->
-<!--                    <div class="dropdown-menu" role="menu">-->
-<!--                      <a href="#" class="dropdown-item">Add new event</a>-->
-<!--                      <a href="#" class="dropdown-item">Clear events</a>-->
-<!--                      <div class="dropdown-divider"></div>-->
-<!--                      <a href="#" class="dropdown-item">View calendar</a>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                  <button type="button" class="btn btn-success btn-sm" data-card-widget="collapse">-->
-<!--                    <i class="fas fa-minus"></i>-->
-<!--                  </button>-->
-<!--                  <button type="button" class="btn btn-success btn-sm" data-card-widget="remove">-->
-<!--                    <i class="fas fa-times"></i>-->
-<!--                  </button>-->
-<!--                </div>-->
-<!--                &lt;!&ndash; /. tools &ndash;&gt;-->
-<!--              </div>-->
-<!--              &lt;!&ndash; /.card-header &ndash;&gt;-->
-<!--              <div class="card-body pt-0">-->
-<!--                &lt;!&ndash;The calendar &ndash;&gt;-->
-<!--                <div id="calendar" style="width: 100%"></div>-->
-<!--              </div>-->
-<!--              &lt;!&ndash; /.card-body &ndash;&gt;-->
-<!--            </div>-->
-            <!-- /.card -->
-          </section>
-          <!-- right col -->
         </div>
-        <!-- /.row (main row) -->
-      </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-  </div>
+    </div>
+    <div class="col-xxl-3 col-xl-12">
+        <div class="row">
+            <div class="col-xxl-12 col-xl-12">
+                <div class="row">
+                    <div class="col-xl-12 col-xl-6">
+                        <div class="card custom-card">
+                            <div class="card-header justify-content-between">
+                                <div class="card-title">
+                                    detections
+                                </div>
+                                <!-- <div class="dropdown">
+                                    <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
+                                        <i class="fe fe-more-vertical"></i>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="javascript:void(0);">Week</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">Month</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">Year</a></li>
+                                    </ul>
+                                </div> -->
+                            </div>
+                            <div class="card-body p-0 overflow-hidden">
+                                <div class="leads-source-chart d-flex align-items-center justify-content-center">
+                                    <canvas id="leads-source" class="chartjs-chart w-100 p-4"></canvas>
+                                    <div class="lead-source-value">
+                                        <span class="d-block fs-14">Total</span>
+                                        <span class="d-block fs-25 fw-bold">{{detection_count}}</span>
+                                    </div>
+                                </div>
+                                <div class="row row-cols-12 border-top border-block-start-dashed">
+                                    <!-- <div class="col p-0">
+                                        <div class="ps-4 py-3 pe-3 text-center border-end border-inline-end-dashed">
+                                            <span class="text-muted fs-12 mb-1 crm-lead-legend mobile d-inline-block">Mobile
+                                            </span>
+                                            <div><span class="fs-16 fw-semibold">1,624</span>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                    <div class="col p-0">
+                                        <div class="p-3 text-center border-end border-inline-end-dashed">
+                                            <span class="text-muted fs-12 mb-1 crm-lead-legend desktop d-inline-block">Black List
+                                            </span>
+                                            <div><span class="fs-16 fw-semibold">{{detection_count_black}}</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col p-0">
+                                        <div class="p-3 text-center border-end border-inline-end-dashed">
+                                            <span class="text-muted fs-12 mb-1 crm-lead-legend laptop d-inline-block">Unkown
+                                            </span>
+                                            <div><span class="fs-16 fw-semibold">{{detection_count_unknown}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col p-0">
+                                        <div class="p-3 text-center">
+                                            <span class="text-muted fs-12 mb-1 crm-lead-legend tablet d-inline-block">White list
+                                            </span>
+                                            <div><span class="fs-16 fw-semibold">{{detection_count_white}}</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-12 col-xl-6">
+                        <div class="card custom-card">
+                            <div class="card-header justify-content-between">
+                                <div class="card-title">
+                                    Deals Status
+                                </div>
+                                <div class="dropdown">
+                                    <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown" aria-expanded="false">
+                                        View All<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a class="dropdown-item" href="javascript:void(0);">Today</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">This Week</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">Last Week</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <h4 class="fw-bold mb-0">4,289</h4>
+                                    <div class="ms-2">
+                                        <span class="badge bg-success-transparent">1.02<i class="ri-arrow-up-s-fill align-mmiddle ms-1"></i></span>
+                                        <span class="text-muted ms-1">compared to last week</span>
+                                    </div>
+                                </div>
+                                <div class="progress-stacked progress-animate progress-xs mb-4">
+                                    <div class="progress-bar" role="progressbar" style="width: 21%" aria-valuenow="21" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: 26%" aria-valuenow="26" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 18%" aria-valuenow="18" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <ul class="list-unstyled mb-0 pt-2 crm-deals-status">
+                                    <li class="primary">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div>Successful Deals</div>
+                                            <div class="fs-12 text-muted">987 deals</div>
+                                        </div>
+                                    </li>
+                                    <li class="info">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div>Pending Deals</div>
+                                            <div class="fs-12 text-muted">1,073 deals</div>
+                                        </div>
+                                    </li>
+                                    <li class="warning">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div>Rejected Deals</div>
+                                            <div class="fs-12 text-muted">1,674 deals</div>
+                                        </div>
+                                    </li>
+                                    <li class="success">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div>Upcoming Deals</div>
+                                            <div class="fs-12 text-muted">921 deals</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-12 col-xl-6">
+                        <div class="card custom-card">
+                            <div class="card-header justify-content-between">
+                                <div class="card-title">
+                                    Recent Activity
+                                </div>
+                                <div class="dropdown">
+                                    <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        View All<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a class="dropdown-item" href="javascript:void(0);">Today</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">This Week</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">Last Week</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div>
+                                    <ul class="list-unstyled mb-0 crm-recent-activity">
+                                        <li class="crm-recent-activity-content">
+                                            <div class="d-flex align-items-top">
+                                                <div class="me-3">
+                                                    <span class="avatar avatar-xs bg-primary-transparent avatar-rounded">
+                                                        <i class="bi bi-circle-fill fs-8"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="crm-timeline-content">
+                                                    <span class="fw-semibold">Update of calendar events &amp;</span><span><a href="javascript:void(0);" class="text-primary fw-semibold"> Added new events in next week.</a></span>
+                                                </div>
+                                                <div class="flex-fill text-end">
+                                                    <span class="d-block text-muted fs-11 op-7">4:45PM</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="crm-recent-activity-content">
+                                            <div class="d-flex align-items-top">
+                                                <div class="me-3">
+                                                    <span class="avatar avatar-xs bg-secondary-transparent avatar-rounded">
+                                                        <i class="bi bi-circle-fill fs-8"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="crm-timeline-content">
+                                                    <span>New theme for <span class="fw-semibold">Spruko Website</span> completed</span>
+                                                    <span class="d-block fs-12 text-muted">Lorem ipsum, dolor sit amet.</span>
+                                                </div>
+                                                <div class="flex-fill text-end">
+                                                    <span class="d-block text-muted fs-11 op-7">3 hrs</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="crm-recent-activity-content">
+                                            <div class="d-flex align-items-top">
+                                                <div class="me-3">
+                                                    <span class="avatar avatar-xs bg-success-transparent avatar-rounded">
+                                                        <i class="bi bi-circle-fill fs-8"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="crm-timeline-content">
+                                                    <span>Created a <span class="text-success fw-semibold">New Task</span> today <span class="avatar avatar-xs bg-purple-transparent avatar-rounded ms-1"><i class="ri-add-fill text-purple fs-12"></i></span></span>
+                                                </div>
+                                                <div class="flex-fill text-end">
+                                                    <span class="d-block text-muted fs-11 op-7">22 hrs</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="crm-recent-activity-content">
+                                            <div class="d-flex align-items-top">
+                                                <div class="me-3">
+                                                    <span class="avatar avatar-xs bg-pink-transparent avatar-rounded">
+                                                        <i class="bi bi-circle-fill fs-8"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="crm-timeline-content">
+                                                    <span>New member <span class="badge bg-pink-transparent">@andreas gurrero</span> added today to AI Summit.</span>
+                                                </div>
+                                                <div class="flex-fill text-end">
+                                                    <span class="d-block text-muted fs-11 op-7">Today</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="crm-recent-activity-content">
+                                            <div class="d-flex align-items-top">
+                                                <div class="me-3">
+                                                    <span class="avatar avatar-xs bg-warning-transparent avatar-rounded">
+                                                        <i class="bi bi-circle-fill fs-8"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="crm-timeline-content">
+                                                    <span>32 New people joined summit.</span>
+                                                </div>
+                                                <div class="flex-fill text-end">
+                                                    <span class="d-block text-muted fs-11 op-7">22 hrs</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="crm-recent-activity-content">
+                                            <div class="d-flex align-items-top">
+                                                <div class="me-3">
+                                                    <span class="avatar avatar-xs bg-info-transparent avatar-rounded">
+                                                        <i class="bi bi-circle-fill fs-8"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="crm-timeline-content">
+                                                    <span>Neon Tarly added <span class="text-info fw-semibold">Robert Bright</span> to AI summit project.</span>
+                                                </div>
+                                                <div class="flex-fill text-end">
+                                                    <span class="d-block text-muted fs-11 op-7">12 hrs</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="crm-recent-activity-content">
+                                            <div class="d-flex align-items-top">
+                                                <div class="me-3">
+                                                    <span class="avatar avatar-xs bg-dark-transparent avatar-rounded">
+                                                        <i class="bi bi-circle-fill fs-8"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="crm-timeline-content">
+                                                    <span>Replied to new support request <i class="ri-checkbox-circle-line text-success fs-16 align-middle"></i></span>
+                                                </div>
+                                                <div class="flex-fill text-end">
+                                                    <span class="d-block text-muted fs-11 op-7">4 hrs</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="crm-recent-activity-content">
+                                            <div class="d-flex align-items-top">
+                                                <div class="me-3">
+                                                    <span class="avatar avatar-xs bg-purple-transparent avatar-rounded">
+                                                        <i class="bi bi-circle-fill fs-8"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="crm-timeline-content">
+                                                    <span>Completed documentation of <a href="javascript:void(0);" class="text-purple text-decoration-underline fw-semibold">AI Summit.</a></span>
+                                                </div>
+                                                <div class="flex-fill text-end">
+                                                    <span class="d-block text-muted fs-11 op-7">4 hrs</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End::row-1 -->
 {% endblock %}
 
+
 {% block scripts %}
-<script src="{% static 'AdminLTE/plugins/sparklines/sparkline.js' %}"></script>
-<script src="{% static 'AdminLTE/dist/js/pages/dashboard.js' %}"></script>
-<script>
-var camera_id=1
-var selectedDate=moment().format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY');
- function changeSelect(event){
-  camera_id=event.target.value;
-   $.ajax({
-            url: '/filter_camera/'+selectedDate+'/'+camera_id+'',
-            method: 'GET',
-
-            success: function(response) {
-                console.log(response)
-                chnage(response);
-            },
-            error: function(error) {
-               console.log(error);
-            }
-        });
-  }
-$('.daterange').daterangepicker({
-    ranges: {
-      Today: [moment(), moment()],
-      Yesterday: [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-      'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-      'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-      'This Month': [moment().startOf('month'), moment().endOf('month')],
-      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-    },
-    startDate: moment().subtract(29, 'days'),
-    endDate: moment()
-  }, function (start, end) {
-  selectedDate=start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY');
-      $.ajax({
-            url: '/filter_camera/'+selectedDate+'/'+camera_id+'',
-            method: 'GET',
-
-            success: function(response) {
-                console.log(response)
-                chnage(response);
-            },
-            error: function(error) {
-               console.log(error);
-            }
-        });
-
-  })
-
-
-function chnage(response){
-$("#all").text(response.detection_count);
-$("#white").text(response.detection_count_white);
-$("#black").text(response.detection_count_black);
-$("#unknown").text(response.detection_count_unknown);
-}
-
-</script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="{% static 'dist/js/datatables.js' %}"></script>
 {% endblock %}

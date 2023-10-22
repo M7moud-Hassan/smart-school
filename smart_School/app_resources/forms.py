@@ -35,9 +35,9 @@ class PersonsForm(forms.ModelForm):
             'image': forms.ClearableFileInput(
                 attrs={'class': 'dropify-face form-control', "data-default-file": "", 'required': True, }),
             'name': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
-            'date_of_birth': forms.DateInput(attrs={
-                'class': 'form-control datetimepicker-input',
-                'data-target': '#reservationdate',
+            'date_of_birth': forms.TextInput(attrs={
+                'class': 'form-control',
+                'id':'date',
                 'required': True,
             }),
             'front_national_img': forms.ClearableFileInput(
@@ -49,10 +49,10 @@ class PersonsForm(forms.ModelForm):
             'address': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
         }
         labels = {
-            'image': 'image person',
-            'front_national_img': 'front image national id',
-            'back_national_img': 'back image national id',
-            'job_title': 'job Title'
+            'image': 'الصور الشخصية',
+            'front_national_img': 'صورة البطاقة الامامية',
+            'back_national_img': 'صورة البطاقة الخلفية',
+            'job_title': 'الاسم الوظيفة'
         }
         allowed_cameras = forms.ModelMultipleChoiceField(
             queryset=Cameras.objects.all(),
@@ -79,7 +79,7 @@ class PersonsForm(forms.ModelForm):
     type_register = forms.ChoiceField(
         choices=TYPE_CHOICES,
         widget=forms.RadioSelect,
-        initial='Visitor'
+        initial='Employee'
     )
     status = forms.ChoiceField(choices=[(
         'whitelist', 'whitelist'), ('blacklist', 'blacklist'), ('unknown', 'unknown')])
