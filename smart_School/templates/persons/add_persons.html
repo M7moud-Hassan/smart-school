@@ -509,7 +509,7 @@ $.ajax({
         // Create the new date in "mm/dd/yyyy" format
         const newDateFormat = `${month}/${day}/${year}`;
         $('#id_name').val(`${data.firstname} ${data.secondname}`)
-        $('#id_id_national').val(`${data.id}`)
+        $('#id_id_national').val(`${data.iden}`)
         $('#id_date_of_birth').val(newDateFormat)
         $('#id_address').val(`${data.address_1} - ${data.address_2}`)
         const fileInput = document.getElementById('id_image');

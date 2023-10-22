@@ -27,8 +27,8 @@ class Persons(models.Model):
     name = models.CharField(max_length=300, null=True, blank=True)
     gender = models.CharField(max_length=100, null=True, blank=True)
     type_register = models.CharField(max_length=100, null=True, blank=True)
-    nationalID = models.ForeignKey(
-        NationaId, on_delete=models.CASCADE, blank=True, null=True)
+    # nationalID = models.ForeignKey(
+    #     NationaId, on_delete=models.CASCADE, blank=True, null=True)
     date_of_birth = models.DateField(null=True, blank=True)
     image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
     front_national_img = models.ImageField(
