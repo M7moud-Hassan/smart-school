@@ -4,7 +4,7 @@ import pytz
 from django.db import models
 from dashboard.models import *
 from django.utils import timezone
-
+from django.contrib.postgres.fields import ArrayField
 
 class Cameras(models.Model):
     """Data model for cameras."""
@@ -22,6 +22,9 @@ class Cameras(models.Model):
 def get_upload_path(instance, filename):
     return f'persons/{instance.status}/{filename}'
 
+
+class ImagesPerson(models.Model):
+    image=models.ImageField(upload_to='persons\\images', blank=True, null=True)
 
 class Persons(models.Model):
     name = models.CharField(max_length=300, null=True, blank=True)
@@ -43,6 +46,7 @@ class Persons(models.Model):
     allowed_cameras = models.ManyToManyField(Cameras, blank=True)
     info = models.ForeignKey(
         'Information', on_delete=models.CASCADE, null=True)
+    images = models.ManyToManyField(ImagesPerson,blank=True, null=True)
 
     # def save(self, *args, **kwargs):
     #     if not self.created_at:

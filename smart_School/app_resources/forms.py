@@ -1,3 +1,5 @@
+import base64
+import io
 from django import forms
 
 from .models import *
@@ -64,6 +66,14 @@ class PersonsForm(forms.ModelForm):
             required=True,
 
         )
+    # images=forms.FileField(
+    #      widget=forms.FileInput(attrs={
+    #          'class': 'multiple-filepond',
+    #         #  'multiple': True,
+    #          'data-allow-reorder': True,
+    #          'data-max-file-size': '3MB',
+    #          'data-max-files': 6
+    #      }))
 
     # Customizing the gender field widget to use radio buttons
     GENDER_CHOICES = [
