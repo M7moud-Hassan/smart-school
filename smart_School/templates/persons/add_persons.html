@@ -3,12 +3,12 @@
 {% block mystyles %}
 <link rel="stylesheet" href="{% static 'css/dropify.min.css' %}">
 <link rel="stylesheet" href="{% static 'dist/libs/flatpickr/flatpickr.min.css' %}">
-<!-- <link rel="stylesheet" href="{% static 'dist/libs/prismjs/themes/prism-coy.min.css' %}">
+<link rel="stylesheet" href="{% static 'dist/libs/prismjs/themes/prism-coy.min.css' %}">
 <link rel="stylesheet" href="{% static 'dist/libs/filepond/filepond.min.css' %}">
 <link rel="stylesheet" href="{% static 'dist/libs/choices.js/public/assets/styles/choices.min.css' %}">
 <link rel="stylesheet" href="{% static 'dist/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.css' %}">
 <link rel="stylesheet" href="{% static 'dist/libs/filepond-plugin-image-edit/filepond-plugin-image-edit.min.css' %}">
-<link rel="stylesheet" href="{% static 'dist/libs/dropzone/dropzone.css' %}"> -->
+<link rel="stylesheet" href="{% static 'dist/libs/dropzone/dropzone.css' %}">
 {% endblock %}
 {% block content %}
 <nav aria-label="breadcrumb">
@@ -29,6 +29,15 @@
     </div>
   </div>
   <div class="card-body">
+    <form  style="display: none;" data-single="true" method="post" action="https://httpbin.org/post" class="dropzone"></form>
+        
+    {% if form.errors %}
+    <ul class="errorlist">
+        {% for field, error_list in form.errors.items %}
+            <li>{{ field }}: {{ error_list.0 }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
     <form class="row g-3 needs-validation" method="post" action="{% url 'add_person' %}" enctype="multipart/form-data" novalidate>
       {% csrf_token %}
       <div class="row">
@@ -165,8 +174,55 @@
         </div>
         </div>
         </div>
-        <!-- <input type="file" class="multiple-filepond" name="filepond" multiple data-allow-reorder="true" data-max-file-size="3MB" data-max-files="6">  -->
-        <div class="row mt-3 g-3">
+        <div class="card custom-card">
+          <div class="card-header justify-content-between">
+              <div class="card-title">
+                  اضافة اكثر من صورة
+              </div>
+              <div class="dropdown">
+                  <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown" aria-expanded="false">
+                      الكاميرات<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
+                  </a>
+                  <ul class="dropdown-menu" role="menu">
+                    {% for camera in cameras %}
+                      <li><a class="dropdown-item"   data-bs-toggle="modal" onclick="openCamera(4,'{{camera.id}}')"
+                        data-bs-target="#modal-info_4">{{camera.name}}</a></li>
+                     
+                      {% endfor %}
+                   
+                  </ul>
+                  <div class="modal fade" id="modal-info_4" data-bs-backdrop="static"
+                  data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                  aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title">Capture Image</h4>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal"
+                          aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <img id="video-4" width="100%" height="300" />
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                          <button type="button" class="btn btn-secondary"
+                                                              data-bs-dismiss="modal">Close</button>
+                        <button type="button"  data-bs-dismiss="modal" id="captureImage-4" class="btn btn-primary">capture</button>
+                       
+                        </div>
+                      </div>
+                      
+                    </div>
+                    </div>
+              </div>
+          </div>
+          <div class="card-body">
+        <input type="file" id="multiImages" class="multiple-filepond" name="images" multiple  data-max-file-size="3MB" data-max-files="6"> 
+        </div>
+        </div>
+       
+        <!-- {{form.images}} -->
+          <div class="row mt-3 g-3">
         <div class="form-group col-12 col-md-6">
           {{ form.name.label_tag }}
           {{ form.name }}
@@ -230,7 +286,7 @@
 <script src="{% static 'dist/js/date&time_pickers.js' %}"></script>
 <script src="{% static 'dist/libs/prismjs/prism.js' %}"></script>
 <script src="{% static 'dist/js/prism-custom.js' %}"></script>
-<!-- 
+
     <script src="{% static 'dist/libs/filepond/filepond.min.js' %}"></script>
     <script src="{% static 'dist/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js' %}"></script>
     <script src="{% static 'dist/libs/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js' %}"></script>
@@ -243,9 +299,14 @@
     <script src="{% static 'dist/libs/filepond-plugin-image-resize/filepond-plugin-image-resize.min.js' %}"></script>
     <script src="{% static 'dist/libs/filepond-plugin-image-transform/filepond-plugin-image-transform.min.js' %}"></script>
     <script src="{% static 'dist/libs/dropzone/dropzone-min.js' %}"></script>
-    <script src="{% static 'dist/js/fileupload.js' %}"></script> -->
+    <script src="{% static 'dist/js/fileupload.js' %}"></script>
 
 <script>
+ var pods;
+  $(function(){
+    const MultipleElement = document.querySelector('.multiple-filepond');
+   pods= FilePond.create(MultipleElement,);
+  })
   $(".dropify-face").dropify(
     {
       messages: {
@@ -307,6 +368,44 @@
       }
     });
   });
+  $(function(){
+
+    $('#captureImage-4').click(function () {
+    $.ajax({
+      url: '/cameras/capture_image/',
+      type: 'GET',
+      xhrFields: {
+        responseType: 'blob' // Set the response type to 'blob'
+      },
+      success: function (response) {
+        // $('.dropify-clear').eq(1).click();
+        // const fileInput = document.getElementById('id_image');
+        var filename = 'captured_image.jpg';
+        // Create a new file object from the blob response
+        var file = new File([response], filename, { type: 'image/jpeg' });
+        pods.addFile(file)
+        // Add the file to the DataTransfer object
+        dataTransfer = new DataTransfer()
+        dataTransfer.items.add(file);
+        // const MultipleElement = document.querySelector('.multiple-filepond');
+        // const filePondInstance = FilePond.getInstance(MultipleElement);
+
+// Add the image file programmatically
+// FilePond.addFile(file);
+        // fileInput.files = dataTransfer.files;
+        // $('#multiImages').files.add(file)
+       
+        var fileInput = document.getElementsByClassName('filepond--browser');
+          fileInput[0].files = dataTransfer.files;
+        // addFileToDropify(1, file);
+        $("#video-4").attr("src", "");
+      },
+      error: function (error) {
+        console.log(error);
+      }
+    });
+  });
+  })
 
   $('#captureImage-2').click(function () {
 

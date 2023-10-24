@@ -1,4 +1,7 @@
 import base64
+from django.core.files.base import ContentFile
+#import pybase64
+#import pybase64
 import io
 import json
 from datetime import datetime
@@ -7,7 +10,7 @@ from django.db.models import Q
 from django.http import HttpResponse, FileResponse, StreamingHttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
-from .models import Cameras, Persons, PersonsDetect
+from .models import Cameras, ImagesPerson, Persons, PersonsDetect
 from .forms import CamerasForm, InformationsForm, PersonsForm
 from .utils import cameras
 import requests
@@ -19,6 +22,9 @@ import pickle
 from django.conf import settings
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 @login_required
 def add_camera(request):
@@ -72,6 +78,12 @@ def delete_camera(request, id):
     else:
         return redirect('/cameras/cameras/')
 
+
+def add_padding(base64_string):
+    while len(base64_string) % 4 != 0:
+        base64_string += '='
+    return base64_string
+
 @login_required
 def add_person(request):
     cameras_list = Cameras.objects.all()
@@ -84,10 +96,33 @@ def add_person(request):
                     person_instance = form.save(commit=False)
                     info_intsance=inforForm.save()
                     person_instance.info=info_intsance
+                    # person_instance.images=image_list
                     person_instance.save()
+                    base64_images = request.POST.getlist('images')
+                    image_list = []
+                    for base64_string in base64_images:
+                        # Decode the base64 string
+                        image_data = pybase64.b64decode(base64_string+ b'==')
+                        image_io = BytesIO(image_data)
+                        image = Image.open(image_io)
+                        image_file = SimpleUploadedFile(f'image.png', image.tobytes(), content_type='image/png')
+                        image_list.append(image_file)
+                    print(len(image_list))
             else:
-                person_instance = form.save()
-            
+                    person_instance = form.save()
+                    base64_images = request.POST.getlist('images')
+                    image_list = []
+                    for base64_image in base64_images:
+                        data = json.loads(base64_image)
+                        base64_data = data['data'].encode('utf-8')
+                        image_data = base64.b64decode(base64_data)
+                        image = Image.open(io.BytesIO(image_data)) 
+                        image_file = SimpleUploadedFile(f'{data["name"]}', image.tobytes(), content_type=data["type"])
+                        im=ImagesPerson.objects.create(image=image_file)
+                        person_instance.images.add(im)
+
+                    #  = image_list
+                    person_instance.save()
             image_of_person(person_instance)
             return redirect('/persons/persons/')
         else:

@@ -85,7 +85,11 @@ def video_feed(request, camera_id):
                     
                         if matches[best_match_index] :
                             print(settings.KNOW_FACE_NAMES[best_match_index])
-                            detect_person(settings.KNOW_FACE_NAMES[best_match_index],camera_id)
+                            if "_"in settings.KNOW_FACE_NAMES[best_match_index]:
+                                 
+                                 detect_person(settings.KNOW_FACE_NAMES[best_match_index].split("_")[0],camera_id)
+                            else:
+                                detect_person(settings.KNOW_FACE_NAMES[best_match_index],camera_id)
                             print("////////////////////////////////////////////")
                         else:
                             #detect_unknown(frame,camera_id)
