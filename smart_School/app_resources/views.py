@@ -110,17 +110,12 @@ def add_person(request):
             else:
                     person_instance = form.save()
                     base64_images = request.POST.getlist('images')
-                    image_list = []
+
                     for base64_image in base64_images:
                         data = json.loads(base64_image)
-                        base64_data = data['data'].encode('utf-8')
-                        image_data = base64.b64decode(base64_data)
-                        image = Image.open(io.BytesIO(image_data)) 
-                        image_file = SimpleUploadedFile(f'{data["name"]}', image.tobytes(), content_type=data["type"])
-                        im=ImagesPerson.objects.create(image=image_file)
+                        data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                        im=ImagesPerson.objects.create(image=data_image)
                         person_instance.images.add(im)
-
-                    #  = image_list
                     person_instance.save()
             image_of_person(person_instance)
             return redirect('/persons/persons/')
