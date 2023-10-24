@@ -97,25 +97,28 @@ def add_person(request):
                     person_instance.info=info_intsance
                     # person_instance.images=image_list
                     person_instance.save()
+                    person_instance = form.save()
                     base64_images = request.POST.getlist('images')
-                    image_list = []
-                    for base64_string in base64_images:
-                        # Decode the base64 string
-                        image_data = pybase64.b64decode(base64_string+ b'==')
-                        image_io = BytesIO(image_data)
-                        image = Image.open(image_io)
-                        image_file = SimpleUploadedFile(f'image.png', image.tobytes(), content_type='image/png')
-                        image_list.append(image_file)
-                    print(len(image_list))
+                    for base64_image in base64_images:
+                        try:
+                            data = json.loads(base64_image)
+                            data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                            im=ImagesPerson.objects.create(image=data_image)
+                            person_instance.images.add(im)
+                        except:
+                            pass
+                    person_instance.save()
             else:
                     person_instance = form.save()
                     base64_images = request.POST.getlist('images')
-
                     for base64_image in base64_images:
-                        data = json.loads(base64_image)
-                        data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
-                        im=ImagesPerson.objects.create(image=data_image)
-                        person_instance.images.add(im)
+                        try:
+                            data = json.loads(base64_image)
+                            data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                            im=ImagesPerson.objects.create(image=data_image)
+                            person_instance.images.add(im)
+                        except:
+                            pass
                     person_instance.save()
             image_of_person(person_instance)
             return redirect('/persons/persons/')

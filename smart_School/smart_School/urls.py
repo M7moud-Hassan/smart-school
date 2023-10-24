@@ -25,6 +25,7 @@ from livefeed import urls as livefeed_urls
 from reports import urls as reporst_urls
 from  authentications import  urls as auth_urls
 from dashboard import urls as dashboard_urls
+from config import urls as config_urls
 
 urlpatterns = [
     path('',include(urls)),
@@ -34,6 +35,7 @@ urlpatterns = [
     path('livefeed/',include(livefeed_urls)),
     path('reports/',include(reporst_urls)),
     path('accounts/',include(auth_urls)),
-    path('dashboard/',include(dashboard_urls))
+    path('dashboard/',include(dashboard_urls)),
+    path('config/',include(config_urls))
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
