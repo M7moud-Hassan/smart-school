@@ -1,3 +1,7 @@
 
 /venv/
 test push
+*.jpg
+*.jpeg
+*.png
+*.gif
