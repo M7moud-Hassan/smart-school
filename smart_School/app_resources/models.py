@@ -4,7 +4,6 @@ import pytz
 from django.db import models
 from dashboard.models import *
 from django.utils import timezone
-from django.contrib.postgres.fields import ArrayField
 
 class Cameras(models.Model):
     """Data model for cameras."""
@@ -20,7 +19,7 @@ class Cameras(models.Model):
 
 
 def get_upload_path(instance, filename):
-    return f'persons/{instance.status}/{filename}'
+    return f'faces/{instance.id_national}.jpg'
 
 
 class ImagesPerson(models.Model):
@@ -30,28 +29,24 @@ class Persons(models.Model):
     name = models.CharField(max_length=300, null=True, blank=True)
     gender = models.CharField(max_length=100, null=True, blank=True)
     type_register = models.CharField(max_length=100, null=True, blank=True)
-    # nationalID = models.ForeignKey(
-    #     NationaId, on_delete=models.CASCADE, blank=True, null=True)
     date_of_birth = models.DateField(null=True, blank=True)
     image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
     front_national_img = models.ImageField(
-        upload_to="persons\\national_id", null=True, blank=True)
+        upload_to="uploads", null=True, blank=True)
     back_national_img = models.ImageField(
-        upload_to="persons\\national_id", null=True, blank=True)
+        upload_to="uploads", null=True, blank=True)
     id_national = models.CharField(max_length=300, null=True, blank=True)
     job_title = models.CharField(max_length=300, null=True, blank=True)
     address = models.CharField(max_length=300, null=True, blank=True)
     status = models.CharField(max_length=100, default='unknown')
+    religion = models.CharField(max_length=100, default='مسلم')
+    status_person = models.CharField(max_length=100, default='اعزب')
     created_at = models.DateTimeField(default= timezone.now())
     allowed_cameras = models.ManyToManyField(Cameras, blank=True)
     info = models.ForeignKey(
         'Information', on_delete=models.CASCADE, null=True)
     images = models.ManyToManyField(ImagesPerson,blank=True, null=True)
 
-    # def save(self, *args, **kwargs):
-    #     if not self.created_at:
-    #         self.created_at = datetime.now().replace(second=0, microsecond=0)
-    #     super().save(*args, **kwargs)
 
 
 class PersonsDetect(models.Model):
