@@ -224,11 +224,13 @@
         <!-- {{form.images}} -->
           <div class="row mt-3 g-3">
         <div class="form-group col-12 col-md-6">
-          {{ form.name.label_tag }}
+          <!-- {{ form.name.label_tag }} -->
+          <label for="">الاسم</label>
           {{ form.name }}
         </div>
         <div class="form-group col-12 col-md-6">
-          {{ form.id_national.label_tag }}
+          <!-- {{ form.id_national.label_tag }} -->
+          <label for="">الرقم القومي</label>
           {{ form.id_national }}
         </div>
         <div class="form-group col-12 col-md-6">
@@ -244,18 +246,20 @@
         {% endfor %}
     </div>
     <div class="form-group col-12 col-md-6">
-      <label>Date:</label>
+      <label> : التاريخ</label>
       <div class="input-group date" id="reservationdate" data-target-input="nearest">
         {{form.date_of_birth}}
         <div class="input-group-text text-muted"> <i class="ri-calendar-line"></i> </div>
       </div>
     </div>
     <div class="form-group col-12 col-md-6">
-      {{ form.address.label_tag }}
+      <!-- {{ form.address.label_tag }} -->
+      <label>العنوان</label>
       {{ form.address }}
     </div>
     <div class="form-group col-12 col-md-6">
-      {{form.status.label_tag}}
+      <!-- {{form.status.label_tag}} -->
+      <label for="">الحالة</label>
       {{form.status}}
     </div>
     <div class="col-12 col-md-6 row align-items-center mt-4 ps-4 pt-2">
