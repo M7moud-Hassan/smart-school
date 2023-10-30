@@ -43,135 +43,168 @@
       <div class="row">
         <div class="col-12 col-md-4">
           <div class="form-group">
-            {{form.front_national_img.label_tag}}
-            {{form.front_national_img}}
-          </div>
-          <div class="btn-group my-1 w-100">
-            <button type="button" class="btn btn-primary" id="uploadButton">get Data</button>
-            <button type="button"
-                class="btn btn-primary dropdown-toggle dropdown-toggle-split me-2"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="visually-hidden">Toggle Dropdown</span>
-            </button>
-            <ul class="dropdown-menu">
-              {% for camera in cameras %}
-              <a class="dropdown-item" href="#" data-bs-toggle="modal" onclick="openCamera(2,'{{camera.id}}')"
-                data-bs-target="#modal-info_2">{{camera.name}}</a>
-              {% endfor %}
-            </ul>
-            <div class="modal fade" id="modal-info_2" data-bs-backdrop="static"
-            data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-            aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title">Capture Image</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-                    </button>
+            <div class="card custom-card">
+              <div class="card-header justify-content-between">
+                  <div class="card-title">
+                       {{form.front_national_img.label_tag}}
                   </div>
-                  <div class="modal-body">
-                    <img id="video-2" width="100%" height="300" />
-                  </div>
-                  <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Close</button>
-                  <button type="button"  data-bs-dismiss="modal" id="captureImage-2" class="btn btn-primary">capture</button>
-                 
-                  </div>
+                  <div class="dropdown">
+                    <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown" aria-expanded="false">
+                        الكاميرات<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                      {% for camera in cameras %}
+                        <li><a class="dropdown-item"   data-bs-toggle="modal" onclick="openCamera(2,'{{camera.id}}')"
+                          data-bs-target="#modal-info_2">{{camera.name}}</a></li>
+                       
+                        {% endfor %}
+                     
+                    </ul>
+                    <div class="modal fade" id="modal-info_2" data-bs-backdrop="static"
+                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                    aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="modal-title">Capture Image</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <img id="video-2" width="100%" height="300" />
+                          </div>
+                          <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close</button>
+                          <button type="button"  data-bs-dismiss="modal" id="captureImage-2" class="btn btn-primary">capture</button>
+                         
+                          </div>
+                        </div>
+                        
+                      </div>
+                      </div>
                 </div>
-                
               </div>
+              <div class="card-body">
+                {{form.front_national_img}}
               </div>
-        </div>
+          </div>
+          <button type="button" id="uploadButton" class="btn btn-primary btn-wave" data-bs-toggle="button"
+            >سحب البيانات</button>
+          <button  id="hide1" class="btn btn-primary btn-loader">
+            <span class="me-2">Loading</span>
+            <span class="loading"><i class="ri-loader-2-fill fs-16"></i></span></button>
+          </div>
+         
           
         </div>
         <div class="col-12 col-md-4">
           <div class="form-group">
-            {{form.back_national_img.label_tag}}
-            {{form.back_national_img}}
-          </div>
-          <div class="btn-group my-1 w-100">
-            <button type="button" class="btn btn-primary" id="uploadButton2">get Data</button>
-            <button type="button"
-                class="btn btn-primary dropdown-toggle dropdown-toggle-split me-2"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="visually-hidden">Toggle Dropdown</span>
-            </button>
-            <ul class="dropdown-menu">
-              {% for camera in cameras %}
-              <a class="dropdown-item" href="#" data-bs-toggle="modal" onclick="openCamera(1,'{{camera.id}}')"
-                data-bs-target="#modal-info">{{camera.name}}</a>
-              {% endfor %}
-            </ul>
-            <div class="modal fade" id="modal-info" data-bs-backdrop="static"
-            data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-            aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title">Capture Image</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
+            <div class="card custom-card">
+              <div class="card-header justify-content-between">
+                  <div class="card-title">
+                    {{form.back_national_img.label_tag}}
                   </div>
-                  <div class="modal-body">
-                    <img id="video-1" width="100%" height="300" />
-                  </div>
-                  <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Close</button>
-                  <button type="button"  data-bs-dismiss="modal" id="captureImage" class="btn btn-primary">capture</button>
-                   
-                    
-                  </div>
+                  <div class="dropdown">
+                    <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown" aria-expanded="false">
+                        الكاميرات<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                      {% for camera in cameras %}
+                        <li><a class="dropdown-item"   data-bs-toggle="modal" onclick="openCamera(1,'{{camera.id}}')"
+                          data-bs-target="#modal-info">{{camera.name}}</a></li>
+                       
+                        {% endfor %}
+                     
+                    </ul>
+                    <div class="modal fade" id="modal-info" data-bs-backdrop="static"
+                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                    aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="modal-title">Capture Image</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <img id="video-1" width="100%" height="300" />
+                          </div>
+                          <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close</button>
+                          <button type="button"  data-bs-dismiss="modal" id="captureImage" class="btn btn-primary">capture</button>
+                           
+                            
+                          </div>
+                        </div>
+                        
+                      </div>
+                      </div>
                 </div>
-                
               </div>
+              <div class="card-body">
+                {{form.back_national_img}}
               </div>
-        </div>
+          </div>
+          <button type="button" id="uploadButton2" class="btn btn-primary btn-wave" data-bs-toggle="button"
+            >سحب البيانات</button>
+          <button  id="hide2" class="btn btn-primary btn-loader">
+            <span class="me-2">Loading</span>
+            <span class="loading"><i class="ri-loader-2-fill fs-16"></i></span></button>
+          </div>
+        
         </div>
         <div class="col-12 col-md-4">
           <div class="form-group">
-            {{form.image.label_tag}}
-            {{form.image}}
-          </div>
-          <div class="btn-group my-1 w-100">
-            <button type="button" class="btn btn-primary">Action</button>
-            <button type="button"
-                class="btn btn-primary dropdown-toggle dropdown-toggle-split me-2"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="visually-hidden">Toggle Dropdown</span>
-            </button>
-            <ul class="dropdown-menu">
-              {% for camera in cameras %}
-              <a class="dropdown-item" href="#" data-bs-toggle="modal" onclick="openCamera(3,'{{camera.id}}')"
-                data-bs-target="#modal-info_3">{{camera.name}}</a>
-              {% endfor %}
-            </ul>
-            <div class="modal fade" id="modal-info_3" data-bs-backdrop="static"
-            data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-            aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title">Capture Image</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+            <div class="card custom-card">
+              <div class="card-header justify-content-between">
+                  <div class="card-title">
+                    {{form.image.label_tag}}
                   </div>
-                  <div class="modal-body">
-                    <img id="video-3" width="100%" height="300" />
-                  </div>
-                  <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Close</button>
-                  <button type="button"  data-bs-dismiss="modal" id="captureImage-3" class="btn btn-primary">capture</button>
-                 
-                  </div>
+                  <div class="dropdown">
+                    <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown" aria-expanded="false">
+                        الكاميرات<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                      {% for camera in cameras %}
+                        <li><a class="dropdown-item"   data-bs-toggle="modal" onclick="openCamera(3,'{{camera.id}}')"
+                          data-bs-target="#modal-info_3">{{camera.name}}</a></li>
+                       
+                        {% endfor %}
+                     
+                    </ul>
+                    <div class="modal fade" id="modal-info_3" data-bs-backdrop="static"
+                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                    aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="modal-title">Capture Image</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <img id="video-3" width="100%" height="300" />
+                          </div>
+                          <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close</button>
+                          <button type="button"  data-bs-dismiss="modal" id="captureImage-3" class="btn btn-primary">capture</button>
+                         
+                          </div>
+                        </div>
+                        
+                      </div>
+                      </div>
                 </div>
-                
               </div>
+              <div class="card-body">
+                {{form.image}}
               </div>
-        </div>
+          </div>
+        
+          </div>
         </div>
         </div>
         <div class="card custom-card">
@@ -240,7 +273,7 @@
         <div class="col-12 col-md-6 row align-items-center mt-4 ps-4 pt-2">
           {% for radio in form.gender %}
           <div class="form-check form-check-md col-6">
-            <input id="input{{radio.choice_label}}" type="radio" class="form-check-input" name="{{ form.gender.name }}" value="{{ radio.choice_label }}" {% if radio.choice_label == 'Male' %}checked{% endif %}>
+            <input id="input{{radio.choice_label}}" type="radio" class="form-check-input" name="{{ form.gender.name }}" value="{{ radio.choice_label }}" {% if radio.choice_label == 'ذكر' %}checked{% endif %}>
             <label for="input{{radio.choice_label}}" class="form-check-label">{{radio.choice_label}}</label>
         </div>
         {% endfor %}
@@ -265,7 +298,7 @@
     <div class="col-12 col-md-6 row align-items-center mt-4 ps-4 pt-2">
       {% for radio in form.type_register %}
       <div class="form-check form-check-md col-6">
-        <input onchange="showOrhid('{{radio.choice_label}}')" id="input{{radio.choice_label}}" type="radio" class="form-check-input" name="{{ form.type_register.name }}" value="{{ radio.choice_label }}" {% if radio.choice_label == 'Employee' %}checked{% endif %}>
+        <input onchange="showOrhid('{{radio.choice_label}}')" id="input{{radio.choice_label}}" type="radio" class="form-check-input" name="{{ form.type_register.name }}" value="{{ radio.choice_label }}" {% if radio.choice_label == 'موظف' %}checked{% endif %}>
         <label for="input{{radio.choice_label}}" class="form-check-label">{{radio.choice_label}}</label>
     </div>
     {% endfor %}
@@ -306,10 +339,29 @@
     <script src="{% static 'dist/js/fileupload.js' %}"></script>
 
 <script>
+  $('#hide1').hide()
+  $('#hide2').hide()
  var pods;
+ var single1;
+ var single2;
+ var single3;
   $(function(){
+    
     const MultipleElement = document.querySelector('.multiple-filepond');
    pods= FilePond.create(MultipleElement,);
+
+  single1= FilePond.create(
+        document.querySelector('.single-fileupload1'),
+        
+    );
+  single2= FilePond.create(
+        document.querySelector('.single-fileupload2'),
+        
+    );
+  single3= FilePond.create(
+        document.querySelector('.single-fileupload3'),
+        
+    );
   })
   $(".dropify-face").dropify(
     {
@@ -355,16 +407,17 @@
         responseType: 'blob' // Set the response type to 'blob'
       },
       success: function (response) {
-        $('.dropify-clear').eq(1).click();
+        // $('.dropify-clear').eq(1).click();
         const fileInput = document.getElementById('id_image');
         var filename = 'captured_image.jpg';
         // Create a new file object from the blob response
         var file = new File([response], filename, { type: 'image/jpeg' });
         // Add the file to the DataTransfer object
-        dataTransfer = new DataTransfer()
-        dataTransfer.items.add(file);
-        fileInput.files = dataTransfer.files;
-        addFileToDropify(1, file);
+        // dataTransfer = new DataTransfer()
+        // dataTransfer.items.add(file);
+        // fileInput.files = dataTransfer.files;
+        // addFileToDropify(1, file);
+        single2.addFile(file)
         $("#video-1").attr("src", "");
       },
       error: function (error) {
@@ -426,10 +479,12 @@
 
         var file = new File([response], filename, { type: 'image/jpeg' });
         // Add the file to the DataTransfer object
-        dataTransfer = new DataTransfer()
-        dataTransfer.items.add(file);
-        fileInput.files = dataTransfer.files;
-        addFileToDropify(0, file)
+        // dataTransfer = new DataTransfer()
+        // dataTransfer.items.add(file);
+        // fileInput.files = dataTransfer.files;
+        single1.addFile(file)
+
+        // addFileToDropify(0, file)
         $("#video-2").attr("src", "");
       },
       error: function (error) {
@@ -446,16 +501,13 @@
         responseType: 'blob'
       },
       success: function (response) {
-        $('.dropify-clear').eq(2).click();
+        
         const fileInput = document.getElementById('id_back_national_img');
         var filename = 'captured_image.jpg';
 
         var file = new File([response], filename, { type: 'image/jpeg' });
         // Add the file to the DataTransfer object
-        dataTransfer = new DataTransfer()
-        dataTransfer.items.add(file);
-        fileInput.files = dataTransfer.files;
-        addFileToDropify(2, file)
+       single3.addFile(file)
         $("#video-3").attr("src", "");
       },
       error: function (error) {
@@ -474,9 +526,13 @@
   $(document).on('hidden.bs.modal', '.modal', onModalClosed);
 
   $("#uploadButton").click(function () {
-    $('#page-loader').addClass('show')
+    $('#uploadButton').hide()
+    $('#hide1').show()
+
+    // $('#page-loader').addClass('show')
+
     var formData = new FormData();
-    formData.append("image", $("#id_front_national_img")[0].files[0]);
+    formData.append("image", single1.getFile().file);
     var csrfToken = $('[name=csrfmiddlewaretoken]').val(); // Extract CSRF token
     formData.append("csrfmiddlewaretoken", csrfToken);
     $.ajax({
@@ -486,7 +542,8 @@
       processData: false,
       contentType: false,
       success: async function (response) {
-
+        $('#hide1').hide()
+        $('#uploadButton').show()
         data = JSON.parse(response['response']);
 
         const originalDate = data.Birthday;
@@ -508,26 +565,32 @@
         // Create a new file object from the blob response
         const blob = new Blob([Uint8Array.from(atob(response['image']), c => c.charCodeAt(0))], { type: 'image/jpeg' });
         var file = new File([blob], filename, { type: 'image/jpeg' });
-        // Add the file to the DataTransfer object
-        dataTransfer = new DataTransfer()
-        dataTransfer.items.add(file);
-        fileInput.files = dataTransfer.files;
-        addFileToDropify(2, file);
-        $('#page-loader').removeClass('show')
+        // // Add the file to the DataTransfer object
+        // dataTransfer = new DataTransfer()
+        // dataTransfer.items.add(file);
+        // fileInput.files = dataTransfer.files;
+        // addFileToDropify(2, file);
+      single3.addFile(file)
+        // $('#page-loader').removeClass('show')
 
       },
       error: function () {
+        $('#hide1').hide()
+        $('#uploadButton').show()
         $('#page-loader').removeClass('show')
         alert("Error connecting to the server.");
       }
     });
   });
   $("#uploadButton2").click(function () {
-    console.log($('#page-loader'));
-    $('#page-loader').addClass('show');
+    // console.log($('#page-loader'));
+    // $('#page-loader').addClass('show');
+    
+    $('#uploadButton2').hide()
+    $('#hide2').show()
 
     var formData = new FormData();
-    formData.append("image", $("#id_back_national_img")[0].files[0]);
+    formData.append("image",single2.getFile().file);
     var csrfToken = $('[name=csrfmiddlewaretoken]').val(); // Extract CSRF token
     formData.append("csrfmiddlewaretoken", csrfToken);
     $.ajax({
@@ -537,6 +600,9 @@
       processData: false,
       contentType: false,
       success: async function (response) {
+        $('#hide2').hide()
+        $('#uploadButton2').show()
+  
         data = JSON.parse(response['response']);
         console.log(data);
         $('#id_job_title').val(`${data.job} ${data.job_location}`)
@@ -546,7 +612,6 @@
          
           $('#inputFemal').prop('checked', false);
         } else {
-          
           $('#inputFemal').prop('checked', true);
           
           $('#inputMale').prop('checked', false);
@@ -554,6 +619,8 @@
         $('#page-loader').removeClass('show')
       },
       error: function () {
+        $('#hide2').hide()
+        $('#uploadButton2').show()
         alert("Error connecting to the server.");
         $('#page-loader').removeClass('show')
       }
@@ -576,7 +643,7 @@
   }
   function showOrhid(value) {
     // console.log(value);
-    if (value == 'Employee') {
+    if (value == 'موظف') {
       $('#info-employee').remove()
     } else {
       $('#employee').append(`
