@@ -1,7 +1,6 @@
 import base64
 from django.core.files.base import ContentFile
-#import pybase64
-#import pybase64
+
 import io
 import json
 from datetime import datetime

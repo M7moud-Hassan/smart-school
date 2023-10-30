@@ -77,12 +77,12 @@ class PersonsForm(forms.ModelForm):
 
     # Customizing the gender field widget to use radio buttons
     GENDER_CHOICES = [
-        ('Male', 'Male'),
-        ('Female', 'Female'),
+        ('Male', 'ذكر'),
+        ('Female', 'انثي'),
     ]
     TYPE_CHOICES = [
-             ('Visitor', 'Visitor'),
-            ('Employee', 'Employee'),
+             ('Visitor', 'زائر'),
+            ('Employee', 'موظف'),
 ]
     gender = forms.ChoiceField(
         choices=GENDER_CHOICES, widget=forms.RadioSelect, initial='Male')
@@ -105,35 +105,35 @@ class InformationsForm(forms.ModelForm):
         model = Information
         fields = ['department', 'type', 'reason', 'other', 'visior_type']
     department = forms.ModelChoiceField(
-        label='department',
+        label='القسم',
         queryset=Department.objects.all(),
         widget=forms.Select(
             attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
         required=True
     )
     type = forms.ModelChoiceField(
-        label='type',
+        label='النوع',
         queryset=Type.objects.all(),
         widget=forms.Select(
             attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
         required=True
     )
     reason = forms.ModelChoiceField(
-        label='reason',
+        label='السبب',
         queryset=Reason.objects.all(),
         widget=forms.Select(
             attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
         required=True
     )
     other = forms.ModelChoiceField(
-        label='other',
+        label='اخري',
         queryset=Other.objects.all(),
         widget=forms.Select(
             attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
         required=True
     )
     visior_type = forms.ModelChoiceField(
-        label='visior type',
+        label='نوع الزياره',
         queryset=VisiTortype.objects.all(),
         widget=forms.Select(
             attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),

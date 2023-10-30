@@ -1,6 +1,9 @@
 {% extends 'base_page.html' %}
 {% load static %}
+{% load custom_filters %}
+{% load humanize %}
 {% block content %}
+
   <!-- Start::page-header -->
 
   <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
@@ -142,7 +145,7 @@
                             <div class="card-title">Profit Earned</div>
                             <div class="dropdown">
                                 <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown" aria-expanded="false">
-                                    View All<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
+                                    رؤية الجميع<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
                                 </a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a class="dropdown-item" href="javascript:void(0);">Today</a></li>
@@ -171,18 +174,18 @@
                                     <div class="flex-fill ms-3">
                                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                                             <div>
-                                                <p class="text-muted mb-0">Total Customers</p>
+                                                <p class="text-muted mb-0">المسجلين في النظام</p>
                                                 <h4 class="fw-semibold mt-1">{{registers}}</h4>
                                             </div>
                                             <div id="crm-total-customers"></div>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between mt-1">
                                             <div>
-                                                <a class="text-primary" href="javascript:void(0);">View All<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
+                                                <a class="text-primary" href="javascript:void(0);">رؤية الجميع<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
                                             </div>
                                             <div class="text-end">
                                                 <p class="mb-0 text-success fw-semibold">+40%</p>
-                                                <span class="text-muted op-7 fs-11">this month</span>
+                                                <span class="text-muted op-7 fs-11">هذا الشهر </span>
                                             </div>
                                         </div>
                                     </div>
@@ -202,18 +205,18 @@
                                     <div class="flex-fill ms-3">
                                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                                             <div>
-                                                <p class="text-muted mb-0">Total unknown</p>
+                                                <p class="text-muted mb-0">الغير مغروفين</p>
                                                 <h4 class="fw-semibold mt-1">{{unknownDetect}}</h4>
                                             </div>
                                             <div id="crm-total-revenue"></div>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between mt-1">
                                             <div>
-                                                <a class="text-secondary" href="javascript:void(0);">View All<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
+                                                <a class="text-secondary" href="javascript:void(0);">رؤية الجميع<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
                                             </div>
                                             <div class="text-end">
                                                 <p class="mb-0 text-success fw-semibold">+25%</p>
-                                                <span class="text-muted op-7 fs-11">this month</span>
+                                                <span class="text-muted op-7 fs-11">هذا الشهر</span>
                                             </div>
                                         </div>
                                     </div>
@@ -227,24 +230,24 @@
                                 <div class="d-flex align-items-top justify-content-between">
                                     <div>
                                         <span class="avatar avatar-md avatar-rounded bg-success">
-                                            <i class="ti ti-wave-square fs-16"></i>
+                                            <i class="ti ti-users fs-16"></i>
                                         </span>
                                     </div>
                                     <div class="flex-fill ms-3">
                                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                                             <div>
-                                                <p class="text-muted mb-0">detection count</p>
-                                                <h4 class="fw-semibold mt-1">{{detection_count}}</h4>
+                                                <p class="text-muted mb-0">الزائرون</p>
+                                                <h4 class="fw-semibold mt-1">{{visitors.count}}</h4>
                                             </div>
                                             <div id="crm-conversion-ratio"></div>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between mt-1">
                                             <div>
-                                                <a class="text-success" href="javascript:void(0);">View All<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
+                                                <a class="text-success" href="javascript:void(0);">رؤية الجميع<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
                                             </div>
                                             <div class="text-end">
                                                 <p class="mb-0 text-danger fw-semibold">-12%</p>
-                                        <span class="text-muted op-7 fs-11">this month</span>
+                                        <span class="text-muted op-7 fs-11">هذا الشهر</span>
                                             </div>
                                         </div>
                                     </div>
@@ -258,24 +261,24 @@
                                 <div class="d-flex align-items-top justify-content-between">
                                     <div>
                                         <span class="avatar avatar-md avatar-rounded bg-warning">
-                                            <i class="ti ti-briefcase fs-16"></i>
+                                            <i class="ti ti-users fs-16"></i>
                                         </span>
                                     </div>
                                     <div class="flex-fill ms-3">
                                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                                             <div>
-                                                <p class="text-muted mb-0">Total Camera</p>
-                                                <h4 class="fw-semibold mt-1">{{cameras.count}}</h4>
+                                                <p class="text-muted mb-0">المؤظفين</p>
+                                                <h4 class="fw-semibold mt-1">{{empolyees.count}}</h4>
                                             </div>
                                             <div id="crm-total-deals"></div>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between mt-1">
                                             <div>
-                                                <a class="text-warning" href="javascript:void(0);">View All<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
+                                                <a class="text-warning" href="javascript:void(0);">رؤية الجميع<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
                                             </div>
                                             <div class="text-end">
                                                 <p class="mb-0 text-success fw-semibold">+19%</p>
-                                                <span class="text-muted op-7 fs-11">this month</span>
+                                                <span class="text-muted op-7 fs-11">هذا الشهر</span>
                                             </div>
                                         </div>
                                     </div>
@@ -287,23 +290,27 @@
                         <div class="card custom-card">
                             <div class="card-header justify-content-between">
                                 <div class="card-title">
-                                    Revenue Analytics
+                                    احصائية الزائرون والمؤظفون
                                 </div>
                                 <div class="dropdown">
                                     <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown"
                                         aria-expanded="false">
-                                        View All<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
+                                        رؤية الجميع<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
                                     </a>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a class="dropdown-item" href="javascript:void(0);">Today</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">This Week</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">Last Week</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="changeChart(1)">اليوم</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="changeChart(2)">هذا الاسبوع</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="changeChart(3)">هذا الشهر</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="changeChart(4)">هذه السنة</a></li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="card-body">
                                 <div class="content-wrapper">
-                                    <div id="crm-revenue-analytics"></div>
+                                    <div id="crm-revenue-analytics_day"></div>
+                                    <!-- <div id="crm-revenue-analytics_week"></div>
+                                    <div id="crm-revenue-analytics_month"></div>
+                                    <div id="crm-revenue-analytics_year"></div> -->
                                 </div>
                             </div>
                         </div>
@@ -380,7 +387,7 @@
                         <div class="card custom-card">
                             <div class="card-header justify-content-between">
                                 <div class="card-title">
-                                    detections
+                                    الاحصائية حسب الاقسام
                                 </div>
                                 <!-- <div class="dropdown">
                                     <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
@@ -397,20 +404,23 @@
                                 <div class="leads-source-chart d-flex align-items-center justify-content-center">
                                     <canvas id="leads-source" class="chartjs-chart w-100 p-4"></canvas>
                                     <div class="lead-source-value">
-                                        <span class="d-block fs-14">Total</span>
-                                        <span class="d-block fs-25 fw-bold">{{detection_count}}</span>
+                                        <span class="d-block fs-14">المجموع</span>
+                                        <span class="d-block fs-25 fw-bold">{{total_deps}}</span>
                                     </div>
                                 </div>
                                 <div class="row row-cols-12 border-top border-block-start-dashed">
-                                    <!-- <div class="col p-0">
+                                    {% for dep in departments %}
+                                    <div class="col p-0">
                                         <div class="ps-4 py-3 pe-3 text-center border-end border-inline-end-dashed">
-                                            <span class="text-muted fs-12 mb-1 crm-lead-legend mobile d-inline-block">Mobile
+                                            <span class="text-muted fs-12 mb-1 crm-lead-legend mobile d-inline-block">{{dep.name}}
                                             </span>
-                                            <div><span class="fs-16 fw-semibold">1,624</span>
+                                            <div><span class="fs-16 fw-semibold">{{counts_department|get_item:forloop.counter0}}</span>
                                             </div>
                                         </div>
-                                    </div> -->
-                                    <div class="col p-0">
+                                    </div>
+                                    {% endfor %}
+                                    
+                                    <!-- <div class="col p-0">
                                         <div class="p-3 text-center border-end border-inline-end-dashed">
                                             <span class="text-muted fs-12 mb-1 crm-lead-legend desktop d-inline-block">Black List
                                             </span>
@@ -431,7 +441,7 @@
                                             </span>
                                             <div><span class="fs-16 fw-semibold">{{detection_count_white}}</span></div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -444,7 +454,7 @@
                                 </div>
                                 <div class="dropdown">
                                     <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown" aria-expanded="false">
-                                        View All<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
+                                        رؤية الجميع<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
                                     </a>
                                     <ul class="dropdown-menu" role="menu">
                                         <li><a class="dropdown-item" href="javascript:void(0);">Today</a></li>
@@ -505,7 +515,7 @@
                                 <div class="dropdown">
                                     <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown"
                                         aria-expanded="false">
-                                        View All<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
+                                        رؤية الجميع<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
                                     </a>
                                     <ul class="dropdown-menu" role="menu">
                                         <li><a class="dropdown-item" href="javascript:void(0);">Today</a></li>
@@ -663,4 +673,790 @@
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="{% static 'dist/js/datatables.js' %}"></script>
+    <script>
+        var data_day_vis=[
+                {
+                    x: '0-2',
+                    y: `{{counts_day_vis|get_item:0}}`
+                },
+                {
+                    x: '2-4',
+                    y: `{{counts_day_vis|get_item:1}}`
+                },
+                {
+                    x: '4-6',
+                    y: `{{counts_day_vis|get_item:2}}`
+                },
+                {
+                    x: '6-8',
+                    y: `{{counts_day_vis|get_item:3}}`
+                },
+                {
+                    x: '8-10',
+                    y: `{{counts_day_vis|get_item:4}}`
+                },
+                {
+                    x: '10-12',
+                    y: `{{counts_day_vis|get_item:5}}`
+                },
+                {
+                    x: '12-14',
+                    y: `{{counts_day_vis|get_item:6}}`
+                },
+                {
+                    x: '14-16',
+                    y: `{{counts_day_vis|get_item:7}}`
+                },
+                {
+                    x: '16-18',
+                    y: `{{counts_day_vis|get_item:8}}`
+                },
+                {
+                    x: '18-20',
+                    y: `{{counts_day_vis|get_item:9}}`
+                },
+                {
+                    x: '20-22',
+                    y: `{{counts_day_vis|get_item:10}}`
+                },
+                {
+                    x: '22-24',
+                    y: `{{counts_day_vis|get_item:11}}`
+                }
+            ];
+        var data_day_emp=[
+                {
+                    x: '0-2',
+                    y: `{{counts_day_emp|get_item:0}}`
+                },
+                {
+                    x: '2-4',
+                    y: `{{counts_day_emp|get_item:1}}`
+                },
+                {
+                    x: '4-6',
+                    y: `{{counts_day_emp|get_item:2}}`
+                },
+                {
+                    x: '6-8',
+                    y: `{{counts_day_emp|get_item:3}}`
+                },
+                {
+                    x: '8-10',
+                    y: `{{counts_day_emp|get_item:4}}`
+                },
+                {
+                    x: '10-12',
+                    y: `{{counts_day_emp|get_item:5}}`
+                },
+                {
+                    x: '12-14',
+                    y: `{{counts_day_emp|get_item:6}}`
+                },
+                {
+                    x: '14-16',
+                    y: `{{counts_day_emp|get_item:7}}`
+                },
+                {
+                    x: '16-18',
+                    y: `{{counts_day_emp|get_item:8}}`
+                },
+                {
+                    x: '18-20',
+                    y: `{{counts_day_emp|get_item:9}}`
+                },
+                {
+                    x: '20-22',
+                    y: `{{counts_day_emp|get_item:10}}`
+                },
+                {
+                    x: '22-24',
+                    y: `{{counts_day_emp|get_item:11}}`
+                }
+            ]
+        
+        var data_week_vis=[
+                {
+                    x: 'السبت',
+                    y: `{{counts_week_vis|get_item:0}}`
+                },
+                {
+                    x: 'الاحد',
+                    y: `{{counts_week_vis|get_item:1}}`
+                },
+                {
+                    x: 'الاثنين',
+                    y: `{{counts_week_vis|get_item:2}}`
+                },
+                {
+                    x: 'الثلاثاء',
+                    y: `{{counts_week_vis|get_item:3}}`
+                },
+                {
+                    x: 'الاربع',
+                    y: `{{counts_week_vis|get_item:4}}`
+                },
+                {
+                    x: 'الخميس',
+                    y: `{{counts_week_vis|get_item:5}}`
+                },
+                {
+                    x: 'الجمعة',
+                    y: `{{counts_week_vis|get_item:6}}`
+                },
+                
+            ];
+        var data_week_emp=[
+        {
+                    x: 'السبت',
+                    y: `{{counts_week_emp|get_item:0}}`
+                },
+                {
+                    x: 'الاحد',
+                    y: `{{counts_week_emp|get_item:1}}`
+                },
+                {
+                    x: 'الاثنين',
+                    y: `{{counts_week_emp|get_item:2}}`
+                },
+                {
+                    x: 'الثلاثاء',
+                    y: `{{counts_week_emp|get_item:3}}`
+                },
+                {
+                    x: 'الاربع',
+                    y: `{{counts_week_emp|get_item:4}}`
+                },
+                {
+                    x: 'الخميس',
+                    y: `{{counts_week_emp|get_item:5}}`
+                },
+                {
+                    x: 'الجمعة',
+                    y: `{{counts_week_emp|get_item:6}}`
+                },
+            ]
+        var data_month_vis=[
+                {
+                    x: '1-5',
+                    y: `{{counts_month_vis|get_item:0}}`
+                },
+                {
+                    x: '5-10',
+                    y: `{{counts_month_vis|get_item:1}}`
+                },
+                {
+                    x: '10-15',
+                    y: `{{counts_month_vis|get_item:2}}`
+                },
+                {
+                    x: '15-20',
+                    y: `{{counts_month_vis|get_item:3}}`
+                },
+                {
+                    x: '20-25',
+                    y: `{{counts_month_vis|get_item:4}}`
+                },
+                {
+                    x: '25-30',
+                    y: `{{counts_month_vis|get_item:5}}`
+                },
+               
+                
+            ];
+        var data_month_emp=[
+        {
+                    x: '1-5',
+                    y: `{{counts_month_emp|get_item:0}}`
+                },
+                {
+                    x: '5-10',
+                    y: `{{counts_month_emp|get_item:1}}`
+                },
+                {
+                    x: '10-15',
+                    y: `{{counts_month_emp|get_item:2}}`
+                },
+                {
+                    x: '15-20',
+                    y: `{{counts_month_emp|get_item:3}}`
+                },
+                {
+                    x: '20-25',
+                    y: `{{counts_month_emp|get_item:4}}`
+                },
+                {
+                    x: '25-30',
+                    y: `{{counts_month_emp|get_item:5}}`
+                },
+              
+            ]
+        var data_year_vis=[
+                {
+                    x: '1',
+                    y: `{{counts_year_vis|get_item:0}}`
+                },
+                {
+                    x: '2',
+                    y: `{{counts_year_vis|get_item:1}}`
+                },
+                {
+                    x: '3',
+                    y: `{{counts_year_vis|get_item:2}}`
+                },
+                {
+                    x: '4',
+                    y: `{{counts_year_vis|get_item:3}}`
+                },
+                {
+                    x: '5',
+                    y: `{{counts_year_vis|get_item:4}}`
+                },
+                {
+                    x: '6',
+                    y: `{{counts_year_vis|get_item:5}}`
+                },
+                {
+                    x: '7',
+                    y: `{{counts_year_vis|get_item:5}}`
+                },
+                {
+                    x: '8',
+                    y: `{{counts_year_vis|get_item:5}}`
+                },
+                {
+                    x: '9',
+                    y: `{{counts_year_vis|get_item:5}}`
+                },
+                {
+                    x: '10',
+                    y: `{{counts_year_vis|get_item:5}}`
+                },
+                {
+                    x: '11',
+                    y: `{{counts_year_vis|get_item:5}}`
+                },
+                {
+                    x: '12',
+                    y: `{{counts_year_vis|get_item:5}}`
+                },
+               
+                
+            ];
+        var data_year_emp=[
+        {
+                    x: '1',
+                    y: `{{counts_year_emp|get_item:0}}`
+                },
+                {
+                    x: '2',
+                    y: `{{counts_year_emp|get_item:1}}`
+                },
+                {
+                    x: '3',
+                    y: `{{counts_year_emp|get_item:2}}`
+                },
+                {
+                    x: '4',
+                    y: `{{counts_year_emp|get_item:3}}`
+                },
+                {
+                    x: '5',
+                    y: `{{counts_year_emp|get_item:4}}`
+                },
+                {
+                    x: '6',
+                    y: `{{counts_year_emp|get_item:5}}`
+                },
+                {
+                    x: '7',
+                    y: `{{counts_year_emp|get_item:5}}`
+                },
+                {
+                    x: '8',
+                    y: `{{counts_year_emp|get_item:5}}`
+                },
+                {
+                    x: '9',
+                    y: `{{counts_year_emp|get_item:5}}`
+                },
+                {
+                    x: '10',
+                    y: `{{counts_year_emp|get_item:5}}`
+                },
+                {
+                    x: '11',
+                    y: `{{counts_year_emp|get_item:5}}`
+                },
+                {
+                    x: '12',
+                    y: `{{counts_year_emp|get_item:5}}`
+                },
+              
+            ]
+
+    var options_day = {
+    series: [
+        {
+            type: 'line',
+            name: 'الزائرون',
+            data: data_day_vis
+        },
+        {
+            type: 'line',
+            name: 'المزظفون',
+            chart: {
+                dropShadow: {
+                    enabled: true,
+                    enabledOnSeries: undefined,
+                    top: 5,
+                    left: 0,
+                    blur: 3,
+                    color: '#000',
+                    opacity: 0.1
+                }
+            },
+            data:data_day_emp
+        }
+       ],
+    chart: {
+        height: 350,
+        animations: {
+            speed: 500
+        },
+        dropShadow: {
+            enabled: true,
+            enabledOnSeries: undefined,
+            top: 8,
+            left: 0,
+            blur: 3,
+            color: '#000',
+            opacity: 0.1
+        },
+    },
+    colors: ["rgb(132, 90, 223)", "rgba(35, 183, 229, 0.85)", "rgba(119, 119, 142, 0.05)"],
+    dataLabels: {
+        enabled: false
+    },
+    grid: {
+        borderColor: '#f1f1f1',
+        strokeDashArray: 3
+    },
+    stroke: {
+        curve: 'smooth',
+        width: [2, 2, 0],
+        dashArray: [0, 5, 0],
+    },
+    xaxis: {
+        axisTicks: {
+            show: false,
+        },
+    },
+    yaxis: {
+        labels: {
+            formatter: function (value) {
+                return "" + value;
+            }
+        },
+    },
+    tooltip: {
+        y: [{
+            formatter: function(e) {
+                return void 0 !== e ? " " + e.toFixed(0) : e
+            }
+        }, {
+            formatter: function(e) {
+                return void 0 !== e ? "" + e.toFixed(0) : e
+            }
+        }, {
+            formatter: function(e) {
+                return void 0 !== e ? e.toFixed(0) : e
+            }
+        }]
+    },
+    legend: {
+        show: true,
+        customLegendItems: ['الزائرون', 'الموظفون'],
+        inverseOrder: true
+    },
+   
+    markers: {
+        hover: {
+            sizeOffset: 5
+        }
+    }
+};
+    var options_week = {
+    series: [
+        {
+            type: 'line',
+            name: 'الزائرون',
+            data: data_week_vis
+        },
+        {
+            type: 'line',
+            name: 'المزظفون',
+            chart: {
+                dropShadow: {
+                    enabled: true,
+                    enabledOnSeries: undefined,
+                    top: 5,
+                    left: 0,
+                    blur: 3,
+                    color: '#000',
+                    opacity: 0.1
+                }
+            },
+            data:data_week_emp
+        }
+       ],
+    chart: {
+        height: 350,
+        animations: {
+            speed: 500
+        },
+        dropShadow: {
+            enabled: true,
+            enabledOnSeries: undefined,
+            top: 8,
+            left: 0,
+            blur: 3,
+            color: '#000',
+            opacity: 0.1
+        },
+    },
+    colors: ["rgb(132, 90, 223)", "rgba(35, 183, 229, 0.85)", "rgba(119, 119, 142, 0.05)"],
+    dataLabels: {
+        enabled: false
+    },
+    grid: {
+        borderColor: '#f1f1f1',
+        strokeDashArray: 3
+    },
+    stroke: {
+        curve: 'smooth',
+        width: [2, 2, 0],
+        dashArray: [0, 5, 0],
+    },
+    xaxis: {
+        axisTicks: {
+            show: false,
+        },
+    },
+    yaxis: {
+        labels: {
+            formatter: function (value) {
+                return "" + value;
+            }
+        },
+    },
+    tooltip: {
+        y: [{
+            formatter: function(e) {
+                return void 0 !== e ? " " + e.toFixed(0) : e
+            }
+        }, {
+            formatter: function(e) {
+                return void 0 !== e ? "" + e.toFixed(0) : e
+            }
+        }, {
+            formatter: function(e) {
+                return void 0 !== e ? e.toFixed(0) : e
+            }
+        }]
+    },
+    legend: {
+        show: true,
+        customLegendItems: ['الزائرون', 'الموظفون'],
+        inverseOrder: true
+    },
+   
+    markers: {
+        hover: {
+            sizeOffset: 5
+        }
+    }
+};
+    var options_month = {
+    series: [
+        {
+            type: 'line',
+            name: 'الزائرون',
+            data: data_month_vis
+        },
+        {
+            type: 'line',
+            name: 'المزظفون',
+            chart: {
+                dropShadow: {
+                    enabled: true,
+                    enabledOnSeries: undefined,
+                    top: 5,
+                    left: 0,
+                    blur: 3,
+                    color: '#000',
+                    opacity: 0.1
+                }
+            },
+            data:data_month_emp
+        }
+       ],
+    chart: {
+        height: 350,
+        animations: {
+            speed: 500
+        },
+        dropShadow: {
+            enabled: true,
+            enabledOnSeries: undefined,
+            top: 8,
+            left: 0,
+            blur: 3,
+            color: '#000',
+            opacity: 0.1
+        },
+    },
+    colors: ["rgb(132, 90, 223)", "rgba(35, 183, 229, 0.85)", "rgba(119, 119, 142, 0.05)"],
+    dataLabels: {
+        enabled: false
+    },
+    grid: {
+        borderColor: '#f1f1f1',
+        strokeDashArray: 3
+    },
+    stroke: {
+        curve: 'smooth',
+        width: [2, 2, 0],
+        dashArray: [0, 5, 0],
+    },
+    xaxis: {
+        axisTicks: {
+            show: false,
+        },
+    },
+    yaxis: {
+        labels: {
+            formatter: function (value) {
+                return "" + value;
+            }
+        },
+    },
+    tooltip: {
+        y: [{
+            formatter: function(e) {
+                return void 0 !== e ? " " + e.toFixed(0) : e
+            }
+        }, {
+            formatter: function(e) {
+                return void 0 !== e ? "" + e.toFixed(0) : e
+            }
+        }, {
+            formatter: function(e) {
+                return void 0 !== e ? e.toFixed(0) : e
+            }
+        }]
+    },
+    legend: {
+        show: true,
+        customLegendItems: ['الزائرون', 'الموظفون'],
+        inverseOrder: true
+    },
+   
+    markers: {
+        hover: {
+            sizeOffset: 5
+        }
+    }
+};
+    var options_year = {
+    series: [
+        {
+            type: 'line',
+            name: 'الزائرون',
+            data: data_year_vis
+        },
+        {
+            type: 'line',
+            name: 'المزظفون',
+            chart: {
+                dropShadow: {
+                    enabled: true,
+                    enabledOnSeries: undefined,
+                    top: 5,
+                    left: 0,
+                    blur: 3,
+                    color: '#000',
+                    opacity: 0.1
+                }
+            },
+            data:data_year_emp
+        }
+       ],
+    chart: {
+        height: 350,
+        animations: {
+            speed: 500
+        },
+        dropShadow: {
+            enabled: true,
+            enabledOnSeries: undefined,
+            top: 8,
+            left: 0,
+            blur: 3,
+            color: '#000',
+            opacity: 0.1
+        },
+    },
+    colors: ["rgb(132, 90, 223)", "rgba(35, 183, 229, 0.85)", "rgba(119, 119, 142, 0.05)"],
+    dataLabels: {
+        enabled: false
+    },
+    grid: {
+        borderColor: '#f1f1f1',
+        strokeDashArray: 3
+    },
+    stroke: {
+        curve: 'smooth',
+        width: [2, 2, 0],
+        dashArray: [0, 5, 0],
+    },
+    xaxis: {
+        axisTicks: {
+            show: false,
+        },
+    },
+    yaxis: {
+        labels: {
+            formatter: function (value) {
+                return "" + value;
+            }
+        },
+    },
+    tooltip: {
+        y: [{
+            formatter: function(e) {
+                return void 0 !== e ? " " + e.toFixed(0) : e
+            }
+        }, {
+            formatter: function(e) {
+                return void 0 !== e ? "" + e.toFixed(0) : e
+            }
+        }, {
+            formatter: function(e) {
+                return void 0 !== e ? e.toFixed(0) : e
+            }
+        }]
+    },
+    legend: {
+        show: true,
+        customLegendItems: ['الزائرون', 'الموظفون'],
+        inverseOrder: true
+    },
+   
+    markers: {
+        hover: {
+            sizeOffset: 5
+        }
+    }
+};
+document.getElementById('crm-revenue-analytics_day').innerHTML = '';
+var chart = new ApexCharts(document.querySelector("#crm-revenue-analytics_day"), options_year);
+chart.render();
+
+function changeChart(id){
+    if(id==1){
+        document.getElementById('crm-revenue-analytics_day').innerHTML = '';
+        var chart = new ApexCharts(document.querySelector("#crm-revenue-analytics_day"), options_day);
+chart.render();
+    }else if(id==2){
+        document.getElementById('crm-revenue-analytics_day').innerHTML = '';
+        var chart = new ApexCharts(document.querySelector("#crm-revenue-analytics_day"), options_week);
+chart.render();
+    }else if(id==3){
+        document.getElementById('crm-revenue-analytics_day').innerHTML = '';
+        var chart = new ApexCharts(document.querySelector("#crm-revenue-analytics_day"), options_month);
+chart.render();
+    }else{
+        document.getElementById('crm-revenue-analytics_day').innerHTML = '';
+        var chart = new ApexCharts(document.querySelector("#crm-revenue-analytics_day"), options_year);
+chart.render();
+    }
+}
+
+var departmentCounts = JSON.parse(decodeURIComponent('{{ counts_department|escapejs }}'));
+backgroundColors=[]
+for(var i=0;i<departmentCounts.length;i++){
+    backgroundColors.push('rgb(132, 90, '+(i*10+5)+')')
+}
+console.log(departmentCounts);
+Chart.defaults.elements.arc.borderWidth = 0;
+Chart.defaults.datasets.doughnut.cutout = '85%';
+var chartInstance = new Chart(document.getElementById("leads-source"), {
+    type: 'doughnut',
+    data: {
+        datasets: [{
+            label: 'My First Dataset',
+            data: departmentCounts,
+            backgroundColor:backgroundColors
+            // backgroundColor: [
+            //     'rgb(132, 90, 223)',
+            //     'rgb(35, 183, 229)',
+            //     'rgb(38, 191, 148)',
+            //     'rgb(245, 184, 73)',
+            // ]
+        }]
+    },
+    plugins: [{
+        afterUpdate: function (chart) {
+            const arcs = chart.getDatasetMeta(0).data;
+
+            arcs.forEach(function (arc) {
+                arc.round = {
+                    x: (chart.chartArea.left + chart.chartArea.right) / 2,
+                    y: (chart.chartArea.top + chart.chartArea.bottom) / 2,
+                    radius: (arc.outerRadius + arc.innerRadius) / 2,
+                    thickness: (arc.outerRadius - arc.innerRadius) / 2,
+                    backgroundColor: arc.options.backgroundColor
+                }
+            });
+        },
+        afterDraw: (chart) => {
+            const {
+                ctx,
+                canvas
+            } = chart;
+
+            chart.getDatasetMeta(0).data.forEach(arc => {
+                const startAngle = Math.PI / 2 - arc.startAngle;
+                const endAngle = Math.PI / 2 - arc.endAngle;
+
+                ctx.save();
+                ctx.translate(arc.round.x, arc.round.y);
+                ctx.fillStyle = arc.options.backgroundColor;
+                ctx.beginPath();
+                ctx.arc(arc.round.radius * Math.sin(endAngle), arc.round.radius * Math.cos(endAngle), arc.round.thickness, 0, 2 * Math.PI);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            });
+        }
+    }]
+});
+
+function leads(myVarVal) {
+
+    chartInstance.data.datasets[0] = {
+        label: 'My First Dataset',
+        data: [32, 27, 25, 16],
+        backgroundColor: [
+            `rgb(${myVarVal})`,
+            'rgb(35, 183, 229)',
+            'rgb(245, 184, 73)',
+            'rgb(38, 191, 148)',
+        ]
+    }
+    chartInstance.update();
+
+}
+    </script>
 {% endblock %}

@@ -13,7 +13,7 @@ def detect_person(national_id,camera_id):
     try:
         camera = Cameras.objects.get(id=camera_id)
         person = Persons.objects.get(id_national=national_id)
-        if True :#not str(camera_id)+""+str(national_id) in ids
+        if not str(camera_id)+""+str(national_id) in ids  :#   True
             ids.append(str(camera_id)+""+str(national_id))
             object_data.append({
                 "id_camera":camera_id,
@@ -52,7 +52,7 @@ def detect_unknown(image_frame, camera_id):
     pil_image.save(image_buffer, format='JPEG')
     image_data = image_buffer.getvalue()
     f=Persons.objects.filter(created_at=created_at)
-    if  False:#len(f)>0
+    if  len(f)>0 : #False:
        pass
     else:
         person = Persons.objects.create(
