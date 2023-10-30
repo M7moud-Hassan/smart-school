@@ -154,18 +154,14 @@ def edit_person(request, id):
         if person:
 
             form = PersonsForm(instance=person,
-                               initial={'image': '', 'front_national_img': '',
-                                        'date_of_birth': person.date_of_birth.strftime(
-                                            '%m/%d/%Y') if person.date_of_birth else ''})
-            form.fields['image'].widget.attrs['data-default-file'] = "http://127.0.0.1:8000/" + person.image.url
-            form.fields['front_national_img'].widget.attrs[
-                'data-default-file'] = "http://127.0.0.1:8000/" + person.front_national_img.url
+                               initial={'image':'', 'front_national_img': '','back_national_img': '',})
+           
             return render(request, 'persons/add_persons.html', context={
-                "title": "Add Person",
+                "title": "تعديل بيانات الشخص",
                 "form": form,
-                "update_or_add": "update",
+                "update_or_add": "تحديث",
                 "cameras": Cameras.objects.all(),
-                "image": person.image,
+                "person": person,
                 'ids_camera': person.allowed_cameras.all().values_list('id', flat=True)
             })
         else:

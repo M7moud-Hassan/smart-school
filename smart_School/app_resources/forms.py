@@ -35,17 +35,17 @@ class PersonsForm(forms.ModelForm):
                   'id_national', 'address', 'job_title','type_register']
         widgets = {
             'image': forms.ClearableFileInput(
-                attrs={'class': 'dropify-face form-control', "data-default-file": "", 'required': True, }),
-            'name': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
+                attrs={'class': 'single-fileupload3', 'required': True,'accept':'image/png, image/jpeg, image/gif' }),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'required': True ,'accept':'image/png, image/jpeg, image/gif'}),
             'date_of_birth': forms.TextInput(attrs={
                 'class': 'form-control',
                 'id':'date',
                 'required': True,
             }),
             'front_national_img': forms.ClearableFileInput(
-                attrs={'class': 'dropify-front form-control', "data-default-file": "", 'required': True}),
+                attrs={'class': 'single-fileupload1','required': True,'accept':'image/png, image/jpeg, image/gif'}),
             'back_national_img': forms.ClearableFileInput(
-                attrs={'class': 'dropify-back form-control', "data-default-file": "", 'required': True}),
+                attrs={'class': 'single-fileupload2', 'required': True,'accept':'image/png, image/jpeg, image/gif'}),
             'id_national': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
             'job_title': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
             'address': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
@@ -77,19 +77,19 @@ class PersonsForm(forms.ModelForm):
 
     # Customizing the gender field widget to use radio buttons
     GENDER_CHOICES = [
-        ('Male', 'ذكر'),
-        ('Female', 'انثي'),
+        ('ذكر', 'ذكر'),
+        ('انثي', 'انثي'),
     ]
     TYPE_CHOICES = [
-             ('Visitor', 'زائر'),
-            ('Employee', 'موظف'),
+             ('زائر', 'زائر'),
+            ('موظف', 'موظف'),
 ]
     gender = forms.ChoiceField(
-        choices=GENDER_CHOICES, widget=forms.RadioSelect, initial='Male')
+        choices=GENDER_CHOICES, widget=forms.RadioSelect, initial='ذكر')
     type_register = forms.ChoiceField(
         choices=TYPE_CHOICES,
         widget=forms.RadioSelect,
-        initial='Employee'
+        initial='موظف'
     )
     status = forms.ChoiceField(choices=[(
         'whitelist', 'whitelist'), ('blacklist', 'blacklist'), ('unknown', 'unknown')])
