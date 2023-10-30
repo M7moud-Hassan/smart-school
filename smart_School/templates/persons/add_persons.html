@@ -38,7 +38,7 @@
         {% endfor %}
     </ul>
 {% endif %}
-    <form class="row g-3 needs-validation" method="post" action="{% url 'add_person' %}" enctype="multipart/form-data" novalidate>
+    <form class="row g-3 needs-validation" method="post"  enctype="multipart/form-data" novalidate>
       {% csrf_token %}
       <div class="row">
         <div class="col-12 col-md-4">
@@ -296,9 +296,10 @@
       {{form.status}}
     </div>
     <div class="col-12 col-md-6 row align-items-center mt-4 ps-4 pt-2">
+      
       {% for radio in form.type_register %}
       <div class="form-check form-check-md col-6">
-        <input onchange="showOrhid('{{radio.choice_label}}')" id="input{{radio.choice_label}}" type="radio" class="form-check-input" name="{{ form.type_register.name }}" value="{{ radio.choice_label }}" {% if radio.choice_label == 'موظف' %}checked{% endif %}>
+        <input onchange="showOrhid('{{radio.choice_label}}')" id="input{{radio.choice_label}}" type="radio" class="form-check-input" name="{{ form.type_register.name }}" value="{{ radio.choice_label }}" {% if radio.choice_label == form.type_register.value %}checked{% endif %}>
         <label for="input{{radio.choice_label}}" class="form-check-label">{{radio.choice_label}}</label>
     </div>
     {% endfor %}
@@ -362,38 +363,20 @@
         document.querySelector('.single-fileupload3'),
         
     );
-  })
-  $(".dropify-face").dropify(
-    {
-      messages: {
-        'default': 'حمل صورتك هنا ',
-        'replace': 'اضغط لستبدال الصورة',
-        'remove': 'مسح',
-        'error': 'خطا في تحميل الصورة'
-      }
-    }
-  );
-  $(".dropify-back").dropify(
-    {
-      messages: {
-        'default': 'حمل  صورة البطاقة الخلفية ',
-        'replace': 'اضغط لستبدال الصورة',
-        'remove': 'مسح',
-        'error': 'خطا في تحميل الصورة'
-      }
-    }
-  );
 
-  $(".dropify-front").dropify(
-    {
-      messages: {
-        'default': 'حمل  صورة البطاقة الامامية ',
-        'replace': 'اضغط لستبدال الصورة',
-        'remove': 'مسح',
-        'error': 'خط في تحميل الصورة'
-      }
+    if(`{{person}}`){
+     single3.addFile(`{{person.image.url}}`)
+     {% for image in person.images.all %}
+        pods.addFile('{{ image.image.url }}');
+    {% endfor %}
+     single2.addFile(`{{person.back_national_img.url}}`)
+     single1.addFile(`{{person.front_national_img.url}}`)
+   
     }
-  );
+
+
+
+  })
 
   function openCamera(index, id) {
     $("#video-" + index).attr("src", "/cameras/video/" + id);
@@ -641,6 +624,8 @@
     reader.readAsDataURL(file);
 
   }
+
+
   function showOrhid(value) {
     // console.log(value);
     if (value == 'موظف') {
@@ -648,7 +633,7 @@
     } else {
       $('#employee').append(`
       <div id="info-employee" class="col-12 pt-4">
-      <h3>information visitor</h3>
+      <h3>معلومات الزائر</h3>
         <div class="row g-3">
           <div class="form-group col-12 col-md-6">
             {{info_form.department.label_tag}}
@@ -674,5 +659,6 @@
         </div>`)
     }
   }
+  showOrhid(`{{form.type_register.value}}`)
 </script>
 {% endblock %}

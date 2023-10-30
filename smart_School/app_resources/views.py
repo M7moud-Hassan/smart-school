@@ -89,7 +89,7 @@ def add_person(request):
     if request.method == 'POST':
         form = PersonsForm(request.POST, request.FILES)
         if form.is_valid():
-            if form.cleaned_data['type_register']=='Visitor':
+            if form.cleaned_data['type_register']=='زائر':
                 inforForm=InformationsForm(request.POST)
                 if inforForm.is_valid():
                     person_instance = form.save(commit=False)
@@ -98,9 +98,28 @@ def add_person(request):
                     # person_instance.images=image_list
                     person_instance.save()
                     person_instance = form.save()
+                    image=request.POST.get('image')
+                    if image:
+                        data = json.loads(image)
+                        data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                        person_instance.image=data_image
+                        person_instance.save()
+                    national_front=request.POST.get('front_national_img')
+                    if national_front:
+                        data = json.loads(national_front)
+                        data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                        person_instance.front_national_img=data_image
+                        person_instance.save()
+                    national_back=request.POST.get('back_national_img')
+                    if national_back:
+                        data = json.loads(national_back)
+                        data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                        person_instance.back_national_img=data_image
+                        person_instance.save()
                     base64_images = request.POST.getlist('images')
                     for base64_image in base64_images:
                         try:
+                            
                             data = json.loads(base64_image)
                             data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
                             im=ImagesPerson.objects.create(image=data_image)
@@ -108,8 +127,27 @@ def add_person(request):
                         except:
                             pass
                     person_instance.save()
+                    image_of_person(person_instance)
             else:
                     person_instance = form.save()
+                    image=request.POST.get('image')
+                    if image:
+                        data = json.loads(image)
+                        data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                        person_instance.image=data_image
+                        person_instance.save()
+                    national_front=request.POST.get('front_national_img')
+                    if national_front:
+                        data = json.loads(national_front)
+                        data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                        person_instance.front_national_img=data_image
+                        person_instance.save()
+                    national_back=request.POST.get('back_national_img')
+                    if national_back:
+                        data = json.loads(national_back)
+                        data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                        person_instance.back_national_img=data_image
+                        person_instance.save()
                     base64_images = request.POST.getlist('images')
                     for base64_image in base64_images:
                         try:
@@ -117,10 +155,11 @@ def add_person(request):
                             data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
                             im=ImagesPerson.objects.create(image=data_image)
                             person_instance.images.add(im)
+                            person_instance.save()
                         except:
+                            print('error')
                             pass
-                    person_instance.save()
-            image_of_person(person_instance)
+                    image_of_person(person_instance)
             return redirect('/persons/persons/')
         else:
             return render(request, 'persons/add_persons.html', context={'form': form,
@@ -146,15 +185,84 @@ def edit_person(request, id):
     if request.method == 'POST':
         form = PersonsForm(request.POST, request.FILES, instance=person)
         if form.is_valid():
-            person_instance = form.save()
-            
-            # image_update_person(person_instance)
+            if form.cleaned_data['type_register']=='زائر':
+                inforForm=InformationsForm(request.POST,request.FILES, instance=person.info)
+                if inforForm.is_valid():
+                    person_instance = form.save()
+                    info_intsance=inforForm.save()
+                    person_instance.info=info_intsance
+                    # person_instance.images=image_list
+                    person_instance.save()
+                    person_instance = form.save()
+                    image=request.POST.get('image')
+                    if image:
+                        data = json.loads(image)
+                        data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                        person_instance.image=data_image
+                        person_instance.save()
+                    national_front=request.POST.get('front_national_img')
+                    if national_front:
+                        data = json.loads(national_front)
+                        data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                        person_instance.front_national_img=data_image
+                        person_instance.save()
+                    national_back=request.POST.get('back_national_img')
+                    if national_back:
+                        data = json.loads(national_back)
+                        data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                        person_instance.back_national_img=data_image
+                        person_instance.save()
+                    base64_images = request.POST.getlist('images')
+                    person_instance.images.clear()
+                    for base64_image in base64_images:
+                        try:
+                            data = json.loads(base64_image)
+                            data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                            im=ImagesPerson.objects.create(image=data_image)
+                            person_instance.images.add(im)
+                        except:
+                            pass
+                    person_instance.save()
+                    image_of_person(person_instance)
+            else:
+                    person_instance = form.save()
+                    image=request.POST.get('image')
+                    if image:
+                        data = json.loads(image)
+                        data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                        person_instance.image=data_image
+                        person_instance.save()
+                    national_front=request.POST.get('front_national_img')
+                    if national_front:
+                        data = json.loads(national_front)
+                        data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                        person_instance.front_national_img=data_image
+                        person_instance.save()
+                    national_back=request.POST.get('back_national_img')
+                    if national_back:
+                        data = json.loads(national_back)
+                        data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                        person_instance.back_national_img=data_image
+                        person_instance.save()
+                    base64_images = request.POST.getlist('images')
+                    person_instance.images.clear()
+                    for base64_image in base64_images:
+                        try:
+                            data = json.loads(base64_image)
+                            data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                            im=ImagesPerson.objects.create(image=data_image)
+                            person_instance.images.add(im)
+                        except:
+                            pass
+                    person_instance.save()
+            image_update_person(person_instance)
             return redirect('/persons/persons/')
     else:
         if person:
 
             form = PersonsForm(instance=person,
                                initial={'image':'', 'front_national_img': '','back_national_img': '',})
+            info_form=InformationsForm(instance=person.info)
            
             return render(request, 'persons/add_persons.html', context={
                 "title": "تعديل بيانات الشخص",
@@ -162,6 +270,7 @@ def edit_person(request, id):
                 "update_or_add": "تحديث",
                 "cameras": Cameras.objects.all(),
                 "person": person,
+                "info_form":info_form,
                 'ids_camera': person.allowed_cameras.all().values_list('id', flat=True)
             })
         else:
