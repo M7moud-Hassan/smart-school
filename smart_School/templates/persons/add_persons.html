@@ -341,11 +341,22 @@
     <script src="{% static 'dist/libs/filepond-plugin-image-resize/filepond-plugin-image-resize.min.js' %}"></script>
     <script src="{% static 'dist/libs/filepond-plugin-image-transform/filepond-plugin-image-transform.min.js' %}"></script>
     <script src="{% static 'dist/libs/dropzone/dropzone-min.js' %}"></script>
-    <script src="{% static 'dist/js/fileupload.js' %}"></script>
+    <!-- <script src="{% static 'dist/js/fileupload.js' %}"></script> -->
 
 <script>
   $('#hide1').hide()
   $('#hide2').hide()
+  FilePond.registerPlugin(
+        FilePondPluginImagePreview,
+        FilePondPluginImageExifOrientation,
+        FilePondPluginFileValidateSize,
+        FilePondPluginFileEncode,
+        FilePondPluginImageEdit,
+        FilePondPluginFileValidateType,
+        FilePondPluginImageCrop,
+        FilePondPluginImageResize,
+        FilePondPluginImageTransform
+    );
  var pods;
  var single1;
  var single2;
