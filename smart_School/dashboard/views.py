@@ -50,6 +50,7 @@ def search_id(request):
     return render(request,'dashboard/search_id.html',context={'form':form})
 
 def face_id(request):
+    
     form=SearchIDForm(request.POST,request.FILES)
     if form.is_valid():
             if form.cleaned_data['frontImage']:
@@ -57,6 +58,7 @@ def face_id(request):
                         if request.method == 'POST':
                             print(settings.KNOW_FACE_NAMES)
                             file = request.FILES.get('frontImage', False) #request.FILES['front']
+                            print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
                             print(file)
                             filename_front = file.name
                             #file.save(os.path.join('uploads',filename))

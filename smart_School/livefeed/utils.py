@@ -20,7 +20,10 @@ def image_of_person(person):
     # Calculate the face representation for the person's image
     image_path = person.image.path
     print(image_path)
-    shutil.copy(image_path, "./media/faces/"+person.id_national+".jpg")
+    try:
+        shutil.copy(image_path, "./media/faces/"+person.id_national+".jpg")
+    except:
+        pass
     image = face_recognition.load_image_file(image_path)
     face_encoding = face_recognition.face_encodings(image)[0]
     settings.KNOW_FACE_ENCODINGS.append(face_encoding)
