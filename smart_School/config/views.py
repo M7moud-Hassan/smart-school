@@ -4,14 +4,17 @@ from datetime import datetime
 import io
 import sqlite3
 from django.http import HttpResponseBadRequest, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
-from app_resources.models import Persons
+from app_resources.models import Cameras, Persons
+from config.forms import ConfigForm
+from config.models import Config
 content_message=[]
 def result_files(request):
      temp=copy.deepcopy(content_message)
      content_message.clear()
      return JsonResponse({'strings': temp})
+
 def add_files(request):
     code=0
     if request.method == 'POST':
@@ -59,3 +62,20 @@ def add_files(request):
             content_message.append('Exit '+str(code))
 
     return render(request, 'config/add_files.html')
+
+def importatnted_fileds(request):
+    instance=Config.objects.all().first()
+    if instance:
+        form=ConfigForm(instance=instance)
+    else:
+        form=ConfigForm()
+    if request.method=='POST':
+        if instance:
+            form=ConfigForm(instance=instance,data=request.POST)
+        else:
+            form=ConfigForm(data=request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    return render(request,'config/important_filed.html',context={'cameras':Cameras.objects.all(),'form':form})

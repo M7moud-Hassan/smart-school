@@ -1,30 +1,21 @@
 import copy
 from django.contrib.auth import logout
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
 from app_resources.utils import object_data
 from django.db.models import Q
-from django.utils import timezone
-from datetime import timedelta, datetime
-from datetime import date
+from datetime import time, timedelta, datetime
 from app_resources.models import Persons, PersonsDetect, Cameras
+from config.models import Config
 from dashboard.models import Department
-from django.db.models import Count
 
 
 # Create your views here.
 @login_required
 def index(request):
-    today = timezone.now().date()
-    yesterday = today - timedelta(days=1)
-    this_month_start = today.replace(day=1)
-    last_month_end = this_month_start - timedelta(days=1)
-    last_month_start = last_month_end.replace(day=1)
-    this_year_start = today.replace(month=1, day=1)
-    last_year_start = this_year_start.replace(year=this_year_start.year - 1)
     cameras = Cameras.objects.all()
-
 ### tody
     now = datetime.now()
     start_time = datetime(now.year, now.month, now.day)
@@ -40,12 +31,12 @@ def index(request):
         count = PersonsDetect.objects.filter(
             detected_at__gte=start_time,
             detected_at__lt=end_time,
-            person_id__type_register='Employee'
+            person_id__type_register='موظف'
         ).count()
         count2 = PersonsDetect.objects.filter(
             detected_at__gte=start_time,
             detected_at__lt=end_time,
-            person_id__type_register='Visitor'
+            person_id__type_register='زائر'
         ).count()
         counts_day_emp.append(count)
         counts_day_vis.append(count2)
@@ -65,12 +56,12 @@ def index(request):
         count = PersonsDetect.objects.filter(
             detected_at__date__gte=start_date,
             detected_at__date__lt=end_date,
-            person_id__type_register='Employee'
+            person_id__type_register='موظف'
         ).count()
         count2 = PersonsDetect.objects.filter(
             detected_at__date__gte=start_date,
             detected_at__date__lt=end_date,
-            person_id__type_register='Visitor'
+            person_id__type_register='زائر'
         ).count()
         counts_week_emp.append(count)
         counts_week_vis.append(count2)
@@ -86,12 +77,12 @@ def index(request):
         count = PersonsDetect.objects.filter(
             detected_at__date__gte=start_date,
             detected_at__date__lt=end_date,
-            person_id__type_register='Employee'
+            person_id__type_register='موظف'
         ).count()
         count2 = PersonsDetect.objects.filter(
             detected_at__date__gte=start_date,
             detected_at__date__lt=end_date,
-            person_id__type_register='Visitor'
+            person_id__type_register='زائر'
         ).count()
         counts_month_emp.append(count)
         counts_month_vis.append(count2)
@@ -106,12 +97,12 @@ def index(request):
         count = PersonsDetect.objects.filter(
             detected_at__date__gte=start_date,
             detected_at__date__lt=end_date,
-            person_id__type_register='Employee'
+            person_id__type_register='موظف'
         ).count()
         count2 = PersonsDetect.objects.filter(
             detected_at__date__gte=start_date,
             detected_at__date__lt=end_date,
-            person_id__type_register='Visitor'
+            person_id__type_register='زائر'
         ).count()
         counts_year_emp.append(count)
         counts_year_vis.append(count2)
@@ -125,18 +116,50 @@ def index(request):
         ).count()
         total_deps=total_deps+count
         department_counts.append(count)
-    registers = Persons.objects.filter(Q(status='whitelist') | Q(status='blacklist'))
-    detectPersons = PersonsDetect.objects.filter(person_id__status="unknown")
-    totalEmpolyees=Persons.objects.filter(type_register='Employee')
-    totalVisitor=Persons.objects.filter(type_register='Visitor')
-    # today = date.today()
+    # registers = Persons.objects.filter(Q(status='whitelist') | Q(status='blacklist'))
+    config=Config.objects.all().first()
+    if config:
+        time_exit=config.time_end_working
+    else:
+        time_exit=time(12,0)
+    today = datetime.now().date()
+    detected_at_datetime = datetime.combine(today, time_exit)
+    
+    activeEmpoly=PersonsDetect.objects.filter(person_id__type_register='موظف',outed_at=None,detected_at__date=today, detected_at__lt=detected_at_datetime).count()
+    active_visitor=PersonsDetect.objects.filter(person_id__type_register='زائر',outed_at=None,detected_at__date=today, detected_at__gt=detected_at_datetime).count()
+    all_visitor=PersonsDetect.objects.filter(outed_at=None,detected_at__date=today).count()
+    active_visitor_after=PersonsDetect.objects.filter(person_id__type_register='زائر',outed_at=None,detected_at__date=today, detected_at__gt=detected_at_datetime).count()
+   
+    most_visitor = PersonsDetect.objects.filter(person_id__type_register='زائر')
+    most_visitor = most_visitor.values('person_id','person_id__name','person_id__image','person_id__job_title')
+    most_visitor = most_visitor.annotate(visits=Count('person_id'))
+    most_visitor = most_visitor.order_by('-visits')[:5]
 
-    # Filter the PersonsDetect model for records detected today
-    # persons_result = PersonsDetect.objects.filter(detected_at__date=today)
-    return render(request, 'home/index.html', context={"registers": registers.count(),
-                                                       "unknownDetect": detectPersons.count(),
-                                                       'empolyees':totalEmpolyees,
-                                                       'visitors':totalVisitor,
+    most_visitor_after = PersonsDetect.objects.filter(person_id__type_register='زائر',detected_at__time__gt=config.time_end_working)
+    most_visitor_after = most_visitor_after.values('person_id','person_id__name','person_id__image','person_id__job_title')
+    most_visitor_after = most_visitor_after.annotate(visits=Count('person_id'))
+    most_visitor_after = most_visitor_after.order_by('-visits')[:5]
+    
+    most_empolyee = PersonsDetect.objects.filter(person_id__type_register='موظف')
+    most_empolyee = most_empolyee.values('person_id','person_id__name','person_id__image','person_id__job_title')
+    most_empolyee = most_empolyee.annotate(visits=Count('person_id'))
+    most_empolyee = most_empolyee.order_by('-visits')[:5]
+
+    ####
+    most_visitor_dep = PersonsDetect.objects.filter(person_id__type_register='زائر')
+    most_visitor_dep = most_visitor_dep.values('person_id','person_id__name','person_id__image','person_id__job_title')
+    most_visitor_dep = most_visitor_dep.annotate(visits=Count('person_id__info__department'))
+    most_visitor_dep = most_visitor_dep.order_by('-visits')[:5]
+
+    return render(request, 'home/index.html', context={         
+                                                       'active_Empolyee':activeEmpoly,
+                                                       'most_visitor':most_visitor,
+                                                       "most_visitor_dep":most_visitor_dep,
+                                                       "most_empolyee":most_empolyee,
+                                                       "most_visitor_after":most_visitor_after,
+                                                       'active_visitor':active_visitor,
+                                                       'all_visitor':all_visitor,
+                                                       'active_visitor_after':active_visitor_after,
                                                        'cameras':cameras,
                                                        'counts_day_emp':counts_day_emp,
                                                        'counts_day_vis':counts_day_vis,

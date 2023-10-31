@@ -3,7 +3,7 @@ from django.utils import timezone
 import pytz
 from django.db import models
 from dashboard.models import *
-from django.utils import timezone
+
 
 class Cameras(models.Model):
     """Data model for cameras."""
@@ -84,3 +84,4 @@ class Information(models.Model):
     visior_type = models.ForeignKey(
         VisiTortype, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(default=timezone.now)
+    empolyee=models.ForeignKey(Persons,on_delete=models.CASCADE, null=True)

@@ -61,7 +61,7 @@ def video_feed(request, camera_id):
                 if frame is None:
                     continue
                 try:
-                    frame = imutils.resize(frame, width=320, height=320)
+                    frame = imutils.resize(frame, width=600, height=600)
                     #frame = imutils.resize(frame, width=1000, height=1000)
                     rgb_frame  =np.ascontiguousarray(frame[:, :, ::-1]) #frame[:, :, ::-1] #frame#[:, :, ::-1]
                     

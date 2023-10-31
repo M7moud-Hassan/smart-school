@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'reports',
     'livefeed',
     'authentications',
-    'dashboard'
+    'dashboard',
+    'config'
 ]
 
 MIDDLEWARE = [

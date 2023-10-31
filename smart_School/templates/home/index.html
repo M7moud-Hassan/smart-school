@@ -50,9 +50,9 @@
                     <div class="card custom-card">
                         <div class="card-header  justify-content-between">
                             <div class="card-title">
-                                Top Deals
+                                اكثر الزائرين ترددا
                             </div>
-                            <div class="dropdown">
+                            <!-- <div class="dropdown">
                                 <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fe fe-more-vertical"></i>
                                 </a>
@@ -61,80 +61,143 @@
                                     <li><a class="dropdown-item" href="javascript:void(0);">Month</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0);">Year</a></li>
                                 </ul>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="card-body">
                             <ul class="list-unstyled crm-top-deals mb-0">
+                                {% for vis in most_visitor %}
                                 <li>
                                     <div class="d-flex align-items-top flex-wrap">
                                         <div class="me-2">
                                             <span class="avatar avatar-sm avatar-rounded">
-                                                <img src="{% static 'dist/images/faces/10.jpg' %}" alt="">
+                                                <img src="http://localhost:8000/media/{{vis.person_id__image}}" alt="">
                                             </span>
                                         </div>
                                         <div class="flex-fill">
-                                            <p class="fw-semibold mb-0">Michael Jordan</p>
-                                            <span class="text-muted fs-12">michael.jordan@example.com</span>
+                                            <p class="fw-semibold mb-0">{{vis.person_id__name}}</p>
+                                            <span class="text-muted fs-12">{{vis.person_id__job_title}}</span>
                                         </div>
-                                        <div class="fw-semibold fs-15">$2,893</div>
+                                        <div class="fw-semibold fs-15">{{vis.visits}}</div>
                                     </div>
                                 </li>
-                                <li>
-                                    <div class="d-flex align-items-top flex-wrap">
-                                        <div class="me-2">
-                                            <span class="avatar avatar-sm avatar-rounded bg-warning-transparent fw-semibold">
-                                                EK
-                                            </span>
-                                        </div>
-                                        <div class="flex-fill">
-                                            <p class="fw-semibold mb-0">Emigo Kiaren</p>
-                                            <span class="text-muted fs-12">emigo.kiaren@gmail.com</span>
-                                        </div>
-                                        <div class="fw-semibold fs-15">$4,289</div>
-                                    </div>
-                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-header  justify-content-between">
+                            <div class="card-title">
+                                اكثر الزائرون ترددا بعد ساعات العمل 
+                            </div>
+                            <!-- <div class="dropdown">
+                                <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fe fe-more-vertical"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="javascript:void(0);">Week</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);">Month</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);">Year</a></li>
+                                </ul>
+                            </div> -->
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled crm-top-deals mb-0">
+                                {% for vis in most_visitor_after %}
                                 <li>
                                     <div class="d-flex align-items-top flex-wrap">
                                         <div class="me-2">
                                             <span class="avatar avatar-sm avatar-rounded">
-                                                <img src="{% static 'dist/images/faces/12.jpg' %}" alt="">
+                                                <img src="http://localhost:8000/media/{{vis.person_id__image}}" alt="">
                                             </span>
                                         </div>
                                         <div class="flex-fill">
-                                            <p class="fw-semibold mb-0">Randy Origoan</p>
-                                            <span class="text-muted fs-12">randy.origoan@gmail.com</span>
+                                            <p class="fw-semibold mb-0">{{vis.person_id__name}}</p>
+                                            <span class="text-muted fs-12">{{vis.person_id__job_title}}</span>
                                         </div>
-                                        <div class="fw-semibold fs-15">$6,347</div>
+                                        <div class="fw-semibold fs-15">{{vis.visits}}</div>
                                     </div>
                                 </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-header  justify-content-between">
+                            <div class="card-title">
+                                اكثر الزائرون ترددا  علي الاقسام 
+                            </div>
+                            <!-- <div class="dropdown">
+                                <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fe fe-more-vertical"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="javascript:void(0);">Week</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);">Month</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);">Year</a></li>
+                                </ul>
+                            </div> -->
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled crm-top-deals mb-0">
+                                {% for vis in most_visitor_dep %}
                                 <li>
                                     <div class="d-flex align-items-top flex-wrap">
                                         <div class="me-2">
-                                            <span class="avatar avatar-sm avatar-rounded bg-success-transparent fw-semibold">
-                                                GP
+                                            <span class="avatar avatar-sm avatar-rounded">
+                                                <img src="http://localhost:8000/media/{{vis.person_id__image}}" alt="">
                                             </span>
                                         </div>
                                         <div class="flex-fill">
-                                            <p class="fw-semibold mb-0">George Pieterson</p>
-                                            <span class="text-muted fs-12">george.pieterson@gmail.com</span>
+                                            <p class="fw-semibold mb-0">{{vis.person_id__name}}</p>
+                                            <span class="text-muted fs-12">{{vis.person_id__job_title}}</span>
                                         </div>
-                                        <div class="fw-semibold fs-15">$3,894</div>
+                                        <div class="fw-semibold fs-15">{{vis.visits}}</div>
                                     </div>
                                 </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-header  justify-content-between">
+                            <div class="card-title">
+                                اكثر الموظفون ترددا
+                            </div>
+                            <!-- <div class="dropdown">
+                                <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fe fe-more-vertical"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="javascript:void(0);">Week</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);">Month</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);">Year</a></li>
+                                </ul>
+                            </div> -->
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled crm-top-deals mb-0">
+                                {% for vis in most_empolyee %}
                                 <li>
                                     <div class="d-flex align-items-top flex-wrap">
                                         <div class="me-2">
-                                            <span class="avatar avatar-sm avatar-rounded bg-primary-transparent fw-semibold">
-                                                KA
+                                            <span class="avatar avatar-sm avatar-rounded">
+                                                <img src="http://localhost:8000/media/{{vis.person_id__image}}" alt="">
                                             </span>
                                         </div>
                                         <div class="flex-fill">
-                                            <p class="fw-semibold mb-0">Kiara Advain</p>
-                                            <span class="text-muted fs-12">kiaraadvain214@gmail.com</span>
+                                            <p class="fw-semibold mb-0">{{vis.person_id__name}}</p>
+                                            <span class="text-muted fs-12">{{vis.person_id__job_title}}</span>
                                         </div>
-                                        <div class="fw-semibold fs-15">$2,679</div>
+                                        <div class="fw-semibold fs-15">{{vis.visits}}</div>
                                     </div>
                                 </li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
@@ -174,8 +237,8 @@
                                     <div class="flex-fill ms-3">
                                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                                             <div>
-                                                <p class="text-muted mb-0">المسجلين في النظام</p>
-                                                <h4 class="fw-semibold mt-1">{{registers}}</h4>
+                                                <p class="text-muted mb-0">الموظفين والزائرين النشط</p>
+                                                <h4 class="fw-semibold mt-1">{{all_visitor}}</h4>
                                             </div>
                                             <div id="crm-total-customers"></div>
                                         </div>
@@ -205,8 +268,8 @@
                                     <div class="flex-fill ms-3">
                                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                                             <div>
-                                                <p class="text-muted mb-0">الغير مغروفين</p>
-                                                <h4 class="fw-semibold mt-1">{{unknownDetect}}</h4>
+                                                <p class="text-muted mb-0">عدد الموظفين النشط </p>
+                                                <h4 class="fw-semibold mt-1">{{active_Empolyee}}</h4>
                                             </div>
                                             <div id="crm-total-revenue"></div>
                                         </div>
@@ -236,8 +299,8 @@
                                     <div class="flex-fill ms-3">
                                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                                             <div>
-                                                <p class="text-muted mb-0">الزائرون</p>
-                                                <h4 class="fw-semibold mt-1">{{visitors.count}}</h4>
+                                                <p class="text-muted mb-0">عدد الزائرين النشط في ساعات العمل</p>
+                                                <h4 class="fw-semibold mt-1">{{active_visitor}}</h4>
                                             </div>
                                             <div id="crm-conversion-ratio"></div>
                                         </div>
@@ -267,8 +330,8 @@
                                     <div class="flex-fill ms-3">
                                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                                             <div>
-                                                <p class="text-muted mb-0">المؤظفين</p>
-                                                <h4 class="fw-semibold mt-1">{{empolyees.count}}</h4>
+                                                <p class="text-muted mb-0"> الزائرين  النشط بعد ساعات العمل </p>
+                                                <h4 class="fw-semibold mt-1">{{active_visitor_after}}</h4>
                                             </div>
                                             <div id="crm-total-deals"></div>
                                         </div>

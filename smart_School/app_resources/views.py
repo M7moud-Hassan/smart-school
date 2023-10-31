@@ -9,7 +9,10 @@ from django.db.models import Q
 from django.http import HttpResponse, FileResponse, StreamingHttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
-from .models import Cameras, ImagesPerson, Persons, PersonsDetect
+from config.models import Config
+
+from dashboard.models import Department
+from .models import Cameras, ImagesPerson, Information, Persons, PersonsDetect
 from .forms import CamerasForm, InformationsForm, PersonsForm
 from .utils import cameras
 import requests
@@ -130,6 +133,9 @@ def add_person(request):
                     image_of_person(person_instance)
             else:
                     person_instance = form.save()
+                    info=Information(department=Department.objects.get(id=request.POST.get('department')))
+                    person_instance.info=info
+                    person_instance.save()
                     image=request.POST.get('image')
                     if image:
                         data = json.loads(image)
@@ -407,11 +413,11 @@ def video_feed(request, camera_id):
 def get_details_from_national_img(request):
     if request.method == 'POST':
         picture = request.FILES.get('image')
-        api_url = 'http://24.144.84.0:9090/api/'
+        api_url = Config.objects.all().first().url_extract_data
         files = {'file': ('filename.jpg', picture.read(), 'image/jpeg')}
         response = requests.post(api_url, files=files)
         response_json = json.loads(response.text)
-        image_url = "http://24.144.84.0:9090/"+response_json.get('face_photo')[1:]
+        image_url = Config.objects.all().first().url_image+response_json.get('face_photo')[1:]
         headers = {'Origin': '*'}
 
         response2 = requests.get(image_url, headers=headers)
@@ -425,7 +431,7 @@ def get_details_from_national_img(request):
 def get_details_from_back_national_img(request):
     if request.method == 'POST':
         picture = request.FILES.get('image')
-        api_url = 'http://24.144.84.0:9090/api_back/'
+        api_url = Config.objects.all().first().url_extract_data_back
         files = {'file': ('filename.jpg', picture.read(), 'image/jpeg')}
         response = requests.post(api_url, files=files)
         response_json = json.loads(response.text)
