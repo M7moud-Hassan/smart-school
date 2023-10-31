@@ -1,7 +1,6 @@
 {% extends 'base_page.html' %}
 {% load static %}
 {% block mystyles %}
-<link rel="stylesheet" href="{% static 'css/dropify.min.css' %}">
 <link rel="stylesheet" href="{% static 'dist/libs/flatpickr/flatpickr.min.css' %}">
 <link rel="stylesheet" href="{% static 'dist/libs/prismjs/themes/prism-coy.min.css' %}">
 <link rel="stylesheet" href="{% static 'dist/libs/filepond/filepond.min.css' %}">
@@ -295,10 +294,15 @@
       <label for="">الحالة</label>
       {{form.status}}
     </div>
+    <div class="form-group col-12 col-md-6" id="id_department_p">
+      <!-- {{form.status.label_tag}} -->
+      <label for="">القسم</label>
+      {{info_form.department}}
+    </div>
     <div class="col-12 col-md-6 row align-items-center mt-4 ps-4 pt-2">
       
       {% for radio in form.type_register %}
-      <div class="form-check form-check-md col-6">
+      <div class="form-check form-check-md col-6 mx-auto">
         <input onchange="showOrhid('{{radio.choice_label}}')" id="input{{radio.choice_label}}" type="radio" class="form-check-input" name="{{ form.type_register.name }}" value="{{ radio.choice_label }}" {% if radio.choice_label == form.type_register.value %}checked{% endif %}>
         <label for="input{{radio.choice_label}}" class="form-check-label">{{radio.choice_label}}</label>
     </div>
@@ -629,8 +633,10 @@
   function showOrhid(value) {
     // console.log(value);
     if (value == 'موظف') {
+      $('#id_department_p').css({'display':'block'})
       $('#info-employee').remove()
     } else {
+      $('#id_department_p').css({'display':'none'})
       $('#employee').append(`
       <div id="info-employee" class="col-12 pt-4">
       <h3>معلومات الزائر</h3>
@@ -654,6 +660,10 @@
           <div class="form-group col-12 col-md-6">
             {{info_form.visior_type.label_tag}}
             {{info_form.visior_type}}
+          </div>
+          <div class="form-group col-12 col-md-6">
+            {{info_form.empolyee.label_tag}}
+            {{info_form.empolyee}}
           </div>
         </div>
         </div>`)

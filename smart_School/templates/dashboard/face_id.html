@@ -1,7 +1,14 @@
 {% extends 'base_page.html' %}
 {% load static %}
 {% block mystyles %}
-<link rel="stylesheet" href="{% static 'css/dropify.min.css' %}">
+<link rel="stylesheet" href="{% static 'dist/libs/flatpickr/flatpickr.min.css' %}">
+<link rel="stylesheet" href="{% static 'dist/libs/prismjs/themes/prism-coy.min.css' %}">
+<link rel="stylesheet" href="{% static 'dist/libs/filepond/filepond.min.css' %}">
+<link rel="stylesheet" href="{% static 'dist/libs/choices.js/public/assets/styles/choices.min.css' %}">
+<link rel="stylesheet" href="{% static 'dist/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.css' %}">
+<link rel="stylesheet" href="{% static 'dist/libs/filepond-plugin-image-edit/filepond-plugin-image-edit.min.css' %}">
+<link rel="stylesheet" href="{% static 'dist/libs/dropzone/dropzone.css' %}">
+
 {% endblock %}
 {% block content %}
   <nav aria-label="breadcrumb">
@@ -13,7 +20,7 @@
   <div class="card custom-card">
     <div class="card-header justify-content-between">
       <div class="card-title">
-        اضافة شخص
+      البحث بصورة الشخص
       </div>
       <div class="prism-toggle">
         <!-- <button class="btn btn-sm btn-primary-light">Show Code<i
@@ -21,6 +28,7 @@
       </div>
     </div>
     <div class="card-body">
+      <form  style="display: none;" data-single="true" method="post" action="https://httpbin.org/post" class="dropzone"></form>
           <form  method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% if form.errors %}
@@ -38,8 +46,20 @@
             <div class="row d-flex justify-content-center align-items-center">
               <div class="card-body col-12 col-md-4">
                 <div class="form-group w-50 mx-auto">
-                  {{form.frontImage.label_tag}}
-                  {{form.frontImage}}
+                 
+                  
+                  <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                            صورة الشخص
+                            </div>
+                        </div>
+                        <div class="card-body">
+                          {{form.frontImage}}
+                        </div>
+                    </div>
+                </div>
                 </div>
                 <div class="form-group w-50 mx-auto">
                 <button class="btn btn-primary mt-3">Serach</button>
@@ -52,119 +72,23 @@
   </div>
 {% endblock %}
 {% block scripts %}
-<script src="{% static 'js/dropify.min.js' %}"></script>
-<script>
+<script src="{% static 'dist/js/validation.js' %}"></script>
+<script src="{% static 'dist/libs/flatpickr/flatpickr.min.js' %}"></script>
+<script src="{% static 'dist/js/date&time_pickers.js' %}"></script>
+<script src="{% static 'dist/libs/prismjs/prism.js' %}"></script>
+<script src="{% static 'dist/js/prism-custom.js' %}"></script>
 
-  $(".dropify-front").dropify(
-    {
-      messages: {
-        'default': 'قم برفع صوره وجه البطاقة هنا ',
-        'replace': 'اضغط للاستبدال الصوره',
-        'remove': 'مسح',
-        'error': 'صوره خاطئه,برجاء إعاده الرفع'
-      }
-    }
-  );
-  $(".dropify-back").dropify(
-    {
-      messages: {
-        'default': 'قم برفع صوره خلفية البطاقة هنا ',
-        'replace': 'اضغط للاستبدال الصوره',
-        'remove': 'مسح',
-        'error': 'صوره خاطئه,برجاء إعاده الرفع'
-      }
-    }
-  );
-  function openCamera(index, id) {
-    $("#video-" + index).attr("src", "/cameras/video/" + id);
-  }
-
-  function release() {
-    $.ajax({
-      url: "/cameras/release/",
-      type: "GET",
-      success: function (data) {
-
-      },
-      error: function (xhr, status, error) {
-
-        console.error(error);
-      }
-    });
-  }
-
-  $('#captureImage').click(function () {
-
-    $.ajax({
-      url: '/cameras/capture_image/',
-      type: 'GET',
-      xhrFields: {
-        responseType: 'blob' // Set the response type to 'blob'
-      },
-      success: function (response) {
-        $('.dropify-clear').eq(0).click();
-        const fileInput = document.getElementById('id_frontImage');
-        var filename = 'captured_image.jpg';
-        // Create a new file object from the blob response
-        var file = new File([response], filename, { type: 'image/jpeg' });
-        // Add the file to the DataTransfer object
-        dataTransfer = new DataTransfer()
-        dataTransfer.items.add(file);
-        fileInput.files = dataTransfer.files;
-        addFileToDropify(0, file);
-        $("#video-1").attr("src", "");
-      },
-      error: function (error) {
-        console.log(error);
-      }
-    });
-    release();
-  });
-
-  $('#captureImage-2').click(function () {
-
-    $.ajax({
-      url: '/cameras/capture_image/',
-      type: 'GET',
-      xhrFields: {
-        responseType: 'blob'
-      },
-      success: function (response) {
-        $('.dropify-clear').eq(1).click();
-        const fileInput = document.getElementById('id_backImage');
-        var filename = 'captured_image.jpg';
-
-        var file = new File([response], filename, { type: 'image/jpeg' });
-        // Add the file to the DataTransfer object
-        dataTransfer = new DataTransfer()
-        dataTransfer.items.add(file);
-        fileInput.files = dataTransfer.files;
-        addFileToDropify(1, file)
-        $("#video-2").attr("src", "");
-      },
-      error: function (error) {
-        console.log(error);
-      }
-    });
-    release();
-  });
-  function addFileToDropify(index, file) {
-    console.log(index)
-    var reader = new FileReader();
-
-    reader.onload = function (e) {
-      $('.dropify-preview').eq(index).css('display', 'block');
-      var imageElement = $('<img>');
-      imageElement.attr('src', e.target.result);
-      // Change the display style of the element with class dropify-clear to block
-      $('.dropify-clear').eq(index).css('display', 'block');
-      // Append the image element to the target element
-      $('.dropify-render').eq(index).append(imageElement);
-    };
-
-    // Convert the File object to a data URL
-    reader.readAsDataURL(file);
-  }
-
-</script>
+    <script src="{% static 'dist/libs/filepond/filepond.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-file-encode/filepond-plugin-file-encode.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-image-edit/filepond-plugin-image-edit.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-image-crop/filepond-plugin-image-crop.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-image-resize/filepond-plugin-image-resize.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-image-transform/filepond-plugin-image-transform.min.js' %}"></script>
+    <script src="{% static 'dist/libs/dropzone/dropzone-min.js' %}"></script>
+    <script src="{% static 'dist/js/fileupload.js' %}"></script>
 {% endblock %}

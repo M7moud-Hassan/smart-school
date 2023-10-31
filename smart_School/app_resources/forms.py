@@ -111,6 +111,13 @@ class InformationsForm(forms.ModelForm):
             attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
         required=True
     )
+    empolyee= forms.ModelChoiceField(
+        label='الموظف',
+        queryset=Persons.objects.filter(type_register='موظف'),
+        widget=forms.Select(
+            attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
+        required=True
+    )
     type = forms.ModelChoiceField(
         label='النوع',
         queryset=Type.objects.all(),
