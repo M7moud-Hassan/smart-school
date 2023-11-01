@@ -133,7 +133,7 @@ def add_person(request):
                     image_of_person(person_instance)
             else:
                     person_instance = form.save()
-                    info=Information(department=Department.objects.get(id=request.POST.get('department')))
+                    info=Information.objects.create(department=Department.objects.get(id=request.POST.get('department')))
                     person_instance.info=info
                     person_instance.save()
                     image=request.POST.get('image')
@@ -156,6 +156,7 @@ def add_person(request):
                         person_instance.save()
                     base64_images = request.POST.getlist('images')
                     for base64_image in base64_images:
+                        print(base64_image)
                         try:
                             data = json.loads(base64_image)
                             data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
@@ -252,13 +253,16 @@ def edit_person(request, id):
                         person_instance.save()
                     base64_images = request.POST.getlist('images')
                     person_instance.images.clear()
+                    print(base64_images)
                     for base64_image in base64_images:
                         try:
                             data = json.loads(base64_image)
                             data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
                             im=ImagesPerson.objects.create(image=data_image)
+                            print("assssssssssssssssssssssss")
                             person_instance.images.add(im)
                         except:
+                            print("eroor")
                             pass
                     person_instance.save()
             image_update_person(person_instance)

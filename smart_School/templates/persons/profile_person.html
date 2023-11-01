@@ -15,7 +15,7 @@
       <div class="card-body p-0">
           <div class="d-sm-flex align-items-top p-4 border-bottom-0 main-profile-cover">
               <div>
-                  <span class="avatar avatar-xxl avatar-rounded online me-3">
+                  <span class="avatar avatar-xxl avatar-rounded  me-3">
                       <img src="http://127.0.0.1:8000/media/{{person.image}}" alt="">
                   </span>
               </div>
@@ -138,7 +138,18 @@
                                     </tr>
                                     <tr>
                                         <td>image national id</td>
-                                        <td><img src="http://localhost:8000/media/{{person.front_national_img}}" height="130px"></td>
+                                        <td>
+                                            <img src="http://localhost:8000/media/{{person.front_national_img}}" height="130px">
+                                            <img src="http://localhost:8000/media/{{person.back_national_img}}" height="130px">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>extenal images</td>
+                                        <td>
+                                        {% for image in person.images.all %}
+                                            <img src="http://localhost:8000/{{image.image.url}}" height="130px">
+                                        {% endfor %}
+                                        </td>
                                     </tr>
                                     </tbody>
                                   </table>

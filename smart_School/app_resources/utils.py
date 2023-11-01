@@ -4,16 +4,29 @@ from datetime import datetime
 from PIL import Image
 from django.core.files.base import ContentFile
 import numpy as np
+import threading
+import time
+
 cameras = []
 
 object_data = []
 ids=[]
 
+ids_lock = threading.Lock()  # Create a lock to ensure thread safety for the 'ids' list
+
+def clear_ids_list():
+    global ids
+    with ids_lock:
+        ids = []  # Clear the 'ids' list
+    threading.Timer(30.0, clear_ids_list).start()  # Schedule the function to run again in 30 seconds
+
+clear_ids_list()
+
 def detect_person(national_id,camera_id):
     try:
         camera = Cameras.objects.get(id=camera_id)
         person = Persons.objects.get(id_national=national_id)
-        if not str(camera_id)+""+str(national_id) in ids  :#   True
+        if   not str(camera_id)+""+str(national_id) in ids  :  #True :
             ids.append(str(camera_id)+""+str(national_id))
             object_data.append({
                 "id_camera":camera_id,
