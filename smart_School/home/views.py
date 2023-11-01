@@ -10,6 +10,7 @@ from datetime import time, timedelta, datetime
 from app_resources.models import Persons, PersonsDetect, Cameras
 from config.models import Config
 from dashboard.models import Department
+from django.utils import timezone
 
 
 # Create your views here.
@@ -135,7 +136,7 @@ def index(request):
     most_visitor = most_visitor.annotate(visits=Count('person_id'))
     most_visitor = most_visitor.order_by('-visits')[:5]
 
-    most_visitor_after = PersonsDetect.objects.filter(person_id__type_register='زائر',detected_at__time__gt=config.time_end_working)
+    most_visitor_after = PersonsDetect.objects.filter(person_id__type_register='زائر',detected_at__time__gt=time_exit)
     most_visitor_after = most_visitor_after.values('person_id','person_id__name','person_id__image','person_id__job_title')
     most_visitor_after = most_visitor_after.annotate(visits=Count('person_id'))
     most_visitor_after = most_visitor_after.order_by('-visits')[:5]
@@ -151,8 +152,14 @@ def index(request):
     most_visitor_dep = most_visitor_dep.annotate(visits=Count('person_id__info__department'))
     most_visitor_dep = most_visitor_dep.order_by('-visits')[:5]
 
+    current_datetime = timezone.now()
+    detected_today = PersonsDetect.objects.filter(
+    detected_at__date=current_datetime.date()
+)
+
     return render(request, 'home/index.html', context={         
                                                        'active_Empolyee':activeEmpoly,
+                                                       "detected_today":detected_today,
                                                        'most_visitor':most_visitor,
                                                        "most_visitor_dep":most_visitor_dep,
                                                        "most_empolyee":most_empolyee,

@@ -50,6 +50,8 @@ def video_feed(request, camera_id):
     connection_string = cam.connection_string
     if connection_string == '0':
         connection_string = 0
+    if connection_string == '1':
+        connection_string = 1
     camera = VideoStream(connection_string)
     camera.start()
     cameras.append({"id": cam.id, "camera": camera})
