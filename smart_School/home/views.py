@@ -113,6 +113,7 @@ def index(request):
     total_deps=0
     for dep in departments:
         count=PersonsDetect.objects.filter(
+            person_id__type_register='زائر',
             person_id__info__department=dep
         ).count()
         total_deps=total_deps+count

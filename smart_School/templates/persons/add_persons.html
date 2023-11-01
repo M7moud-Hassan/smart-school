@@ -296,8 +296,7 @@
     </div>
     <div class="form-group col-12 col-md-6" id="id_department_p">
       <!-- {{form.status.label_tag}} -->
-      <label for="">القسم</label>
-      {{info_form.department}}
+    
     </div>
     <div class="col-12 col-md-6 row align-items-center mt-4 ps-4 pt-2">
       
@@ -644,10 +643,13 @@
   function showOrhid(value) {
     // console.log(value);
     if (value == 'موظف') {
-      $('#id_department_p').css({'display':'block'})
+      $('#id_department_p').remove()
       $('#info-employee').remove()
     } else {
-      $('#id_department_p').css({'display':'none'})
+      $('#id_department_p').append(`
+      <label for="">القسم</label>
+      {{info_form.department}}
+      `)
       $('#employee').append(`
       <div id="info-employee" class="col-12 pt-4">
       <h3>معلومات الزائر</h3>

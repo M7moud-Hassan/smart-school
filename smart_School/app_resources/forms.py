@@ -109,40 +109,40 @@ class InformationsForm(forms.ModelForm):
         queryset=Department.objects.all(),
         widget=forms.Select(
             attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
-        required=True
+        required=False
     )
     empolyee= forms.ModelChoiceField(
         label='الموظف',
         queryset=Persons.objects.filter(type_register='موظف'),
         widget=forms.Select(
             attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
-        required=True
+        required=False
     )
     type = forms.ModelChoiceField(
         label='النوع',
         queryset=Type.objects.all(),
         widget=forms.Select(
             attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
-        required=True
+        required=False
     )
     reason = forms.ModelChoiceField(
         label='السبب',
         queryset=Reason.objects.all(),
         widget=forms.Select(
             attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
-        required=True
+        required=False
     )
     other = forms.ModelChoiceField(
         label='اخري',
         queryset=Other.objects.all(),
         widget=forms.Select(
             attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
-        required=True
+        required=False
     )
     visior_type = forms.ModelChoiceField(
         label='نوع الزياره',
         queryset=VisiTortype.objects.all(),
         widget=forms.Select(
             attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
-        required=True
+        required=False
     )

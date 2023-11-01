@@ -47,6 +47,9 @@ class Persons(models.Model):
         'Information', on_delete=models.CASCADE, null=True)
     images = models.ManyToManyField(ImagesPerson,blank=True, null=True)
 
+    def __str__(self):
+        return self.name
+
 
 
 class PersonsDetect(models.Model):
