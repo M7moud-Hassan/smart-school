@@ -137,7 +137,7 @@ def index(request):
     most_visitor = most_visitor.annotate(visits=Count('person_id'))
     most_visitor = most_visitor.order_by('-visits')[:5]
 
-    most_visitor_after = PersonsDetect.objects.filter(person_id__type_register='زائر',detected_at__time__gt=time_exit)
+    most_visitor_after = PersonsDetect.objects.filter(person_id__type_register='زائر',detected_at__time__gt=detected_at_datetime)
     most_visitor_after = most_visitor_after.values('person_id','person_id__name','person_id__image','person_id__job_title')
     most_visitor_after = most_visitor_after.annotate(visits=Count('person_id'))
     most_visitor_after = most_visitor_after.order_by('-visits')[:5]

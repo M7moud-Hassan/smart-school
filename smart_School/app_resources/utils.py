@@ -38,22 +38,22 @@ def detect_person(national_id,camera_id):
                 "img":person.image.url,
                 "des":"description about person"
             })
-        detected_at = datetime.now().replace(second=0, microsecond=0)
-        created, p = PersonsDetect.objects.get_or_create(
-            camera_id=camera,
-            person_id=person,
-            detected_at=detected_at,
-            defaults={'detected_at': detected_at}
-        )
-        if camera.camera_type=='outdoor' and created:
-            person=PersonsDetect.objects.filter(person_id=person,camera_id__camera_type='indoor').last()
-            if person:
-                person.spend_time=created.spend_time
-                person.outed_at=created.outed_at
-                person.save()
-                created.detected_at=person.detected_at
-                created.save()
-            return
+            detected_at = datetime.now().replace(second=0, microsecond=0)
+            created, p = PersonsDetect.objects.get_or_create(
+                camera_id=camera,
+                person_id=person,
+                detected_at=detected_at,
+                defaults={'detected_at': detected_at}
+            )
+            if camera.camera_type=='outdoor' and created:
+                person=PersonsDetect.objects.filter(person_id=person,camera_id__camera_type='indoor').last()
+                if person:
+                    person.spend_time=created.spend_time
+                    person.outed_at=created.outed_at
+                    person.save()
+                    created.detected_at=person.detected_at
+                    created.save()
+                return
     except Exception as e:
         print("errr:=>",e)
 

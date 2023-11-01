@@ -643,13 +643,14 @@
   function showOrhid(value) {
     // console.log(value);
     if (value == 'موظف') {
-      $('#id_department_p').remove()
-      $('#info-employee').remove()
-    } else {
       $('#id_department_p').append(`
       <label for="">القسم</label>
       {{info_form.department}}
       `)
+      
+      $('#info-employee').remove()
+    } else {
+      $('#id_department_p').remove()
       $('#employee').append(`
       <div id="info-employee" class="col-12 pt-4">
       <h3>معلومات الزائر</h3>

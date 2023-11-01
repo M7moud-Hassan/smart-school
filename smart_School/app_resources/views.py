@@ -156,7 +156,7 @@ def add_person(request):
                         person_instance.save()
                     base64_images = request.POST.getlist('images')
                     for base64_image in base64_images:
-                        print(base64_image)
+                    
                         try:
                             data = json.loads(base64_image)
                             data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
