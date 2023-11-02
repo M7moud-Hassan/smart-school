@@ -4,7 +4,7 @@ from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
-from app_resources.utils import object_data
+
 from django.db.models import Q
 from datetime import time, timedelta, datetime
 from app_resources.models import Persons, PersonsDetect, Cameras
@@ -127,9 +127,24 @@ def index(request):
     today = datetime.now().date()
     detected_at_datetime = datetime.combine(today, time_exit)
     
-    activeEmpoly=PersonsDetect.objects.filter(person_id__type_register='موظف',outed_at=None,detected_at__date=today, detected_at__lt=detected_at_datetime).count()
-    active_visitor=PersonsDetect.objects.filter(person_id__type_register='زائر',outed_at=None,detected_at__date=today, detected_at__gt=detected_at_datetime).count()
-    all_visitor=PersonsDetect.objects.filter(outed_at=None,detected_at__date=today).count()
+    activeEmpoly=PersonsDetect.objects.filter(person_id__type_register='موظف',outed_at=None).count()
+    one_week_ago = today - timedelta(days=7)
+    one_month_ago = today - timedelta(days=30)  
+    one_year_ago = today - timedelta(days=365)
+
+    active_visitor_all = PersonsDetect.objects.filter(person_id__type_register='زائر').count()
+    active_visitor_today = PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__date=today).count()
+    active_visitor_week = PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__gte=one_week_ago).count()
+    active_visitor_month = PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__gte=one_month_ago).count()
+    active_visitor_year = PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__gte=one_year_ago).count()
+
+    active_visitor_all_after = PersonsDetect.objects.filter(person_id__type_register='زائر',detected_at__time__gt=time_exit).count()
+    active_visitor_today_after = PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__date=today,detected_at__time__gt=time_exit).count()
+    active_visitor_week_after = PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__gte=one_week_ago,detected_at__time__gt=time_exit).count()
+    active_visitor_month_after = PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__gte=one_month_ago,detected_at__time__gt=time_exit).count()
+    active_visitor_year_after = PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__gte=one_year_ago,detected_at__time__gt=time_exit).count()
+   
+    all_visitor=PersonsDetect.objects.filter(person_id__type_register='زائر',outed_at=None).count()
     active_visitor_after=PersonsDetect.objects.filter(person_id__type_register='زائر',outed_at=None,detected_at__date=today, detected_at__gt=detected_at_datetime).count()
    
     most_visitor = PersonsDetect.objects.filter(person_id__type_register='زائر')
@@ -165,7 +180,16 @@ def index(request):
                                                        "most_visitor_dep":most_visitor_dep,
                                                        "most_empolyee":most_empolyee,
                                                        "most_visitor_after":most_visitor_after,
-                                                       'active_visitor':active_visitor,
+                                                       'active_visitor_all':active_visitor_all,
+                                                       'active_visitor_day':active_visitor_today,
+                                                       'active_visitor_week':active_visitor_week,
+                                                       'active_visitor_month':active_visitor_month,
+                                                       'active_visitor_year':active_visitor_year,
+                                                       "active_visitor_all_after":active_visitor_all_after,
+                                                       "active_visitor_day_after":active_visitor_today_after,
+                                                       "active_visitor_week_after":active_visitor_week_after,
+                                                       "active_visitor_month_after":active_visitor_month_after,
+                                                       "active_visitor_year_after":active_visitor_year_after,
                                                        'all_visitor':all_visitor,
                                                        'active_visitor_after':active_visitor_after,
                                                        'cameras':cameras,
@@ -182,9 +206,16 @@ def index(request):
                                                        'total_deps':total_deps
                                                        })
 
-def result_cameras(request):
+def result_cameras(request,pk):   
+    from app_resources.utils import object_data
     resu=copy.deepcopy(object_data)
+    res=[]
+    for obj in object_data:
+        if obj['id_camera']!=pk:
+            res.append(obj)
     object_data.clear()
+    object_data=res
+    
     return JsonResponse({
         "data": resu
     })
@@ -213,3 +244,55 @@ def filter_camera(request, filter_date,camera_id):
         "detection_count_unknown": "detection_count_unknown"
     })
 
+
+def show_table(request,pk):
+    title_all=""
+    all_visitor=[]
+    today = datetime.now().date()
+    one_week_ago = today - timedelta(days=7)
+    one_month_ago = today - timedelta(days=30)  
+    one_year_ago = today - timedelta(days=365)
+
+    config=Config.objects.all().first()
+    if config:
+        time_exit=config.time_end_working
+    else:
+        time_exit=time(12,0)
+   
+    if pk==1:
+        title_all='الزائرين النشط'
+        all_visitor=PersonsDetect.objects.filter(person_id__type_register='زائر',outed_at=None)
+    elif pk==2:
+        title_all='الموظفون النشط'
+        all_visitor=PersonsDetect.objects.filter(person_id__type_register='موظف',outed_at=None)
+    elif pk==3:
+        title_all='كل  الزوار'
+        all_visitor=PersonsDetect.objects.filter(person_id__type_register='زائر')
+    elif pk==4:
+        title_all=' كل  الزوار اليوم' 
+        all_visitor=PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__date=today)
+    elif pk==5:
+        title_all=' كل  الزوار الاسيوع' 
+        all_visitor=PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__gte=one_week_ago)
+    elif pk==6:
+        title_all=' كل  الزوار الشهر' 
+        all_visitor=PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__gte=one_month_ago)
+    elif pk==7:
+        title_all=' كل  الزوار السنة' 
+        all_visitor=PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__gte=one_year_ago)
+    elif pk==8:
+        title_all=' كل  الزوار بعد ساعات العمل ' 
+        all_visitor=PersonsDetect.objects.filter(person_id__type_register='زائر',detected_at__time__gt=time_exit)
+    elif pk==9:
+        title_all='  كل  الزوار بعد ساعات العمل اليوم ' 
+        all_visitor=PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__date=today,detected_at__time__gt=time_exit)
+    elif pk==10:
+        title_all='  كل  الزوار بعد ساعات العمل الاسبوع ' 
+        all_visitor=PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__gte=one_week_ago,detected_at__time__gt=time_exit)
+    elif pk==11:
+        title_all='  كل  الزوار بعد ساعات العمل الشهر ' 
+        all_visitor=PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__gte=one_month_ago,detected_at__time__gt=time_exit)
+    elif pk==12:
+        title_all='  كل  الزوار بعد ساعات العمل السنة ' 
+        all_visitor=PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__gte=one_year_ago,detected_at__time__gt=time_exit)
+    return render(request,'home/view_all.html',context={"title_all":title_all,"all_visitor":all_visitor})

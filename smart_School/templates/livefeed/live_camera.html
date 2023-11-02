@@ -14,7 +14,7 @@
             </div>
             <div class="card-body p-0 pb-4">
                 <div class="teams-nav" id="teams-nav">
-                    <ul class="list-unstyled mb-0 mt-2 " id="resultCamera">
+                    <ul class="list-unstyled mb-0 mt-2 " id="resultCamera{{camera.id}}">
                         <!-- <li>
                             <a href="javascript:void(0);">
                                 <div class="d-flex align-items-center">
@@ -81,7 +81,7 @@
     });
     setInterval(()=>{
     $.ajax({
-                url: '/result_cameras/',
+                url: `/result_cameras/{{camera.id}}/`,
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -107,9 +107,10 @@
     //         </div>
     //       </div>
     // `;
+    var url="{% url 'view_person' 5 %}".replace(5,obj.id_person)
                     var newDiv = `
                     <li>
-                            <a href="javascript:void(0);">
+                            <a href="${url}" target="_blank">
                                 <div class="d-flex align-items-center">
                                     <div class="me-2 d-flex align-items-center">
                                         <span class="avatar avatar-lg avatar-rounded" style="border: 3px solid ${obj.category};">
@@ -129,7 +130,7 @@
                         </li>
                             `;
 //   if (!$("#result"+obj.id_camera+" #p"+obj.id_person).length > 0) {
-      $("#resultCamera").append(newDiv);
+      $("#resultCamera"+obj.id_camera).append(newDiv);
 
    
     // $('.btn[data-filter]').on('click', function() {

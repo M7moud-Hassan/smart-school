@@ -80,12 +80,6 @@ def delete_camera(request, id):
     else:
         return redirect('/cameras/cameras/')
 
-
-def add_padding(base64_string):
-    while len(base64_string) % 4 != 0:
-        base64_string += '='
-    return base64_string
-
 @login_required
 def add_person(request):
     cameras_list = Cameras.objects.all()
@@ -293,34 +287,28 @@ def persons(request):
                                                             "sub_title": "Persons", })
 
 
-"""def delete_person(request, id):
-    
-    person = Persons.objects.filter(id=id).first()
-    person.delete()
-    return redirect('/persons/persons')"""
+
 @login_required
 def delete_person(request, id):
     person = Persons.objects.filter(id=id).first()
 
     if person:
-        # Delete the person's representation from the list
-        #delete_representation(person)
-
-        # Delete the person from the database
+        delete_representation(person)
         person.delete()
 
     return redirect('/persons/persons')
-@login_required
-def delete_representation(person):
-    pickle_file_path = os.path.join(settings.MEDIA_ROOT, 'representations.pkl')
 
-    if os.path.exists(pickle_file_path):
-        with open(pickle_file_path, "rb") as f:
-            representations = pickle.load(f)
-            representations = [rep for rep in representations if rep[2] != person.id]  # Remove person's representation
-        with open(pickle_file_path, "wb") as f:
-            pickle.dump(representations, f)
-            print(len(representations))
+def delete_representation(person):
+    pass
+    # pickle_file_path = os.path.join(settings.MEDIA_ROOT, 'representations.pkl')
+
+    # if os.path.exists(pickle_file_path):
+    #     with open(pickle_file_path, "rb") as f:
+    #         representations = pickle.load(f)
+    #         representations = [rep for rep in representations if rep[2] != person.id]  # Remove person's representation
+    #     with open(pickle_file_path, "wb") as f:
+    #         pickle.dump(representations, f)
+    #         print(len(representations))
 
 @login_required
 def view_person(request, id):
@@ -363,10 +351,8 @@ def capture_image(request):
 @login_required
 def release_resources(request):
     try:
-        # for camera in cameras:
-        #     print(camera['camera'])
-        #     camera['camera'].stream.stream.release()
-        # cameras.clear()
+        for camera in cameras:
+            camera['camera'].stream.stream.release()
         pass
     except:
         pass
@@ -444,7 +430,6 @@ def get_details_from_back_national_img(request):
         response_json = json.loads(response.text)
         print(response_json)
         response_data = {
-            "response": response.text,
-           
+            "response": response.text
         }
         return HttpResponse(json.dumps(response_data), content_type="application/json")

@@ -15,6 +15,7 @@ from imutils.video import VideoStream
 import imutils
 import face_recognition
 from django.conf import settings
+from app_resources.utils import ids
 
 
 def all_cameras(request):
@@ -44,6 +45,19 @@ TOLERANCE = 0.55
 @gzip.gzip_page
 @require_GET
 def video_feed(request, camera_id):
+    global ids
+    exists=False
+    for obj in ids:
+         if obj['camera_id']==camera_id:
+              obj['persons'].clear()
+              exists=True
+              break
+    
+    if not exists:
+         ids.append({
+              "camera_id":camera_id,
+              "persons":[]
+         })
     # with open(os.path.join(settings.MEDIA_ROOT, 'representations.pkl') , 'rb') as f:
     #     representations = pickle.load(f)
     cam = Cameras.objects.filter(id=camera_id).first()

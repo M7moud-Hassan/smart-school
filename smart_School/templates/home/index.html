@@ -237,14 +237,14 @@
                                     <div class="flex-fill ms-3">
                                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                                             <div>
-                                                <p class="text-muted mb-0">الموظفين والزائرين النشط</p>
+                                                <p class="text-muted mb-0"> عدد الزائرين النشط </p>
                                                 <h4 class="fw-semibold mt-1">{{all_visitor}}</h4>
                                             </div>
                                             <div id="crm-total-customers"></div>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between mt-1">
                                             <div>
-                                                <a class="text-primary" href="javascript:void(0);">رؤية الجميع<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
+                                                <a class="text-primary" href="{% url 'show_table' 1 %}">رؤية الجميع<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
                                             </div>
                                             <div class="text-end">
                                                 <p class="mb-0 text-success fw-semibold">+40%</p>
@@ -275,7 +275,7 @@
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between mt-1">
                                             <div>
-                                                <a class="text-secondary" href="javascript:void(0);">رؤية الجميع<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
+                                                <a class="text-secondary" href="{% url 'show_table' 2 %}">رؤية الجميع<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
                                             </div>
                                             <div class="text-end">
                                                 <p class="mb-0 text-success fw-semibold">+25%</p>
@@ -287,9 +287,29 @@
                             </div>
                         </div>
                     </div>
+                   
                     <div class="col-xxl-6 col-lg-6 col-md-6">
                         <div class="card custom-card overflow-hidden">
-                            <div class="card-body">
+                            <div class="card-header justify-content-between">
+                                <div class="card-title pt-0 mt-0">
+                                    اجمالي عدد الزائرين                              
+                                      </div>
+                                <div class="dropdown" style="z-index: 300000;">
+                                    <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        رؤية الجميع<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
+                                    </a>
+                                    <ul class="dropdown-menu "  style="overflow: auto;" role="menu" style="z-index: 30000;">
+                                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="changed(`{{active_visitor_all}}`,3)">الكل</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="changed(`{{active_visitor_day}}`,4)">اليوم</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="changed(`{{active_visitor_week}}`,5)">هذا الاسبوع</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="changed(`{{active_visitor_month}}`,6)">هذا الشهر</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="changed(`{{active_visitor_year}}`,7)">هذه السنة</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body " style="margin-bottom: 40px;">
+                              
                                 <div class="d-flex align-items-top justify-content-between">
                                     <div>
                                         <span class="avatar avatar-md avatar-rounded bg-success">
@@ -299,14 +319,14 @@
                                     <div class="flex-fill ms-3">
                                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                                             <div>
-                                                <p class="text-muted mb-0">عدد الزائرين النشط في ساعات العمل</p>
-                                                <h4 class="fw-semibold mt-1">{{active_visitor}}</h4>
+                                                <p class="text-muted mb-0">  </p>
+                                                <h4 class="fw-semibold mt-1" id="display_num">{{active_visitor_all}}</h4>
                                             </div>
                                             <div id="crm-conversion-ratio"></div>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between mt-1">
                                             <div>
-                                                <a class="text-success" href="javascript:void(0);">رؤية الجميع<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
+                                                <a class="text-success" href="{% url 'show_table' 3 %}" id="view_all1">رؤية الجميع<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
                                             </div>
                                             <div class="text-end">
                                                 <p class="mb-0 text-danger fw-semibold">-12%</p>
@@ -320,7 +340,25 @@
                     </div>
                     <div class="col-xxl-6 col-lg-6 col-md-6">
                         <div class="card custom-card overflow-hidden">
-                            <div class="card-body">
+                            <div class="card-header justify-content-between">
+                                <div class="card-title pt-0 mt-0">
+                                    اجمالي الزائرين بعد ساعات العمل                              
+                                      </div>
+                                <div class="dropdown" style="z-index: 300000;">
+                                    <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        رؤية الجميع<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
+                                    </a>
+                                    <ul class="dropdown-menu "  style="overflow: auto;" role="menu" style="z-index: 30000;">
+                                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="changedd(`{{active_visitor_all_after}}`,8)">الكل</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="changedd(`{{active_visitor_day_after}}`,9)">اليوم</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="changedd(`{{active_visitor_week_after}}`,10)">هذا الاسبوع</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="changedd(`{{active_visitor_month_after}}`,11)">هذا الشهر</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="changedd(`{{active_visitor_year_after}}`,12)">هذه السنة</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body" style="margin-bottom: 40px;">
                                 <div class="d-flex align-items-top justify-content-between">
                                     <div>
                                         <span class="avatar avatar-md avatar-rounded bg-warning">
@@ -330,14 +368,14 @@
                                     <div class="flex-fill ms-3">
                                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                                             <div>
-                                                <p class="text-muted mb-0"> الزائرين  النشط بعد ساعات العمل </p>
-                                                <h4 class="fw-semibold mt-1">{{active_visitor_after}}</h4>
+                                                <p class="text-muted mb-0">      </p>
+                                                <h4 id="display2" class="fw-semibold mt-1">{{active_visitor_all_after}}</h4>
                                             </div>
                                             <div id="crm-total-deals"></div>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between mt-1">
                                             <div>
-                                                <a class="text-warning" href="javascript:void(0);">رؤية الجميع<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
+                                                <a class="text-warning" href="{% url 'show_table' 8 %}"  id="view_all2">رؤية الجميع<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i></a>
                                             </div>
                                             <div class="text-end">
                                                 <p class="mb-0 text-success fw-semibold">+19%</p>
@@ -1520,6 +1558,15 @@ function leads(myVarVal) {
     }
     chartInstance.update();
 
+}
+function changed(num,id){
+    $('#view_all1').attr("href","{% url 'show_table' 5 %}".replace('5', id));
+    $('#display_num').text(num)
+}
+function changedd(num,id){
+    $('#view_all2').attr("href", "{% url 'show_table' 5 %}".replace('5', id));
+    
+    $('#display2').text(num)
 }
     </script>
 {% endblock %}
