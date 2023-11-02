@@ -39,6 +39,12 @@ TOLERANCE = 0.55
 ######################################################
 
 
+# Global variable to keep track of frame skipping counters for each recognized person
+skip_frames_counter = {}
+
+# Define how many frames to skip after detecting a person
+FRAMES_TO_SKIP = 30
+
 
 
 @gzip.gzip_page
@@ -82,14 +88,32 @@ def video_feed(request, camera_id):
                         best_match_index = np.argmin(face_distances)
                         if matches[best_match_index]:
                             name.append(settings.KNOW_FACE_NAMES[best_match_index])
-                    
+                        
                         if matches[best_match_index] :
                             print(settings.KNOW_FACE_NAMES[best_match_index])
                             if "_"in settings.KNOW_FACE_NAMES[best_match_index]:
+                                # Check if we should skip frames for this recognized person
+                                #f skip_frames_counter.get(settings.KNOW_FACE_NAMES[best_match_index].split("_")[0], 0) > 0:
+                                    # Reduce the counter for this person and skip the detection
+                                #    skip_frames_counter[settings.KNOW_FACE_NAMES[best_match_index].split("_")[0]] -= 1
+                               # else:
+                                    # Detect the person and reset the skip counter
+                                detect_person(settings.KNOW_FACE_NAMES[best_match_index].split("_")[0],camera_id)
+
+                               #     skip_frames_counter[settings.KNOW_FACE_NAMES[best_match_index].split("_")[0]] = FRAMES_TO_SKIP
                                  
-                                 detect_person(settings.KNOW_FACE_NAMES[best_match_index].split("_")[0],camera_id)
                             else:
+
+                                 # Check if we should skip frames for this recognized person
+                                #if skip_frames_counter.get(settings.KNOW_FACE_NAMES[best_match_index], 0) > 0:
+                                    # Reduce the counter for this person and skip the detection
+                                #    skip_frames_counter[settings.KNOW_FACE_NAMES[best_match_index]] -= 1
+                               # else:
+                                    # Detect the person and reset the skip counter
                                 detect_person(settings.KNOW_FACE_NAMES[best_match_index],camera_id)
+
+                                #    skip_frames_counter[settings.KNOW_FACE_NAMES[best_match_index]] = FRAMES_TO_SKIP
+                                #detect_person(settings.KNOW_FACE_NAMES[best_match_index],camera_id)
                             print("////////////////////////////////////////////")
                         else:
                             #detect_unknown(frame,camera_id)
