@@ -39,6 +39,7 @@ def dashboard(request):
     return render(request, 'dashboard/dashboard.html', context={'sub_title': 'Dashboard', 'form': form,
                                                                 'current_visitor': current_visitor,
                                                                 'avg_visitor': avg_visitor,
+                                                                 "cameras":Cameras.objects.all(),
                                                                 'women_count': women_count,
                                                                 'men_count': men_count, 'months_counts': months_counts,
                                                                 'persons': persons})
@@ -55,7 +56,7 @@ def search_id(request):
                 pass
     else:
         form = SearchIDForm()
-    return render(request, 'dashboard/search_id.html', context={'form': form})
+    return render(request, 'dashboard/search_id.html', context={'form': form, "cameras":Cameras.objects.all(),})
 
 
 def face_id(request):
@@ -103,4 +104,4 @@ def face_id(request):
                 # except Exception as e:
                 #        return Response({'error': str(e)})
 
-    return render(request, 'dashboard/face_id.html', context={'form': form})
+    return render(request, 'dashboard/face_id.html', context={'form': form, "cameras":Cameras.objects.all(),})

@@ -295,4 +295,4 @@ def show_table(request,pk):
     elif pk==12:
         title_all='  كل  الزوار بعد ساعات العمل السنة ' 
         all_visitor=PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__gte=one_year_ago,detected_at__time__gt=time_exit)
-    return render(request,'home/view_all.html',context={"title_all":title_all,"all_visitor":all_visitor})
+    return render(request,'home/view_all.html',context={"title_all":title_all,"all_visitor":all_visitor, "cameras":Cameras.objects.all(),})

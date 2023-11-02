@@ -38,6 +38,7 @@ def add_camera(request):
     else:
         form = CamerasForm()
         return render(request, 'camera/add_camera.html', context={
+            "cameras":Cameras.objects.all(),
             "title": "Camera",
             "sub_title": "Add Camera",
             "form": form,
@@ -64,6 +65,7 @@ def edit_camera(request, id):
         if camera:
             form = CamerasForm(instance=camera)
             return render(request, 'camera/add_camera.html', context={
+                 "cameras":Cameras.objects.all(),
                 "title": "Camera",
                 "form": form,
                 "add_or_update": "update"
@@ -253,7 +255,7 @@ def edit_person(request, id):
                             data = json.loads(base64_image)
                             data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
                             im=ImagesPerson.objects.create(image=data_image)
-                            print("assssssssssssssssssssssss")
+                           
                             person_instance.images.add(im)
                         except:
                             print("eroor")
@@ -284,6 +286,7 @@ def edit_person(request, id):
 def persons(request):
     persons_list = Persons.objects.filter(~Q(status='unknown'))
     return render(request, 'persons/persons.html', context={"persons": persons_list, "title": "Persons",
+                                                             "cameras":Cameras.objects.all(),
                                                             "sub_title": "Persons", })
 
 
@@ -326,7 +329,8 @@ def view_person(request, id):
     else:
         detections = PersonsDetect.objects.filter(person_id=person)
     return render(request, 'persons/profile_person.html',
-                  context={"person": person, "report": report, "title": "Persons", 'detections': detections})
+                  context={"person": person, "report": report, "title": "Persons", 'detections': detections,
+                            "cameras":Cameras.objects.all(),})
 
 @login_required
 def capture_image(request):
