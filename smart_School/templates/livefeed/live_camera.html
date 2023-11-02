@@ -109,7 +109,7 @@
     // `;
     var url="{% url 'view_person' 5 %}".replace(5,obj.id_person)
                     var newDiv = `
-                    <li>
+                    <li id="p${obj.id_person}">
                             <a href="${url}" target="_blank">
                                 <div class="d-flex align-items-center">
                                     <div class="me-2 d-flex align-items-center">
@@ -129,10 +129,10 @@
                             </a>
                         </li>
                             `;
-//   if (!$("#result"+obj.id_camera+" #p"+obj.id_person).length > 0) {
+  if (!$("#resultCamera"+obj.id_camera+" #p"+obj.id_person).length > 0) {
       $("#resultCamera"+obj.id_camera).append(newDiv);
 
-   
+  }
     // $('.btn[data-filter]').on('click', function() {
     //   $('.btn[data-filter]').removeClass('active');
     //   $(this).addClass('active');

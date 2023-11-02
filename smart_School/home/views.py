@@ -214,7 +214,7 @@ def result_cameras(request,pk):
         if obj['id_camera']!=pk:
             res.append(obj)
     object_data.clear()
-    object_data=res
+    object_data.extend(res)
     
     return JsonResponse({
         "data": resu
