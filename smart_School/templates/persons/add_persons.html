@@ -31,11 +31,12 @@
     <form  style="display: none;" data-single="true" method="post" action="https://httpbin.org/post" class="dropzone"></form>
         
     {% if form.errors %}
-    <ul class="errorlist">
-        {% for field, error_list in form.errors.items %}
-            <li>{{ field }}: {{ error_list.0 }}</li>
+    {% for field, error_list in form.errors.items %}
+    <div class="alert alert-outline-danger rounded-pill alert-dismissible fade show">
+      {{ field }}: {{ error_list.0 }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><i class="bi bi-x"></i></button>
+</div>
         {% endfor %}
-    </ul>
 {% endif %}
     <form class="row g-3 needs-validation" method="post"  enctype="multipart/form-data" novalidate>
       {% csrf_token %}
@@ -554,7 +555,7 @@
         // Create the new date in "mm/dd/yyyy" format
         const newDateFormat = `${month}/${day}/${year}`;
         $('#id_name').val(`${data.firstname} ${data.secondname}`)
-        $('#id_id_national').val(`${data.iden}`)
+        $('#id_id_national').val(data.iden.replace(/\s/g, ''));
         $('#date').val(newDateFormat)
         $('#id_address').val(`${data.address_1} - ${data.address_2}`)
         const fileInput = document.getElementById('id_image');

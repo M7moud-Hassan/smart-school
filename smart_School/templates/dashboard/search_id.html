@@ -35,6 +35,16 @@
     </div>
   </div>
   <div class="card-body">
+    {% if messages %}
+  
+    {% for message in messages %}
+    <div class="alert alert-outline-danger rounded-pill alert-dismissible fade show">
+      {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><i class="bi bi-x"></i></button>    
+    </div>
+    {% endfor %}
+  
+{% endif %}
     <form  style="display: none;" data-single="true" method="post" action="https://httpbin.org/post" class="dropzone"></form>
           <form method="post" enctype="multipart/form-data">
             {% csrf_token %}

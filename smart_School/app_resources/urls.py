@@ -12,7 +12,8 @@ url_cameras = [
     path('video/<int:camera_id>', video_feed, name="video"),
 ]
 url_persons= [
-    path('persons/',persons,name="persons"),
+    path('empolyees/',empolyees,name="empolyees"),
+    path('visitors/',visitors,name="visitors"),
     path('add_person/',add_person,name="add_person"),
     path('edit_person/<int:id>',edit_person,name="edit_person"),
     path('delete_person/<int:id>',delete_person,name='delete_person'),

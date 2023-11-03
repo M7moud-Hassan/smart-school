@@ -163,7 +163,10 @@ def add_person(request):
                             print('error')
                             pass
                     image_of_person(person_instance)
-            return redirect('/persons/persons/')
+            if person_instance.type_register=='موظف':
+                return redirect('/persons/empolyees/')
+            else:
+                return redirect('/persons/visitors/')
         else:
             return render(request, 'persons/add_persons.html', context={'form': form,
                                                                         "title": "Persons",
@@ -262,7 +265,10 @@ def edit_person(request, id):
                             pass
                     person_instance.save()
             image_update_person(person_instance)
-            return redirect('/persons/persons/')
+            if person_instance.type_register=='موظف':
+                return redirect('/persons/empolyees/')
+            else:
+                return redirect('/persons/visitors/')
     else:
         if person:
 
@@ -280,14 +286,20 @@ def edit_person(request, id):
                 'ids_camera': person.allowed_cameras.all().values_list('id', flat=True)
             })
         else:
-            return redirect('/persons/persons')
+            return redirect('/')
 
 @login_required
-def persons(request):
-    persons_list = Persons.objects.filter(~Q(status='unknown'))
-    return render(request, 'persons/persons.html', context={"persons": persons_list, "title": "Persons",
+def visitors(request):
+    persons_list = Persons.objects.filter(type_register='زائر')
+    return render(request, 'persons/persons.html', context={"persons": persons_list, "title": "visitors",
                                                              "cameras":Cameras.objects.all(),
-                                                            "sub_title": "Persons", })
+                                                            "sub_title": "visitors", })
+@login_required
+def empolyees(request):
+    persons_list = Persons.objects.filter(type_register='موظف')
+    return render(request, 'persons/persons.html', context={"persons": persons_list, "title": "empolyees",
+                                                             "cameras":Cameras.objects.all(),
+                                                            "sub_title": "empolyees", })
 
 
 
@@ -297,9 +309,13 @@ def delete_person(request, id):
 
     if person:
         delete_representation(person)
+        type_register=person.type_register
         person.delete()
 
-    return redirect('/persons/persons')
+    if type_register=='موظف':
+        return redirect('/persons/empolyees/')
+    else:
+        return redirect('/persons/visitors/')
 
 def delete_representation(person):
     pass

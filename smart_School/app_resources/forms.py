@@ -66,16 +66,6 @@ class PersonsForm(forms.ModelForm):
             required=True,
 
         )
-    # images=forms.FileField(
-    #      widget=forms.FileInput(attrs={
-    #          'class': 'multiple-filepond',
-    #         #  'multiple': True,
-    #          'data-allow-reorder': True,
-    #          'data-max-file-size': '3MB',
-    #          'data-max-files': 6
-    #      }))
-
-    # Customizing the gender field widget to use radio buttons
     GENDER_CHOICES = [
         ('ذكر', 'ذكر'),
         ('انثي', 'انثي'),
@@ -98,6 +88,14 @@ class PersonsForm(forms.ModelForm):
         super(PersonsForm, self).__init__(*args, **kwargs)
         self.fields['date_of_birth'].widget.attrs['class'] = 'form-control'
         self.fields['status'].widget.attrs['class'] = 'form-control'
+    
+    def clean_id_national(self):
+        id_national = self.cleaned_data['id_national']
+        exists=Persons.objects.filter(id_national=id_national)
+        if exists:
+             raise forms.ValidationError('هذ الشخص مسجل سابقا')
+        else:
+            return self.cleaned_data['id_national']
 
 
 class InformationsForm(forms.ModelForm):
