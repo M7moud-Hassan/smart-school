@@ -15,6 +15,7 @@ from imutils.video import VideoStream
 import imutils
 import face_recognition
 from django.conf import settings
+from app_resources.utils import ids
 
 
 def all_cameras(request):
@@ -50,12 +51,27 @@ FRAMES_TO_SKIP = 30
 @gzip.gzip_page
 @require_GET
 def video_feed(request, camera_id):
+    global ids
+    exists=False
+    for obj in ids:
+         if obj['camera_id']==camera_id:
+              obj['persons'].clear()
+              exists=True
+              break
+    
+    if not exists:
+         ids.append({
+              "camera_id":camera_id,
+              "persons":[]
+         })
     # with open(os.path.join(settings.MEDIA_ROOT, 'representations.pkl') , 'rb') as f:
     #     representations = pickle.load(f)
     cam = Cameras.objects.filter(id=camera_id).first()
     connection_string = cam.connection_string
     if connection_string == '0':
         connection_string = 0
+    if connection_string == '1':
+        connection_string = 1
     camera = VideoStream(connection_string)
     camera.start()
     cameras.append({"id": cam.id, "camera": camera})
@@ -76,75 +92,51 @@ def video_feed(request, camera_id):
                     
 
                     name = []
+                    #print("Numbr of faces:", len(face_encodings))
                     # Loop through each face found in the unknown image
-                    for face_encoding in  face_encodings:
-                        # See if the face is a match for the known face(s)
-                        matches = face_recognition.compare_faces(settings.KNOW_FACE_ENCODINGS, face_encoding,tolerance=TOLERANCE)
+                    if len(face_encodings)<5:
+                        for face_encoding in  face_encodings:
+                            # See if the face is a match for the known face(s)
+                            matches = face_recognition.compare_faces(settings.KNOW_FACE_ENCODINGS, face_encoding,tolerance=TOLERANCE)
 
-                        
-
-                        # Or instead, use the known face with the smallest distance to the new face
-                        face_distances = face_recognition.face_distance(settings.KNOW_FACE_ENCODINGS, face_encoding)
-                        best_match_index = np.argmin(face_distances)
-                        if matches[best_match_index]:
-                            name.append(settings.KNOW_FACE_NAMES[best_match_index])
-                        
-                        if matches[best_match_index] :
-                            print(settings.KNOW_FACE_NAMES[best_match_index])
-                            if "_"in settings.KNOW_FACE_NAMES[best_match_index]:
-                                # Check if we should skip frames for this recognized person
-                                #f skip_frames_counter.get(settings.KNOW_FACE_NAMES[best_match_index].split("_")[0], 0) > 0:
-                                    # Reduce the counter for this person and skip the detection
-                                #    skip_frames_counter[settings.KNOW_FACE_NAMES[best_match_index].split("_")[0]] -= 1
-                               # else:
-                                    # Detect the person and reset the skip counter
-                                detect_person(settings.KNOW_FACE_NAMES[best_match_index].split("_")[0],camera_id)
-
-                               #     skip_frames_counter[settings.KNOW_FACE_NAMES[best_match_index].split("_")[0]] = FRAMES_TO_SKIP
-                                 
-                            else:
-
-                                 # Check if we should skip frames for this recognized person
-                                #if skip_frames_counter.get(settings.KNOW_FACE_NAMES[best_match_index], 0) > 0:
-                                    # Reduce the counter for this person and skip the detection
-                                #    skip_frames_counter[settings.KNOW_FACE_NAMES[best_match_index]] -= 1
-                               # else:
-                                    # Detect the person and reset the skip counter
-                                detect_person(settings.KNOW_FACE_NAMES[best_match_index],camera_id)
-
-                                #    skip_frames_counter[settings.KNOW_FACE_NAMES[best_match_index]] = FRAMES_TO_SKIP
-                                #detect_person(settings.KNOW_FACE_NAMES[best_match_index],camera_id)
-                            print("////////////////////////////////////////////")
-                        else:
-                            #detect_unknown(frame,camera_id)
-                            print("unknow !!!!!!!!!!!!!!!!!!!!!")
-                    """target_faces = DeepFace.extract_faces(frame)
-                    if len(target_faces) > 0:
-                                
-                                print("face: ", len(target_faces))
-                                target_representation = DeepFace.represent(frame, model_name="VGG-Face", enforce_detection=False, detector_backend="ssd", align=True)[0]["embedding"]
-
-                                # load representations of faces in database
-                                distances = []
-                                for i in range(0, len(representations)):
-                                    source_representation = representations[i][1]
-                                    distance = dst.findCosineDistance(source_representation, target_representation)
-                                    distances.append(distance)
                             
-                                # Find the minimum distance index
-                                idx = np.argmin(distances)
-                                min_distance = distances[idx]
-                                print(min_distance)
-                                # Check if the minimum distance is below a certain threshold (adjust threshold as needed)
-                                threshold = 0.5
-                                if min_distance <= threshold:
-                                    matched_name = representations[idx][0]
-                                    detect_person(representations[idx][2],camera_id)
 
-                                    print("Matched Name:", matched_name)
+                            # Or instead, use the known face with the smallest distance to the new face
+                            face_distances = face_recognition.face_distance(settings.KNOW_FACE_ENCODINGS, face_encoding)
+                            best_match_index = np.argmin(face_distances)
+                            if matches[best_match_index]:
+                                name.append(settings.KNOW_FACE_NAMES[best_match_index])
+                            
+                            if matches[best_match_index] :
+                                print(settings.KNOW_FACE_NAMES[best_match_index])
+                                if "_"in settings.KNOW_FACE_NAMES[best_match_index]:
+                                    # Check if we should skip frames for this recognized person
+                                    #f skip_frames_counter.get(settings.KNOW_FACE_NAMES[best_match_index].split("_")[0], 0) > 0:
+                                        # Reduce the counter for this person and skip the detection
+                                    #    skip_frames_counter[settings.KNOW_FACE_NAMES[best_match_index].split("_")[0]] -= 1
+                                # else:
+                                        # Detect the person and reset the skip counter
+                                    detect_person(settings.KNOW_FACE_NAMES[best_match_index].split("_")[0],camera_id)
+
+                                #     skip_frames_counter[settings.KNOW_FACE_NAMES[best_match_index].split("_")[0]] = FRAMES_TO_SKIP
+                                    
                                 else:
-                                    matched_name = "Unknown"
-                                    detect_unknown(frame,camera_id)"""
+
+                                    # Check if we should skip frames for this recognized person
+                                    #if skip_frames_counter.get(settings.KNOW_FACE_NAMES[best_match_index], 0) > 0:
+                                        # Reduce the counter for this person and skip the detection
+                                    #    skip_frames_counter[settings.KNOW_FACE_NAMES[best_match_index]] -= 1
+                                # else:
+                                        # Detect the person and reset the skip counter
+                                    detect_person(settings.KNOW_FACE_NAMES[best_match_index],camera_id)
+
+                                    #    skip_frames_counter[settings.KNOW_FACE_NAMES[best_match_index]] = FRAMES_TO_SKIP
+                                    #detect_person(settings.KNOW_FACE_NAMES[best_match_index],camera_id)
+                                print("////////////////////////////////////////////")
+                            else:
+                                #detect_unknown(frame,camera_id)
+                                print("unknow !!!!!!!!!!!!!!!!!!!!!")
+                    
                 except Exception as e:
                         print(f"An exception occurred: {e}")
                 _, jpeg = cv2.imencode('.jpg', frame)

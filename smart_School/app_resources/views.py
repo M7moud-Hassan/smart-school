@@ -38,6 +38,7 @@ def add_camera(request):
     else:
         form = CamerasForm()
         return render(request, 'camera/add_camera.html', context={
+            "cameras":Cameras.objects.all(),
             "title": "Camera",
             "sub_title": "Add Camera",
             "form": form,
@@ -64,6 +65,7 @@ def edit_camera(request, id):
         if camera:
             form = CamerasForm(instance=camera)
             return render(request, 'camera/add_camera.html', context={
+                 "cameras":Cameras.objects.all(),
                 "title": "Camera",
                 "form": form,
                 "add_or_update": "update"
@@ -79,12 +81,6 @@ def delete_camera(request, id):
         return redirect('/cameras/cameras/')
     else:
         return redirect('/cameras/cameras/')
-
-
-def add_padding(base64_string):
-    while len(base64_string) % 4 != 0:
-        base64_string += '='
-    return base64_string
 
 @login_required
 def add_person(request):
@@ -156,7 +152,7 @@ def add_person(request):
                         person_instance.save()
                     base64_images = request.POST.getlist('images')
                     for base64_image in base64_images:
-                        print(base64_image)
+                    
                         try:
                             data = json.loads(base64_image)
                             data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
@@ -259,7 +255,7 @@ def edit_person(request, id):
                             data = json.loads(base64_image)
                             data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
                             im=ImagesPerson.objects.create(image=data_image)
-                            print("assssssssssssssssssssssss")
+                           
                             person_instance.images.add(im)
                         except:
                             print("eroor")
@@ -290,37 +286,32 @@ def edit_person(request, id):
 def persons(request):
     persons_list = Persons.objects.filter(~Q(status='unknown'))
     return render(request, 'persons/persons.html', context={"persons": persons_list, "title": "Persons",
+                                                             "cameras":Cameras.objects.all(),
                                                             "sub_title": "Persons", })
 
 
-"""def delete_person(request, id):
-    
-    person = Persons.objects.filter(id=id).first()
-    person.delete()
-    return redirect('/persons/persons')"""
+
 @login_required
 def delete_person(request, id):
     person = Persons.objects.filter(id=id).first()
 
     if person:
-        # Delete the person's representation from the list
-        #delete_representation(person)
-
-        # Delete the person from the database
+        delete_representation(person)
         person.delete()
 
     return redirect('/persons/persons')
-@login_required
-def delete_representation(person):
-    pickle_file_path = os.path.join(settings.MEDIA_ROOT, 'representations.pkl')
 
-    if os.path.exists(pickle_file_path):
-        with open(pickle_file_path, "rb") as f:
-            representations = pickle.load(f)
-            representations = [rep for rep in representations if rep[2] != person.id]  # Remove person's representation
-        with open(pickle_file_path, "wb") as f:
-            pickle.dump(representations, f)
-            print(len(representations))
+def delete_representation(person):
+    pass
+    # pickle_file_path = os.path.join(settings.MEDIA_ROOT, 'representations.pkl')
+
+    # if os.path.exists(pickle_file_path):
+    #     with open(pickle_file_path, "rb") as f:
+    #         representations = pickle.load(f)
+    #         representations = [rep for rep in representations if rep[2] != person.id]  # Remove person's representation
+    #     with open(pickle_file_path, "wb") as f:
+    #         pickle.dump(representations, f)
+    #         print(len(representations))
 
 @login_required
 def view_person(request, id):
@@ -338,7 +329,8 @@ def view_person(request, id):
     else:
         detections = PersonsDetect.objects.filter(person_id=person)
     return render(request, 'persons/profile_person.html',
-                  context={"person": person, "report": report, "title": "Persons", 'detections': detections})
+                  context={"person": person, "report": report, "title": "Persons", 'detections': detections,
+                            "cameras":Cameras.objects.all(),})
 
 @login_required
 def capture_image(request):
@@ -363,10 +355,8 @@ def capture_image(request):
 @login_required
 def release_resources(request):
     try:
-        # for camera in cameras:
-        #     print(camera['camera'])
-        #     camera['camera'].stream.stream.release()
-        # cameras.clear()
+        for camera in cameras:
+            camera['camera'].stream.stream.release()
         pass
     except:
         pass
@@ -391,6 +381,9 @@ def video_feed(request, camera_id):
     connection_string = cam.connection_string
     if connection_string == '0':
         connection_string = 0
+    if connection_string == '1':
+        connection_string = 1
+    
 
     camera = VideoStream(connection_string)
     camera.start()
@@ -441,7 +434,6 @@ def get_details_from_back_national_img(request):
         response_json = json.loads(response.text)
         print(response_json)
         response_data = {
-            "response": response.text,
-           
+            "response": response.text
         }
         return HttpResponse(json.dumps(response_data), content_type="application/json")

@@ -5,7 +5,7 @@ from dashboard.models import *
 
 class SearchIDForm(forms.Form):
    frontImage = forms.ImageField(
-        widget=forms.ClearableFileInput(attrs={'class': 'single-fileupload', "accept":"image/png, image/jpeg, image/gif"}),
+        widget=forms.ClearableFileInput(attrs={'class': 'single-fileupload w-100', "accept":"image/png, image/jpeg, image/gif"}),
         label='National Image',
         required=False
     )

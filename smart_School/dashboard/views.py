@@ -39,6 +39,7 @@ def dashboard(request):
     return render(request, 'dashboard/dashboard.html', context={'sub_title': 'Dashboard', 'form': form,
                                                                 'current_visitor': current_visitor,
                                                                 'avg_visitor': avg_visitor,
+                                                                 "cameras":Cameras.objects.all(),
                                                                 'women_count': women_count,
                                                                 'men_count': men_count, 'months_counts': months_counts,
                                                                 'persons': persons})
@@ -55,7 +56,27 @@ def search_id(request):
                 pass
     else:
         form = SearchIDForm()
-    return render(request, 'dashboard/search_id.html', context={'form': form})
+    return render(request, 'dashboard/search_id.html', context={'form': form, "cameras":Cameras.objects.all(),})
+
+
+def face_id(request):
+    form = SearchIDForm()
+    if request.method == 'POST':
+        form = SearchIDForm(request.POST, request.FILES)
+        if form.is_valid():
+            image=request.POST.get('frontImage')
+            if image:
+                data = json.loads(image)
+                data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                print(data_image)
+                face_function(data_image)
+            
+
+    return render(request, 'dashboard/face_id.html', context={'form': form, "cameras":Cameras.objects.all(),})
+
+
+MODEL =  "hog"  #hog "cnn"
+TOLERANCE = 0.55 
 def face_function(data_image):
     with open(os.path.join('media', 'uploads', data_image), 'wb+') as destination:
         for chunk in destination.chunks():
@@ -88,7 +109,7 @@ def face_function(data_image):
                                 name= settings.KNOW_FACE_NAMES[best_match_index].split("_")[0]
                                  #detect_person(settings.KNOW_FACE_NAMES[best_match_index].split("_")[0],camera_id)
                             else:
-                                 name = settings.KNOW_FACE_NAMES[best_match_index]
+                                name = settings.KNOW_FACE_NAMES[best_match_index]
                                 #detect_person(settings.KNOW_FACE_NAMES[best_match_index],camera_id)
                             print("////////////////////////////////////////////")
                         else:
@@ -99,19 +120,3 @@ def face_function(data_image):
         
     
     return name
-
-
-def face_id(request):
-    form = SearchIDForm()
-    if request.method == 'POST':
-        form = SearchIDForm(request.POST, request.FILES)
-        if form.is_valid():
-            image=request.POST.get('frontImage')
-            if image:
-                data = json.loads(image)
-                data_image = ContentFile(base64.b64decode(data['data']),name=data['name'])
-                print(data_image)
-                face_function(data_image)
-            
-
-    return render(request, 'dashboard/face_id.html', context={'form': form})

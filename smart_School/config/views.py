@@ -61,7 +61,7 @@ def add_files(request):
                     content_message.append(f"An error occurred: {str(e)}")
             content_message.append('Exit '+str(code))
 
-    return render(request, 'config/add_files.html')
+    return render(request, 'config/add_files.html',context={ "cameras":Cameras.objects.all(),})
 
 def importatnted_fileds(request):
     instance=Config.objects.all().first()

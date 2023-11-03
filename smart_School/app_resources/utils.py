@@ -1,33 +1,26 @@
 from io import BytesIO
 from .models import PersonsDetect, Persons, Cameras
-from datetime import datetime
+from django.utils import timezone
 from PIL import Image
 from django.core.files.base import ContentFile
-import numpy as np
-import threading
-import time
 
 cameras = []
 
 object_data = []
 ids=[]
-
-#ids_lock = threading.Lock()  # Create a lock to ensure thread safety for the 'ids' list
-
-"""def clear_ids_list():
-    global ids
-    with ids_lock:
-        ids = []  # Clear the 'ids' list
-    threading.Timer(30.0, clear_ids_list).start()  # Schedule the function to run again in 30 seconds
-
-clear_ids_list()"""
-
 def detect_person(national_id,camera_id):
     try:
         camera = Cameras.objects.get(id=camera_id)
         person = Persons.objects.get(id_national=national_id)
-        if True    :  #:not str(camera_id)+""+str(national_id) in ids 
-            ids.append(str(camera_id)+""+str(national_id))
+        exist=None
+        for obj in ids:
+            if obj['camera_id']==camera_id and national_id in obj['persons']:
+                exist=obj
+                break
+
+        if  exist is None:
+            obj['persons'].append(national_id)
+            
             object_data.append({
                 "id_camera":camera_id,
                 "category":'green' if person.status=='whitelist' else 'red',
@@ -38,28 +31,28 @@ def detect_person(national_id,camera_id):
                 "img":person.image.url,
                 "des":"description about person"
             })
-        detected_at = datetime.now().replace(second=0, microsecond=0)
-        created, p = PersonsDetect.objects.get_or_create(
-            camera_id=camera,
-            person_id=person,
-            detected_at=detected_at,
-            defaults={'detected_at': detected_at}
-        )
-        if camera.camera_type=='outdoor' and created:
-            person=PersonsDetect.objects.filter(person_id=person,camera_id__camera_type='indoor').last()
-            if person:
-                person.spend_time=created.spend_time
-                person.outed_at=created.outed_at
-                person.save()
-                created.detected_at=person.detected_at
-                created.save()
-            return
+            detected_at = timezone.now().replace(second=0, microsecond=0)
+            created, p = PersonsDetect.objects.get_or_create(
+                camera_id=camera,
+                person_id=person,
+                detected_at=detected_at,
+                defaults={'detected_at': detected_at}
+            )
+            if camera.camera_type=='outdoor' and created:
+                person=PersonsDetect.objects.filter(person_id=person,camera_id__camera_type='indoor').last()
+                if person:
+                    person.spend_time=created.spend_time
+                    person.outed_at=created.outed_at
+                    person.save()
+                    created.detected_at=person.detected_at
+                    created.save()
+                return
     except Exception as e:
         print("errr:=>",e)
 
 
 def detect_unknown(image_frame, camera_id):
-    created_at = datetime.now().replace(second=0, microsecond=0)
+    created_at = timezone.now().replace(second=0, microsecond=0)
     pil_image = Image.fromarray(image_frame)
     image_buffer = BytesIO()
     pil_image.save(image_buffer, format='JPEG')
