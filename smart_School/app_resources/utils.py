@@ -9,7 +9,6 @@ cameras = []
 object_data = []
 ids=[]
 def detect_person(national_id,camera_id):
-    national_id="3838939"
     try:
         camera = Cameras.objects.get(id=camera_id)
         person = Persons.objects.get(id_national=national_id)

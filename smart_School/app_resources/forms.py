@@ -91,11 +91,14 @@ class PersonsForm(forms.ModelForm):
     
     def clean_id_national(self):
         id_national = self.cleaned_data['id_national']
-        exists=Persons.objects.filter(id_national=id_national)
-        if exists:
-             raise forms.ValidationError('هذ الشخص مسجل سابقا')
+        if self.instance.id is not None:
+            if self.instance.id_national == id_national:
+                return id_national
         else:
-            return self.cleaned_data['id_national']
+            exists = Persons.objects.filter(id_national=id_national)
+            if exists:
+                raise forms.ValidationError('هذ الشخص مسجل سابقا')
+        return id_national
 
 
 class InformationsForm(forms.ModelForm):

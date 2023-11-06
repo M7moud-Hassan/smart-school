@@ -230,6 +230,10 @@ def edit_person(request, id):
                             pass
                     person_instance.save()
                     image_of_person(person_instance)
+                    if person_instance.type_register=='موظف':
+                        return redirect('/persons/empolyees/')
+                    else:
+                        return redirect('/persons/visitors/')
             else:
                     person_instance = form.save()
                     image=request.POST.get('image')
