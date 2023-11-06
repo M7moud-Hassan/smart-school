@@ -83,11 +83,18 @@ def video_feed(request, camera_id):
                 if frame is None:
                     continue
                 try:
-                    frame = imutils.resize(frame, width=600, height=600)
-                    #frame = imutils.resize(frame, width=1000, height=1000)
-                    rgb_frame  =np.ascontiguousarray(frame[:, :, ::-1]) #frame[:, :, ::-1] #frame#[:, :, ::-1]
+                    #frame = imutils.resize(frame, width=600, height=600)
                     
-                    face_locations = face_recognition.face_locations(rgb_frame, model = MODEL )#))
+                    #rgb_frame  =np.ascontiguousarray(frame[:, :, ::-1]) #frame[:, :, ::-1] #frame#[:, :, ::-1]
+                    
+                    #face_locations = face_recognition.face_locations(rgb_frame, model = MODEL )#))
+                    #frame = cv2.resize(frame, (0, 0), fx=0.50, fy=0.50)
+                    frame = imutils.resize(frame, width=600, height=600)
+                    
+                    #rgb_frame  = np.ascontiguousarray(frame[:, :, ::-1]) #frame[:, :, ::-1] #frame#[:, :, ::-1]
+                    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+                    face_locations = face_recognition.face_locations(rgb_frame,model = MODEL )#))number_of_times_to_upsample=2
                     face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
                     
 

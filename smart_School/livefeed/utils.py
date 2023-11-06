@@ -19,23 +19,23 @@ def image_of_person(person):
     # Assuming the 'person' parameter is a Persons model object
     # Calculate the face representation for the person's image
     image_path = person.image.path
-    print(image_path)
-    try:
-        shutil.copy(image_path, "./media/faces/"+person.id_national+".jpg")
-    except:
-        pass
-    image = face_recognition.load_image_file(image_path)
-    face_encoding = face_recognition.face_encodings(image)[0]
-    settings.KNOW_FACE_ENCODINGS.append(face_encoding)
-    settings.KNOW_FACE_NAMES.append(person.id_national)
+    #print(image_path)
+    #try:
+    #    shutil.copy(image_path, "./media/faces/"+person.id_national+".jpg")
+    #except:
+     #   pass
+    #image = face_recognition.load_image_file(image_path)
+    #face_encoding = face_recognition.face_encodings(image)[0]
+    #settings.KNOW_FACE_ENCODINGS.append(face_encoding)
+    #settings.KNOW_FACE_NAMES.append(person.id_national)
     ################################multi images ####################
-    print(person.images,"!!!!!!!!!!!!!!!!!ssss")
-    #image_path_2=person.images
+    #print(person.images,"!!!!!!!!!!!!!!!!!ssss")
+    image_path_2=person.images
     k=0
     for image_path_2 in person.images.all():
         print(image_path_2)
         image_path_2=image_path_2.image.path
-        shutil.copy(image_path_2, "./media/faces/"+person.id_national+"_"+str(k)+".jpg")
+        shutil.copy(image_path_2, "./media/faces2/"+person.id_national+"_"+str(k)+".jpg")
         image_2 = face_recognition.load_image_file(image_path_2)
         face_encoding = face_recognition.face_encodings(image_2)[0]
         settings.KNOW_FACE_ENCODINGS.append(face_encoding)
@@ -75,7 +75,7 @@ def image_update_person(person):
     for image_path_2 in person.images.all():
         print(image_path_2)
         image_path_2=image_path_2.image.path
-        shutil.copy(image_path_2, "./media/faces/"+person.id_national+"_"+str(k)+".jpg")
+        shutil.copy(image_path_2, "./media/faces2/"+person.id_national+"_"+str(k)+".jpg")
         image_2 = face_recognition.load_image_file(image_path_2)
         face_encoding = face_recognition.face_encodings(image_2)[0]
         settings.KNOW_FACE_ENCODINGS.append(face_encoding)
