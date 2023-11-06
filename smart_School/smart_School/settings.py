@@ -155,7 +155,7 @@ KNOW_FACE_NAMES = [
 from PIL import Image
 import glob
 image_list = []
-for Imagename in glob.glob('./media/faces/*.jpg'):
+for Imagename in glob.glob('./media/faces2/*.jpg'):
    
     image = face_recognition.load_image_file(Imagename)
     face_encoding = face_recognition.face_encodings(image)[0]
