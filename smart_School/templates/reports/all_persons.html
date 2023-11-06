@@ -1,11 +1,16 @@
 {% extends 'base_page.html' %}
 {% load static %}
 {% block mystyles %}
-<link rel="stylesheet" href="{% static 'css/dropify.min.css' %}">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
-
+<link rel="stylesheet" href="{% static 'dist/libs/flatpickr/flatpickr.min.css' %}">
+<link rel="stylesheet" href="{% static 'dist/libs/prismjs/themes/prism-coy.min.css' %}">
+<link rel="stylesheet" href="{% static 'dist/libs/filepond/filepond.min.css' %}">
+<link rel="stylesheet" href="{% static 'dist/libs/choices.js/public/assets/styles/choices.min.css' %}">
+<link rel="stylesheet" href="{% static 'dist/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.css' %}">
+<link rel="stylesheet" href="{% static 'dist/libs/filepond-plugin-image-edit/filepond-plugin-image-edit.min.css' %}">
+<link rel="stylesheet" href="{% static 'dist/libs/dropzone/dropzone.css' %}">
 {% endblock %}
 {% block content %}
   
@@ -28,50 +33,66 @@
         </div>
       </div>
               <div class="card-body">
+                <form  style="display: none;" data-single="true" method="post" action="https://httpbin.org/post" class="dropzone"></form>
+      
                   <div class="row d-flex align-items-end mb-4">
 
                   <form  method="POST" enctype="multipart/form-data" class="col-12 col-md-6">
                       {% csrf_token %}
                       <div class="">
                 <div class="form-group">
-                   <label for="id_image">Search By Image:</label>
-                    <input type="file" id="id_image" name="image" class="dropify-face form-control" data-default-file="" required>
-
-                  </div>
-                  <div class="btn-group my-1 w-100">
-                    <button type="button" class="btn btn-primary" id="uploadButton">get Data</button>
-                    <button type="button"
-                        class="btn btn-primary dropdown-toggle dropdown-toggle-split me-2"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="visually-hidden">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu">
-                      {% for camera in cameras %}
-                      <a class="dropdown-item" href="#" data-toggle="modal" onclick="openCamera(2,'{{camera.id}}')"
-                        data-target="#modal-info_2">{{camera.name}}</a>
-                      {% endfor %}
-                    </ul>
-                    <div class="modal fade" id="modal-info_2">
-                      <div class="modal-dialog">
-                        <div class="modal-content bg-info">
-                          <div class="modal-header">
-                            <h4 class="modal-title">Capture Image</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <img id="video-2" width="100%" height="300" />
-                          </div>
-                          <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-outline-light" id="captureImage-2"
-                              data-dismiss="modal">Capture</button>
-                          </div>
+                  <div class="card custom-card">
+                    <div class="card-header justify-content-between">
+                        <div class="card-title">
+                          <label for="id_image">Search By Image:</label>
+                          
                         </div>
-                        
+                        <div class="dropdown">
+                          <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown" aria-expanded="false">
+                              الكاميرات<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
+                          </a>
+                          <ul class="dropdown-menu" role="menu">
+                            {% for camera in cameras %}
+                              <li><a class="dropdown-item"   data-bs-toggle="modal" onclick="openCamera(2,'{{camera.id}}')"
+                                data-bs-target="#modal-info_2">{{camera.name}}</a></li>
+                             
+                              {% endfor %}
+                           
+                          </ul>
+                          <div class="modal fade" id="modal-info_2" data-bs-backdrop="static"
+                          data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                          aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h4 class="modal-title">Capture Image</h4>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                  aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                  <img id="video" width="100%" height="300" />
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                  <button type="button" class="btn btn-secondary"
+                                                                      data-bs-dismiss="modal">Close</button>
+                                <button type="button"  data-bs-dismiss="modal" id="captureImage-2" class="btn btn-primary">capture</button>
+                               
+                                </div>
+                              </div>
+                              
+                            </div>
+                            </div>
                       </div>
-                      </div>
+                    </div>
+                    <div class="card-body">
+                      {{form.frontImage}}
+                      <input type="file" id="id_image" name="image" class="single-fileupload"  accept="image/png, image/jpeg, image/gif">
+                    </div>
+                </div>
+                  </div>
+                  <div class="btn-group my-1">
+                    <button type="button" class="btn btn-primary" id="uploadButton">search</button>
+                  
                 </div>
                   </div>
                   </form>
@@ -166,8 +187,12 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{% static 'dist/js/validation.js' %}"></script>
+<script src="{% static 'dist/libs/flatpickr/flatpickr.min.js' %}"></script>
+<script src="{% static 'dist/js/date&time_pickers.js' %}"></script>
+<script src="{% static 'dist/libs/prismjs/prism.js' %}"></script>
+<script src="{% static 'dist/js/prism-custom.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-<script src="{% static 'js/dropify.min.js' %}"></script>
 <script src="{% static 'dist/libs/flatpickr/flatpickr.min.js' %}"></script>
 <script src="{% static 'dist/js/date&time_pickers.js'%}"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
@@ -179,18 +204,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
     <script src="{% static 'dist/js/datatables.js' %}"></script>
+
+
+    <script src="{% static 'dist/libs/filepond/filepond.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-file-encode/filepond-plugin-file-encode.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-image-edit/filepond-plugin-image-edit.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-image-crop/filepond-plugin-image-crop.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-image-resize/filepond-plugin-image-resize.min.js' %}"></script>
+    <script src="{% static 'dist/libs/filepond-plugin-image-transform/filepond-plugin-image-transform.min.js' %}"></script>
+    <script src="{% static 'dist/libs/dropzone/dropzone-min.js' %}"></script>
+    <script src="{% static 'dist/js/fileupload.js' %}"></script>
 <script>
-   $(".dropify-face").dropify(
-      {
-      messages: {
-        'default': 'قم برفع صوره الوجه هنا ',
-        'replace': 'اضغط للاستبدال الصوره',
-        'remove': 'مسح',
-        'error': 'صوره خاطئه,برجاء إعاده الرفع'
-      }
-    }
-    );
+   var fileOpen;
+   $(function(){
+    const MultipleElement = document.querySelector('.multiple-filepond');
+   fileOpen= FilePond.create(MultipleElement,);
+   });
   function openCamera(id){
 $("#video").attr("src","/cameras/video/"+id);
 }
@@ -210,10 +246,12 @@ $('#captureImage').click(function() {
               // Create a new file object from the blob response
               var file = new File([response], filename, { type: 'image/jpeg' });
               // Add the file to the DataTransfer object
-              dataTransfer=new DataTransfer()
-              dataTransfer.items.add(file);
-              fileInput.files = dataTransfer.files;
-              addFileToDropify(file)
+              // dataTransfer=new DataTransfer()
+              // dataTransfer.items.add(file);
+              // fileInput.files = dataTransfer.files;
+              console.log(file);
+              fileOpen.addFile(file)
+              // addFileToDropify(file)
         },
         error: function(error) {
             console.log(error);

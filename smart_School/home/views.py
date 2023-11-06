@@ -11,6 +11,7 @@ from app_resources.models import Persons, PersonsDetect, Cameras
 from config.models import Config
 from dashboard.models import Department
 from django.utils import timezone
+from reports.utils import filter_persons
 
 
 # Create your views here.
@@ -41,7 +42,6 @@ def index(request):
         ).count()
         counts_day_emp.append(count)
         counts_day_vis.append(count2)
-    print(len(counts_day_vis))
 ### weeee
     start_of_week = now - timedelta(days=now.weekday())
     date_intervals = [start_of_week + timedelta(days=i) for i in range(7)]
@@ -118,6 +118,15 @@ def index(request):
         ).count()
         total_deps=total_deps+count
         department_counts.append(count)
+    department_counts_2 =[]
+    total_deps_2=0
+    for dep in departments:
+        count=PersonsDetect.objects.filter(
+            person_id__type_register='موظف',
+            person_id__info__department=dep
+        ).count()
+        total_deps_2=total_deps_2+count
+        department_counts_2.append(count)
     # registers = Persons.objects.filter(Q(status='whitelist') | Q(status='blacklist'))
     config=Config.objects.all().first()
     if config:
@@ -168,10 +177,12 @@ def index(request):
     most_visitor_dep = most_visitor_dep.annotate(visits=Count('person_id__info__department'))
     most_visitor_dep = most_visitor_dep.order_by('-visits')[:5]
 
-    current_datetime = timezone.now()
+    
     detected_today = PersonsDetect.objects.filter(
-    detected_at__date=current_datetime.date()
+    person_id__type_register='موظف',
+    detected_at__date=today
 )
+    detected_today=filter_persons(detected_today)   
 
     return render(request, 'home/index.html', context={         
                                                        'active_Empolyee':activeEmpoly,
@@ -203,7 +214,9 @@ def index(request):
                                                        'counts_year_vis':counts_year_vis,
                                                        'departments':departments,
                                                        'counts_department':department_counts,
-                                                       'total_deps':total_deps
+                                                       'total_deps':total_deps,
+                                                       'counts_department_2':department_counts_2,
+                                                       'total_deps_2':total_deps_2
                                                        })
 
 def result_cameras(request,pk):   

@@ -30,7 +30,7 @@ class Persons(models.Model):
     gender = models.CharField(max_length=100, null=True, blank=True)
     type_register = models.CharField(max_length=100, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
+    image = models.ImageField(upload_to="uploads", null=True, blank=True)
     front_national_img = models.ImageField(
         upload_to="uploads", null=True, blank=True)
     back_national_img = models.ImageField(

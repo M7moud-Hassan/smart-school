@@ -20,7 +20,6 @@ def detect_person(national_id,camera_id):
 
         if  exist is None:
             obj['persons'].append(national_id)
-            
             object_data.append({
                 "id_camera":camera_id,
                 "category":'green' if person.status=='whitelist' else 'red',

@@ -50,12 +50,12 @@
                     <div class="card custom-card">
                         <div class="card-header  justify-content-between">
                             <div class="card-title">
-                                اكثر الزائرين ترددا
+                                اكثر الزائرين حضورا
                             </div>
                             <!-- <div class="dropdown">
                                 <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fe fe-more-vertical"></i>
-                                </a>
+                                </a>ال
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="javascript:void(0);">Week</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0);">Month</a></li>
@@ -89,7 +89,7 @@
                     <div class="card custom-card">
                         <div class="card-header  justify-content-between">
                             <div class="card-title">
-                                اكثر الزائرون ترددا بعد ساعات العمل 
+                                اكثر الزائرون حضورا بعد ساعات العمل 
                             </div>
                             <!-- <div class="dropdown">
                                 <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown" aria-expanded="false">
@@ -128,7 +128,7 @@
                     <div class="card custom-card">
                         <div class="card-header  justify-content-between">
                             <div class="card-title">
-                                اكثر الزائرون ترددا  علي الاقسام 
+                                اكثر الزائرون حضورا  علي الاقسام 
                             </div>
                             <!-- <div class="dropdown">
                                 <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown" aria-expanded="false">
@@ -167,7 +167,7 @@
                     <div class="card custom-card">
                         <div class="card-header  justify-content-between">
                             <div class="card-title">
-                                اكثر الموظفون ترددا
+                                اكثر الموظفون حضورا
                             </div>
                             <!-- <div class="dropdown">
                                 <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown" aria-expanded="false">
@@ -490,18 +490,18 @@
                                 <div class="card-title">
                                     الاحصائية حسب الاقسام
                                 </div>
-                                <!-- <div class="dropdown">
+                                <div class="dropdown">
                                     <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
                                         <i class="fe fe-more-vertical"></i>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="javascript:void(0);">Week</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">Month</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">Year</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="on_show_d(1)">زائرين</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="on_show_d(2)">مزظفين</a></li>
+                                        
                                     </ul>
-                                </div> -->
+                                </div>
                             </div>
-                            <div class="card-body p-0 overflow-hidden">
+                            <div class="card-body p-0 overflow-hidden"  id="d_vis">
                                 <div class="leads-source-chart d-flex align-items-center justify-content-center">
                                     <canvas id="leads-source" class="chartjs-chart w-100 p-4"></canvas>
                                     <div class="lead-source-value">
@@ -516,6 +516,50 @@
                                             <span class="text-muted fs-12 mb-1 crm-lead-legend mobile d-inline-block">{{dep.name}}
                                             </span>
                                             <div><span class="fs-16 fw-semibold">{{counts_department|get_item:forloop.counter0}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    
+                                    <!-- <div class="col p-0">
+                                        <div class="p-3 text-center border-end border-inline-end-dashed">
+                                            <span class="text-muted fs-12 mb-1 crm-lead-legend desktop d-inline-block">Black List
+                                            </span>
+                                            <div><span class="fs-16 fw-semibold">{{detection_count_black}}</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col p-0">
+                                        <div class="p-3 text-center border-end border-inline-end-dashed">
+                                            <span class="text-muted fs-12 mb-1 crm-lead-legend laptop d-inline-block">Unkown
+                                            </span>
+                                            <div><span class="fs-16 fw-semibold">{{detection_count_unknown}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col p-0">
+                                        <div class="p-3 text-center">
+                                            <span class="text-muted fs-12 mb-1 crm-lead-legend tablet d-inline-block">White list
+                                            </span>
+                                            <div><span class="fs-16 fw-semibold">{{detection_count_white}}</span></div>
+                                        </div>
+                                    </div> -->
+                                </div>
+                            </div>
+                            <div class="card-body p-0 overflow-hidden" id="d_emp">
+                                <div class="leads-source-chart d-flex align-items-center justify-content-center">
+                                    <canvas id="leads-source" class="chartjs-chart w-100 p-4"></canvas>
+                                    <div class="lead-source-value">
+                                        <span class="d-block fs-14">المجموع</span>
+                                        <span class="d-block fs-25 fw-bold">{{total_deps_2}}</span>
+                                    </div>
+                                </div>
+                                <div class="row row-cols-12 border-top border-block-start-dashed">
+                                    {% for dep in departments %}
+                                    <div class="col p-0">
+                                        <div class="ps-4 py-3 pe-3 text-center border-end border-inline-end-dashed">
+                                            <span class="text-muted fs-12 mb-1 crm-lead-legend mobile d-inline-block">{{dep.name}}
+                                            </span>
+                                            <div><span class="fs-16 fw-semibold">{{counts_department_2|get_item:forloop.counter0}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -1568,5 +1612,15 @@ function changedd(num,id){
     
     $('#display2').text(num)
 }
+function on_show_d(id){
+    if(id==1){
+        $('#d_emp').hide()
+        $('#d_vis').show()
+    }else{
+        $('#d_emp').show()
+        $('#d_vis').hide()
+    }
+}
+on_show_d(1)
     </script>
 {% endblock %}

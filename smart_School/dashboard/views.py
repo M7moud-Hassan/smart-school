@@ -2,58 +2,45 @@ import base64
 from datetime import date, datetime
 import json
 from django.core.files.base import ContentFile
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 import requests
 from app_resources.forms import PersonsForm
+from config.models import Config
 from dashboard.form import FilterForm, SearchIDForm
 from app_resources.models import Cameras, Information, Persons
 from django.contrib.auth.decorators import login_required
-
-import face_recognition
+from django.contrib import messages
 import os
 from django.conf import settings
 import numpy as np
 
-
-def dashboard(request):
-    current_visitor = 0
-    avg_visitor = 0
-    women_count = 0
-    men_count = 0
-    months_counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    persons = []
-    form = FilterForm()
-    if request.method == 'POST':
-        date_range = request.POST.get('date_rang')
-        department = request.POST.get('department')
-        type = request.POST.get('type')
-        typeVisitor = request.POST.get('typeVisitor')
-        reason = request.POST.get('reason')
-        other = request.POST.get('other')
-        start_date, end_date = map(lambda x: datetime.strptime(
-            x.strip(), '%m/%d/%Y'), date_range.split('-'))
-        persons = Persons.objects.filter(
-            created_at__range=(start_date, end_date),)
-    else:
-        form = FilterForm()
-    return render(request, 'dashboard/dashboard.html', context={'sub_title': 'Dashboard', 'form': form,
-                                                                'current_visitor': current_visitor,
-                                                                'avg_visitor': avg_visitor,
-                                                                 "cameras":Cameras.objects.all(),
-                                                                'women_count': women_count,
-                                                                'men_count': men_count, 'months_counts': months_counts,
-                                                                'persons': persons})
 
 
 def search_id(request):
     if request.method == 'POST':
         form = SearchIDForm(request.POST, request.FILES)
         if form.is_valid():
-            if form.cleaned_data['frontImage']:
-                pass
+            image=request.POST.get('frontImage')
+            if  image:
+                picture = request.POST.get('image')
+                data = json.loads(image)
+                picture = ContentFile(base64.b64decode(data['data']),name=data['name'])
+                api_url = Config.objects.all().first().url_extract_data
+                files = {'file': ('filename.jpg', picture, 'image/jpeg')}
+                response = requests.post(api_url, files=files)
+                response_json = json.loads(response.text)
+                person = Persons.objects.filter(id_national=response_json.get('iden').replace(' ', ''))
+                if person:
+                   return redirect('/persons/view_person/'+str(person.first().id))
+                else:
+                    messages.error(request, ' الشخص غير موجود ' +response_json.get('iden').replace(' ', ''))
+                    
             if form.cleaned_data['National_id']:
-
-                pass
+                person=Persons.objects.filter(id_national=form.cleaned_data['National_id'])
+                if person:
+                    redirect('/persons/view_person/'+person.first().id)
+                else:
+                    messages.error(request, ' الشخص غير موجود ' +form.cleaned_data['National_id'])
     else:
         form = SearchIDForm()
     return render(request, 'dashboard/search_id.html', context={'form': form, "cameras":Cameras.objects.all(),})
