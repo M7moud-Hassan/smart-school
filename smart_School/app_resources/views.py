@@ -19,13 +19,8 @@ import requests
 from livefeed.utils import image_of_person, image_update_person
 import imutils
 from imutils.video import VideoStream
-import os
-import pickle
-from django.conf import settings
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from PIL import Image
-from io import BytesIO
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 @login_required

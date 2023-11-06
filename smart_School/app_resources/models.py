@@ -69,7 +69,6 @@ class PersonsDetect(models.Model):
             if indoor_detection:
                 time_in = indoor_detection.detected_at
                 current_time = datetime.now().replace(second=0, microsecond=0, tzinfo=pytz.UTC)
-
                 time_in = time_in.replace(tzinfo=pytz.UTC)
                 self.spend_time = str(current_time - time_in)
             else:

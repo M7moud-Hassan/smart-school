@@ -5,7 +5,6 @@ from PIL import Image
 from django.core.files.base import ContentFile
 
 cameras = []
-
 object_data = []
 ids=[]
 def detect_person(national_id,camera_id):
@@ -17,9 +16,10 @@ def detect_person(national_id,camera_id):
             if obj['camera_id']==camera_id and national_id in obj['persons']:
                 exist=obj
                 break
-
         if  exist is None:
-            obj['persons'].append(national_id)
+            for obj in ids:
+                if obj['camera_id']==camera_id:
+                    obj['persons'].append(national_id)
             object_data.append({
                 "id_camera":camera_id,
                 "category":'green' if person.status=='whitelist' else 'red',
@@ -30,22 +30,17 @@ def detect_person(national_id,camera_id):
                 "img":person.image.url,
                 "des":"description about person"
             })
-            detected_at = timezone.now().replace(second=0, microsecond=0)
-            created, p = PersonsDetect.objects.get_or_create(
-                camera_id=camera,
-                person_id=person,
-                detected_at=detected_at,
-                defaults={'detected_at': detected_at}
-            )
-            if camera.camera_type=='outdoor' and created:
+            if camera.camera_type=='outdoor':
                 person=PersonsDetect.objects.filter(person_id=person,camera_id__camera_type='indoor').last()
                 if person:
-                    person.spend_time=created.spend_time
-                    person.outed_at=created.outed_at
-                    person.save()
-                    created.detected_at=person.detected_at
-                    created.save()
-                return
+                    person.camera_id=camera
+                person.save()
+            else:
+                PersonsDetect.objects.create(
+                camera_id=camera,
+                person_id=person,
+            )
+           
     except Exception as e:
         print("errr:=>",e)
 
@@ -57,7 +52,7 @@ def detect_unknown(image_frame, camera_id):
     pil_image.save(image_buffer, format='JPEG')
     image_data = image_buffer.getvalue()
     f=Persons.objects.filter(created_at=created_at)
-    if  len(f)>0 : #False:
+    if  len(f)>0 :
        pass
     else:
         person = Persons.objects.create(
