@@ -295,9 +295,14 @@
       <label for="">الحالة</label>
       {{form.status}}
     </div>
-    <div class="form-group col-12 col-md-6" id="id_department_p">
+    <div class="form-group col-12 col-md-6 id_department_p">
       <label for="">القسم</label>
       {{form.department}}
+    
+    </div>
+    <div class="form-group col-12 col-md-6 id_department_p">
+      <label for="">رقم القيد</label>
+      {{form.registration_number}}
     
     </div>
     <div class="col-12 col-md-6 row align-items-center mt-4 ps-4 pt-2">
@@ -646,11 +651,11 @@
   function showOrhid(value) {
     console.log(value);
     if (value == 'موظف') {
-      $('#id_department_p').show();
+      $('.id_department_p').show();
       
       $('#info-employee').remove()
     } else {
-      $('#id_department_p').hide()
+      $('.id_department_p').hide()
       $('#employee').append(`
       <div id="info-employee" class="col-12 pt-4">
       <h3>معلومات الزائر</h3>
