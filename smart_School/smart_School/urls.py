@@ -26,6 +26,7 @@ from reports import urls as reporst_urls
 from  authentications import  urls as auth_urls
 from dashboard import urls as dashboard_urls
 from config import urls as config_urls
+from smart_School import settings
 
 urlpatterns = [
     path('',include(urls)),

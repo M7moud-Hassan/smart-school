@@ -28,7 +28,7 @@ class ImagesPerson(models.Model):
 class Persons(models.Model):
     name = models.CharField(max_length=300, null=True, blank=True)
     gender = models.CharField(max_length=100, null=True, blank=True)
-    type_register = models.CharField(max_length=100, null=True, blank=True)
+    type_register = models.CharField(max_length=100,default='موظف')
     date_of_birth = models.DateField(null=True, blank=True)
     image = models.ImageField(upload_to="uploads", null=True, blank=True)
     front_national_img = models.ImageField(
@@ -38,7 +38,7 @@ class Persons(models.Model):
     id_national = models.CharField(max_length=300, null=True, blank=True)
     job_title = models.CharField(max_length=300, null=True, blank=True)
     address = models.CharField(max_length=300, null=True, blank=True)
-    status = models.CharField(max_length=100, default='unknown')
+    status = models.CharField(max_length=100, default='whitelist')
     religion = models.CharField(max_length=100, default='مسلم')
     status_person = models.CharField(max_length=100, default='اعزب')
     created_at = models.DateTimeField(default= timezone.now())
@@ -46,6 +46,9 @@ class Persons(models.Model):
     info = models.ForeignKey(
         'Information', on_delete=models.CASCADE, null=True)
     images = models.ManyToManyField(ImagesPerson,blank=True, null=True)
+    registration_number=models.IntegerField(null=True,blank=True)
+    department = models.ForeignKey(
+        Department, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name

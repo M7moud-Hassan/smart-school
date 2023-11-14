@@ -32,24 +32,26 @@ class PersonsForm(forms.ModelForm):
         model = Persons
         fields = ['name', 'gender', 'date_of_birth', 'image', 'status', 'allowed_cameras', 'front_national_img',
                   'back_national_img',
-                  'id_national', 'address', 'job_title','type_register']
+                  'id_national', 'address', 'job_title','type_register','department']
         widgets = {
             'image': forms.ClearableFileInput(
-                attrs={'class': 'single-fileupload3', 'required': True,'accept':'image/png, image/jpeg, image/gif' }),
-            'name': forms.TextInput(attrs={'class': 'form-control', 'required': True ,'accept':'image/png, image/jpeg, image/gif'}),
+                attrs={'class': 'single-fileupload3', 'required': False,'accept':'image/png, image/jpeg, image/gif' }),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'required': False ,'accept':'image/png, image/jpeg, image/gif'}),
             'date_of_birth': forms.TextInput(attrs={
                 'class': 'form-control',
                 'id':'date',
-                'required': True,
+                'required': False,
             }),
             'front_national_img': forms.ClearableFileInput(
-                attrs={'class': 'single-fileupload1','required': True,'accept':'image/png, image/jpeg, image/gif'}),
+                attrs={'class': 'single-fileupload1','required': False,'accept':'image/png, image/jpeg, image/gif'}),
             'back_national_img': forms.ClearableFileInput(
-                attrs={'class': 'single-fileupload2', 'required': True,'accept':'image/png, image/jpeg, image/gif'}),
-            'id_national': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
-            'job_title': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
-            'address': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
+                attrs={'class': 'single-fileupload2', 'required': False,'accept':'image/png, image/jpeg, image/gif'}),
+            'id_national': forms.TextInput(attrs={'class': 'form-control', 'required': False}),
+            'job_title': forms.TextInput(attrs={'class': 'form-control', 'required': False}),
+            'address': forms.TextInput(attrs={'class': 'form-control', 'required': False}),
         }
+
+        
         labels = {
             'image': 'الصور الشخصية',
             'front_national_img': 'صورة البطاقة الامامية',
@@ -65,6 +67,13 @@ class PersonsForm(forms.ModelForm):
                                                 }),
             required=True,
 
+        )
+    department = forms.ModelChoiceField(
+        label='القسم',
+        queryset=Department.objects.all(),
+        widget=forms.Select(
+            attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),
+        required=False
         )
     GENDER_CHOICES = [
         ('ذكر', 'ذكر'),
