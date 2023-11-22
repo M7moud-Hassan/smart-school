@@ -4,6 +4,65 @@
 
 {% endblock %}
 {% block content %}
+<div class="modal fade" id="formmodal" tabindex="-1"
+aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title" id="exampleModalLabel">اضافة سبب</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form onsubmit="add_reason(event)" id="form">
+                
+                <div class="mb-3">
+                    <label for="recipient-name"
+                        class="col-form-label">الموظف:</label>
+                    <input type="text" class="form-control" id="recipient-name" readonly>
+                </div>
+                <!-- <div class="mb-3">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-text text-muted"> <i class="ri-calendar-line"></i> </div>
+                            <input type="text" class="form-control" id="datetime" placeholder="Choose date with time">
+                        </div>
+                    </div>
+                </div> -->
+                <div>
+                    <p class="fw-semibold mb-2">الاذن</p>
+                    <select class="form-control" data-trigger name="choices-single-default" id="id_reason" required>
+                        <!-- <option value="">اختر السبب</option> -->
+                        {% for reason in reasons %}
+                        <option value="{{reason.id}}">{{reason.name}}</option>
+                        {% endfor %}
+                    </select> 
+                </div>
+                
+                <div class="mb-3">
+                    <label for="recipient-name"
+                        class="col-form-label">كود الجهة :</label>
+                    <input type="text" class="form-control" id="code" >
+                </div>
+               
+                <div class="mb-3">
+                    <label for="message-text"
+                        class="col-form-label">السبب:</label>
+                    <textarea class="form-control" id="message-text"></textarea>
+                </div>
+                <input type="hidden" name="id" id="id">
+                <input type="hidden" name="id_detect" id="id_detect">
+            </form>
+        </div>
+        <div class="modal-footer">
+            
+            <button type="button" class="btn btn-secondary"
+                data-bs-dismiss="modal">اغلاق</button>
+            <button type="button" data-bs-dismiss="modal" onclick="submit()" class="btn btn-primary">حفظ</button>
+        </div>
+    </div>
+</div>
+</div>
 <div class="row mt-4">
 
   <div class="col-xl-3">
@@ -68,6 +127,9 @@
 
 {% block  scripts %}
 <script src="{% static 'dist/js/team.js' %}"></script>
+<script src="{% static 'dist/js/modal.js' %}"></script>
+<!-- <script src="{% static 'dist/libs/flatpickr/flatpickr.min.js' %}"></script>
+<script src="{% static 'dist/js/date&time_pickers.js' %}"></script> -->
  <script>
     $(function () {
       // var screenHeight = $(window).height()/1.5;
@@ -109,24 +171,22 @@
     // `;
     var url="{% url 'view_person' 5 %}".replace(5,obj.id_person)
                     var newDiv = `
-                    <li id="p${obj.id_person}">
-                            <a href="${url}" target="_blank">
-                                <div class="d-flex align-items-center">
-                                    <div class="me-2 d-flex align-items-center">
+                    <li id="p${obj.id_person}" class="row align-items-center justify-items-center">
+                            <a href="${url}" target="_blank" class="col-10">
+                                
+                                    <div class="me-2 d-flex align-items-center ">
                                         <span class="avatar avatar-lg avatar-rounded" style="border: 3px solid ${obj.category};">
                                             <img src="http://localhost:8000${obj.img}" alt="">
                                         </span>
+                                        <span class="ps-2" style="color:${obj.category}">${obj.name}</span>
                                     </div>
-                                    <div class="flex-fill">
-                                        <span style="color:${obj.category}">${obj.name}</span>
-                                    </div>
-                                    <div>
-                                        <span class="fs-10 fw-semibold text-muted">
-                                            
-                                        </span>
-                                    </div>
-                                </div>
+                                   
                             </a>
+                                            <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-light" data-bs-toggle="modal"
+                                            data-bs-target="#formmodal" data-bs-whatever="${obj.name}" data-bs-id="${obj.id}" data-bs-detect="${obj.des}">
+                                                <i class="fe fe-more-vertical"></i> 
+                                            </a>
+                                           
                         </li>
                             `;
   if (!$("#resultCamera"+obj.id_camera+" #p"+obj.id_person).length > 0) {
@@ -151,6 +211,46 @@
   });
   
 
+  function submit(){
+    $('#form').submit()
+  }
+  function add_reason(event){
+    event.preventDefault()
+    $.ajax({
+    type: 'POST',
+    url: '/persons/add_reason/',
+    data: {
+
+        'id_detect': $('#id_detect').val(), 
+        'id_reason':getValue(),
+        'text': $('#message-text').val(),
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+        // 'date':$('#datetime').val(),
+        'code':$('#code').val()
+    },
+    success: function(msg){
+        if(msg.result){
+            alert('تم حفظ البيانات')
+        }else{
+            alert('حدث مشكلة حاول  ثانيتا')
+        }
+      
+    }
+});
+    
+  }
+
+  function getValue() {
+
+    var selectElement = document.getElementById("id_reason");
+
+    
+    var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+    
+   return selectedOption.value;
+
+}
 
  
 

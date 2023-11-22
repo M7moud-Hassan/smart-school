@@ -5,9 +5,15 @@
     exampleModal.addEventListener('show.bs.modal', function (event) {
         var button = event.relatedTarget
         var recipient = button.getAttribute('data-bs-whatever')
+        var id = button.getAttribute('data-bs-id')
+        var id_detect = button.getAttribute('data-bs-detect')
         var modalTitle = exampleModal.querySelector('.modal-title')
+        var modalid = document.getElementById('id')
+        var modalid_detect = document.getElementById('id_detect')
+        modalid.value=id
+        modalid_detect.value=id_detect
         var modalBodyInput = exampleModal.querySelector('.modal-body input')
-        modalTitle.textContent = 'New message to ' + recipient
+        modalTitle.textContent = 'سبب  لي ' + recipient
         modalBodyInput.value = recipient
     })
 

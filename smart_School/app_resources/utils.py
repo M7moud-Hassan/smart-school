@@ -8,6 +8,7 @@ cameras = []
 object_data = []
 ids=[]
 def detect_person(national_id,camera_id):
+    national_id='3934828383'
     try:
         camera = Cameras.objects.get(id=camera_id)
         person = Persons.objects.get(id_national=national_id)
@@ -20,6 +21,17 @@ def detect_person(national_id,camera_id):
             for obj in ids:
                 if obj['camera_id']==camera_id:
                     obj['persons'].append(national_id)
+            detect=None
+            if camera.camera_type=='outdoor':
+                detect=PersonsDetect.objects.filter(person_id=person,camera_id__camera_type='indoor').last()
+                if detect:
+                    detect.camera_id=camera
+                detect.save()
+            else:
+                detect=PersonsDetect.objects.create(
+                camera_id=camera,
+                person_id=person,
+            )
             object_data.append({
                 "id_camera":camera_id,
                 "category":'green' if person.status=='whitelist' else 'red',
@@ -28,18 +40,8 @@ def detect_person(national_id,camera_id):
                 "id":person.id_national,
                 "name":person.name,
                 "img":person.image.url,
-                "des":"description about person"
+                "des":detect.id
             })
-            if camera.camera_type=='outdoor':
-                person=PersonsDetect.objects.filter(person_id=person,camera_id__camera_type='indoor').last()
-                if person:
-                    person.camera_id=camera
-                person.save()
-            else:
-                PersonsDetect.objects.create(
-                camera_id=camera,
-                person_id=person,
-            )
            
     except Exception as e:
         print("errr:=>",e)

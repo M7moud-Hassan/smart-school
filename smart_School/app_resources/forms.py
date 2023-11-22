@@ -70,7 +70,7 @@ class PersonsForm(forms.ModelForm):
 
         )
     department = forms.ModelChoiceField(
-        label='القسم',
+        label='القسم', 
         queryset=Department.objects.all(),
         widget=forms.Select(
             attrs={'class': 'form-control select2', 'placeholder': 'Branch'}),

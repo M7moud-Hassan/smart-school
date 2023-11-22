@@ -9,10 +9,10 @@ from django.db.models import Q
 from django.http import HttpResponse, FileResponse, StreamingHttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
-from config.models import Config
+from config.models import Config, Reasons
 
 from dashboard.models import Department
-from .models import Cameras, ImagesPerson, Information, Persons, PersonsDetect
+from .models import Cameras, DetectReason, ImagesPerson, Information, Persons, PersonsDetect
 from .forms import CamerasForm, InformationsForm, PersonsForm
 from .utils import cameras
 import requests
@@ -90,7 +90,7 @@ def add_person(request):
                     info_intsance=inforForm.save()
                     person_instance.info=info_intsance
                     # person_instance.images=image_list
-                    person_instance.save()
+                    person_instance.save() 
                     person_instance = form.save()
                     image=request.POST.get('image')
                     if image:
@@ -371,7 +371,9 @@ def capture_image(request):
 def release_resources(request):
     try:
         for camera in cameras:
-            camera['camera'].stream.stream.release()
+            camera['camera'].release()
+    
+        
         pass
     except:
         pass
@@ -382,7 +384,7 @@ def release_camera(request, id):
     try:
         for camera in cameras:
             if camera['id'] == id:
-                camera['camera'].stream.stream.release()
+                camera['camera'].release()
     except:
         pass
     return HttpResponse('done')
@@ -452,3 +454,20 @@ def get_details_from_back_national_img(request):
             "response": response.text
         }
         return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+@login_required
+def add_reason(request):
+    try:
+        reason = DetectReason.objects.create(
+            reason=Reasons.objects.get(id=request.POST.get('id_reason', None)),
+            note=request.POST.get('text', None),
+            code=request.POST.get('code',None),
+            # date=request.POST.get('date',None),
+        )
+        detect = PersonsDetect.objects.get(id=int(request.POST.get('id_detect', '')))
+        detect.reason = reason
+        detect.save()
+        return HttpResponse(json.dumps({'result': True}), content_type="application/json")
+    except Exception as e:
+        print(str(e))
+        return HttpResponse(json.dumps({'result': False, 'error': str(e)}), content_type="application/json")

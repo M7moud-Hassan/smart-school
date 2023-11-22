@@ -16,6 +16,7 @@ import imutils
 import face_recognition
 from django.conf import settings
 from app_resources.utils import ids
+from config.models import Reasons
 
 
 def all_cameras(request):
@@ -31,7 +32,8 @@ def open_camera(request, id):
     camera = Cameras.objects.filter(id=id).first()
     return render(request, 'livefeed/live_camera.html', context={
         "cameras": Cameras.objects.all(),
-        "camera": camera
+        "camera": camera,
+        'reasons':Reasons.objects.filter(when='الدخول' if camera.camera_type=='indoor' else 'الخروج')
     })
 
 ####################################################### 

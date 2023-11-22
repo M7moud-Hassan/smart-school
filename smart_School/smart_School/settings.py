@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'smart_School.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
   
-DATABASES = {
+DATABASES = { 
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGRES_DB', 'test'),
@@ -137,7 +137,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 import face_recognition
 import numpy as np
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw 
 
 # This is an example of running face recognition on a single image
 # and drawing a box around each person that was identified.
@@ -149,7 +149,7 @@ KNOW_FACE_ENCODINGS = [
     
 ]
 
-KNOW_FACE_NAMES = [
+KNOW_FACE_NAMES = [ 
 
 ]
 from PIL import Image

@@ -7,10 +7,11 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import redirect, render
 
 from app_resources.models import Cameras, Persons
-from config.forms import ConfigForm
-from config.models import Config
+from config.forms import AddDurationForm, AddSheftForm, ConfigForm,WhenForm
+from config.models import AddDuration, Config, Nabatshieh, Reasons
 from dashboard.models import Department
 import xlrd
+
 content_message=[]
 def result_files(request):
      temp=copy.deepcopy(content_message)
@@ -117,3 +118,100 @@ def importatnted_fileds(request):
             form.save()
             return redirect('/')
     return render(request,'config/important_filed.html',context={'cameras':Cameras.objects.all(),'form':form})
+
+def sheftat(request):
+    sheftat=Nabatshieh.objects.all()
+    return render(request,'config/sheftat.html',context={'sheftat':sheftat})
+
+def add_sheftat(request):
+    if request.method=='POST':
+       
+        form=AddSheftForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("/config/sheftat")
+        else:
+            return render(request,'config/add_sheft.html',context={'form':form})
+    else:
+        form=AddSheftForm()
+    return render(request,'config/add_sheft.html',context={'form':form})
+
+def edit_sheft(request,pk):
+    sheft=Nabatshieh.objects.get(id=pk)
+    if request.method=='POST':
+        form=AddSheftForm(instance=sheft,data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("/config/sheftat")
+    else:
+        form=AddSheftForm(instance=sheft)
+    return render(request,'config/add_sheft.html',context={'form':form})
+
+def delete_sheft(request,pk):
+    sheft=Nabatshieh.objects.get(id=pk)
+    sheft.delete()
+    return redirect("/config/sheftat")
+
+def when_add(request):
+    if request.method=='POST':
+        form=WhenForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/config/reasons/')
+        else:
+            return render(request,'config/when.html',context={'form':form})
+    else:
+        form=WhenForm()
+    return render(request,'config/when.html',context={'form':form})
+
+def reasons(request):
+    return render(request,'config/reasons.html',context={'data':Reasons.objects.all()})
+
+def update_reason(request,pk):
+    item=Reasons.objects.get(id=pk)
+    if request.method=='POST':
+        form=WhenForm(instance=item,data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/config/reasons/')
+        else:
+            return render(request,'config/when.html',context={'form':form})
+    else:
+        form=WhenForm(instance=item)
+        return render(request,'config/when.html',context={'form':form})
+    
+def delete_reason(request,pk):
+    item=Reasons.objects.get(id=pk)
+    item.delete()
+    return redirect('/config/reasons/')
+def add_duration(request):
+    if request.method=='POST':
+        form=AddDurationForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/config/durations')
+        else:
+            return render(request,'config/add_duration.html',{'form':form})
+    else:
+        form=AddDurationForm()
+        return render(request,'config/add_duration.html',{'form':form})
+
+def durations(request):
+    return render(request,'config/durations.html',context={'durations':AddDuration.objects.all()})
+
+def update_duration(request,pk):
+    item=AddDuration.objects.get(id=pk)
+    if request.method=='POST':
+        form=AddDurationForm(instance=item,data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/config/durations')
+        else:
+            return render(request,'config/add_duration.html',{'form':form})
+    else:
+        form=AddDurationForm(instance=item)
+        return render(request,'config/add_duration.html',{'form':form})
+def delete_duration(request,pk):
+    item=AddDuration.objects.get(id=pk)
+    item.delete()
+    return redirect('/config/durations')

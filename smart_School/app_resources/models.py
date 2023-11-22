@@ -5,6 +5,7 @@ from django.db import models
 from dashboard.models import *
 
 
+
 class Cameras(models.Model):
     """Data model for cameras."""
     name = models.CharField(max_length=300)
@@ -54,13 +55,20 @@ class Persons(models.Model):
         return self.name
 
 
+# from config.models import Reasons
+class DetectReason(models.Model):
+    reason=models.ForeignKey('config.Reasons',on_delete=models.CASCADE)
+    date_time=models.DateTimeField(default=timezone.now)
+    code=models.CharField(max_length=100,null=True)
+    note=models.CharField(max_length=200,null=True)
 
-class PersonsDetect(models.Model):
+class PersonsDetect(models.Model): 
     detected_at = models.DateTimeField()
     outed_at = models.DateTimeField(null=True, blank=True)
     camera_id = models.ForeignKey(Cameras, on_delete=models.CASCADE)
     person_id = models.ForeignKey(Persons, on_delete=models.CASCADE)
     spend_time = models.CharField(max_length=100, null=True, blank=True)
+    reason=models.ForeignKey(DetectReason,on_delete=models.CASCADE,null=True,blank=True)
 
     def save(self, *args, **kwargs):
         if not self.detected_at:
@@ -90,3 +98,4 @@ class Information(models.Model):
         VisiTortype, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(default=timezone.now)
     empolyee=models.ForeignKey(Persons,on_delete=models.CASCADE, null=True)
+
