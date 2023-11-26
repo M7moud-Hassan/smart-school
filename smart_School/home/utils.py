@@ -16,6 +16,9 @@ def perform_detection(detected_today,include=False):
     if config:
         time_work=config.time_end_working()
     for person in detected_today:
+        if person.spend_time:
+            if ',' in person.spend_time:
+                person.spend_time=person.spend_time.split(',')[1].strip()
         persons_detect.append(person.person_id)
         for n in nabatshieh:
             if person.person_id in n.persions.all():
@@ -26,7 +29,9 @@ def perform_detection(detected_today,include=False):
                     time_work=time_work.split(',')[1].strip()
         for du in durations:
             if person.person_id in n.persions.all():
-                time_work=time_work + timedelta(hours=int(du.num_hour_working))
+                time_work_datetime = datetime.strptime(time_work,"%H:%M:%S")
+                new_time_work_datetime = time_work_datetime + timedelta(hours=int(du.num_hour_working))
+                time_work = new_time_work_datetime.strftime("%H:%M:%S")
         if person.reason is None and person.spend_time:
             if difference_time(person.spend_time,time_work):
                 person_dict = model_to_dict(person)
@@ -35,7 +40,11 @@ def perform_detection(detected_today,include=False):
                 person_dict['reason_in']="لا يوجد"
                 person_dict['reason_out']="لا يوجد"
                 person_dict['dep']=person.person_id.department.name
+                person_dict['detected_at']=person.detected_at.strftime('%d-%m-%Y %H:%M:%S') if person.detected_at else 'لا يوجد'
+                person_dict['outed_at']=person.outed_at.strftime('%d-%m-%Y %H:%M:%S')  if person.outed_at else 'لا يوجد'
+                person_dict['spend_time']=datetime.strptime(person.spend_time, "%H:%M:%S").strftime('%H:%M:%S') if person.spend_time else 'لا يوجد'
                 result.append(person_dict)
+
             else:
                 person_dict = model_to_dict(person)
                 person_dict['color'] = 'red'
@@ -43,6 +52,10 @@ def perform_detection(detected_today,include=False):
                 person_dict['reason_in']="لا يوجد"
                 person_dict['reason_out']="لا يوجد"
                 person_dict['dep']=person.person_id.department.name
+                person_dict['detected_at']=person.detected_at.strftime('%d-%m-%Y %H:%M:%S') if person.detected_at else 'لا يوجد'
+                person_dict['outed_at']=person.outed_at.strftime('%d-%m-%Y %H:%M:%S')  if person.outed_at else 'لا يوجد'
+                person_dict['spend_time']=datetime.strptime(person.spend_time, "%H:%M:%S").strftime('%H:%M:%S') if person.spend_time else 'لا يوجد'
+
                 result.append(person_dict)
         elif person.reason is None and person.spend_time is None:
             person_dict = model_to_dict(person)
@@ -50,6 +63,9 @@ def perform_detection(detected_today,include=False):
             person_dict['reason_in']="لا يوجد"
             person_dict['reason_out']="لا يوجد"
             person_dict['dep']=person.person_id.department.name
+            person_dict['detected_at']=person.detected_at.strftime('%d-%m-%Y %H:%M:%S') if person.detected_at else 'لا يوجد'
+            person_dict['outed_at']=person.outed_at.strftime('%d-%m-%Y %H:%M:%S')  if person.outed_at else 'لا يوجد'
+            person_dict['spend_time']=datetime.strptime(person.spend_time, "%H:%M:%S").strftime('%H:%M:%S') if person.spend_time else 'لا يوجد'
             result.append(person_dict)
         elif person.reason and person.spend_time:
             person_dict = model_to_dict(person)
@@ -58,6 +74,9 @@ def perform_detection(detected_today,include=False):
             person_dict['reason_in']="لا يوجد"
             person_dict['reason_out']=person.reason.reason.name
             person_dict['dep']=person.person_id.department.name
+            person_dict['detected_at']=person.detected_at.strftime('%d-%m-%Y %H:%M:%S') if person.detected_at else 'لا يوجد'
+            person_dict['outed_at']=person.outed_at.strftime('%d-%m-%Y %H:%M:%S')  if person.outed_at else 'لا يوجد'
+            person_dict['spend_time']=datetime.strptime(person.spend_time, "%H:%M:%S").strftime('%H:%M:%S') if person.spend_time else 'لا يوجد'
             result.append(person_dict)
         elif person.reason and person.spend_time is None:
             person_dict = model_to_dict(person)
@@ -66,6 +85,9 @@ def perform_detection(detected_today,include=False):
             person_dict['reason_out']="لا يوجد"
             person_dict['reason_in']=person.reason.reason.name
             person_dict['dep']=person.person_id.department.name
+            person_dict['detected_at']=person.detected_at.strftime('%d-%m-%Y %H:%M:%S') if person.detected_at else 'لا يوجد'
+            person_dict['outed_at']=person.outed_at.strftime('%d-%m-%Y %H:%M:%S')  if person.outed_at else 'لا يوجد'
+            person_dict['spend_time']=datetime.strptime(person.spend_time, "%H:%M:%S").strftime('%H:%M:%S') if person.spend_time else 'لا يوجد'
             result.append(person_dict)
 
     if include:
@@ -86,6 +108,7 @@ def perform_detection(detected_today,include=False):
                         person_dict['dep']=person_.department.name
                     else:
                         person_dict['dep']='لايوجد'
+                    person_dict['detected_at']=person.detected_at.strftime('%d-%m-%Y %H:%M:%S')
                     result.append(person_dict)
             
     return result
