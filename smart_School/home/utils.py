@@ -92,8 +92,20 @@ def perform_detection(detected_today,include=False):
 
 
 def difference_time(spend_time_str,max_time_str):
+    if ','  in spend_time_str:
+        spend_time_str=spend_time_str.split(',')[1].strip()
+    if '.' in spend_time_str: 
+          spend_time_str=spend_time_str.split('.')[0].strip()
+    if  isinstance(max_time_str, str):
+        if ','  in max_time_str:
+            max_time_str=max_time_str.split(',')[1].strip()
+        if '.' in spend_time_str: 
+            max_time_str=max_time_str.split('.')[0].strip()
     spend_time = datetime.strptime(spend_time_str, "%H:%M:%S").time()
-    max_time = datetime.strptime(max_time_str, "%H:%M:%S").time()
+    if isinstance(max_time_str,str):
+        max_time = datetime.strptime(max_time_str, "%H:%M:%S").time()
+    else:
+        max_time=max_time_str
     time_difference = timedelta(
         hours=spend_time.hour,
         minutes=spend_time.minute,
