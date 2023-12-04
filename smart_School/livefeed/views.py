@@ -1,4 +1,4 @@
-import cv2
+import cv2 
 from django.http import StreamingHttpResponse
 from django.views.decorators import gzip
 from django.shortcuts import render
