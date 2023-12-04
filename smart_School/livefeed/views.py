@@ -17,6 +17,7 @@ import face_recognition
 from django.conf import settings
 from app_resources.utils import ids
 from config.models import Reasons
+from app_resources.views import release_resources
 
 
 def all_cameras(request):
@@ -29,6 +30,7 @@ def all_cameras(request):
 
 
 def open_camera(request, id):
+    release_resources(request)
     camera = Cameras.objects.filter(id=id).first()
     return render(request, 'livefeed/live_camera.html', context={
         "cameras": Cameras.objects.all(),
