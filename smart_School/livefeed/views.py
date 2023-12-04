@@ -1,17 +1,15 @@
-import asyncio
 import cv2
 from django.http import StreamingHttpResponse
 from django.views.decorators import gzip
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from app_resources.models import *
-from app_resources.utils import cameras, detect_person, detect_unknown, save_image
+from app_resources.utils import cameras, detect_person, detect_unknown
 from django.conf import settings
 import cv2
 import os
 import os.path
 import pickle
-import time
 import numpy as np
 from imutils.video import VideoStream
 import imutils
@@ -19,7 +17,7 @@ import face_recognition
 from django.conf import settings
 from app_resources.utils import ids
 from config.models import Reasons
-from app_resources.views import release_resources
+
 
 def all_cameras(request):
     camears_lisy = Cameras.objects.all()
@@ -31,7 +29,6 @@ def all_cameras(request):
 
 
 def open_camera(request, id):
-    release_resources(request)
     camera = Cameras.objects.filter(id=id).first()
     return render(request, 'livefeed/live_camera.html', context={
         "cameras": Cameras.objects.all(),
@@ -56,8 +53,6 @@ camera=None
 @gzip.gzip_page
 @require_GET
 def video_feed(request, camera_id):
-    time.sleep(1)
-    release_resources(request)
     global ids
     exists=False
     for obj in ids:
@@ -84,17 +79,19 @@ def video_feed(request, camera_id):
         camera.stream.stop()
         camera=None
     camera = VideoStream(connection_string)
+    camera.start()
     cameras.append({"id": cam.id, "camera": camera})
+
     def generate():   
         while True:
-                if len(cameras)==0 or camera==None:
-                    break
                 frame = camera.read()
                 #frame = imutils.resize(frame, WIDTH_SCALE = 320)
+                if camera is None:
+                     break
                 if frame is None:
                     continue
                 try:
-                    #frame = imutils.resize(frame, width=600, height=600)
+                     #frame = imutils.resize(frame, width=600, height=600)
                     
                     #rgb_frame  =np.ascontiguousarray(frame[:, :, ::-1]) #frame[:, :, ::-1] #frame#[:, :, ::-1]
                     
