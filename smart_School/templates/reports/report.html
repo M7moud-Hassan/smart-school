@@ -131,6 +131,8 @@ var table = new Tabulator("#example-table", {
           }
     },
     columns:[
+        {title:"المسلسل", field:"index", sorter:"number",hozAlign:"center"},
+        {title:"رقم القيد", field:"num", sorter:"number",hozAlign:"center",headerFilter:"input"},
         {title:"اسم الموظف", field:"name", sorter:"string",hozAlign:"center",headerFilter:"input"},
         {title:"القسم", field:"dep", sorter:"string",hozAlign:"center", headerFilter:"list",headerFilterParams:{valuesLookup:true, clearable:true}},
         {title:"وقت الدخول", field:"detected_at", sorter:"date",hozAlign:"center",headerFilter:"input"},

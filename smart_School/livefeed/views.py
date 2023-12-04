@@ -18,6 +18,7 @@ from django.conf import settings
 from app_resources.utils import ids
 from config.models import Reasons
 from app_resources.views import release_resources
+from app_resources.utils import object_data
 
 
 def all_cameras(request):
@@ -82,10 +83,22 @@ def video_feed(request, camera_id):
         camera=None
     camera = VideoStream(connection_string)
     camera.start()
-    cameras.append({"id": cam.id, "camera": camera})
+    cameras.append({"id":cam.id, "camera": camera})
 
-    def generate():   
+    def generate():
+        index=0   
         while True:
+                index=index+1
+                object_data.append({
+                "id_camera":camera_id,
+                "category":'green' ,
+                "sort":'white' , 
+                "id_person":index,
+                "id":"ejdj",
+                "name":index,
+                "img":"djkdkdj",
+                "des":"djdjdjdj"
+            })
                 frame = camera.read()
                 #frame = imutils.resize(frame, WIDTH_SCALE = 320)
                 if camera is None:

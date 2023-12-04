@@ -73,7 +73,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
             </div>
             <div class="card-body p-0 pb-4">
                 <div class="teams-nav" id="teams-nav">
-                    <ul class="list-unstyled mb-0 mt-2 " id="resultCamera{{camera.id}}">
+                    <ul class="list-unstyled mb-0 mt-2 "  id="resultCamera{{camera.id}}">
                         <!-- <li>
                             <a href="javascript:void(0);">
                                 <div class="d-flex align-items-center">
@@ -191,7 +191,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                             `;
   if (!$("#resultCamera"+obj.id_camera+" #p"+obj.id_person).length > 0) {
     $('#counter').text(Number($('#counter').text()) + 1);
-      $("#resultCamera"+obj.id_camera).append(newDiv);
+      $("#resultCamera"+obj.id_camera).prepend(newDiv);
 
   }
     // $('.btn[data-filter]').on('click', function() {

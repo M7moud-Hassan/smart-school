@@ -12,12 +12,12 @@ def report(request):
 
 def load_data(request, date):
     if 'to' in date:
-        start, end = date.split('to')
+        start, end = date.split('to') 
         start_date = datetime.strptime(start.strip(), "%Y-%m-%d")
         end_date = datetime.strptime(end.strip(), "%Y-%m-%d")
         queryset = PersonsDetect.objects.filter(Q(detected_at__date__range=(start_date, end_date))|Q(detected_at=None,outed_at__date__range=(start_date, end_date)))
     else:
         queryset = PersonsDetect.objects.filter(Q(detected_at__date=datetime.strptime(date, "%Y-%m-%d"))|Q(detected_at=None,outed_at__date=datetime.strptime(date, "%Y-%m-%d")))
-    queryset=filter_persons(queryset)  
+    # queryset=filter_persons(queryset)   
     data=perform_detection(queryset,include=True)
     return JsonResponse(data, safe=False)
