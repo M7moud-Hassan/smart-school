@@ -328,7 +328,6 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'js/dropify.min.js' %}"></script>
 <script src="{% static 'dist/js/validation.js' %}"></script>
 <script src="{% static 'dist/libs/flatpickr/flatpickr.min.js' %}"></script>
 <script src="{% static 'dist/js/date&time_pickers.js' %}"></script>
@@ -355,7 +354,7 @@
   FilePond.registerPlugin(
         FilePondPluginImagePreview,
         FilePondPluginImageExifOrientation,
-        FilePondPluginFileValidateSize,
+       
         FilePondPluginFileEncode,
         FilePondPluginImageEdit,
         FilePondPluginFileValidateType,
@@ -387,14 +386,19 @@
     {% if person.image %}
     if(`{{person}}`){
      single3.addFile(`{{person.image.url}}`)
+     {% endif %}
      {% for image in person.images.all %}
         pods.addFile('{{ image.image.url }}');
     {% endfor %}
+    {% if person.back_national_img %}
      single2.addFile(`{{person.back_national_img.url}}`)
+     {% endif %}
+     {% if person.front_national_img %}
      single1.addFile(`{{person.front_national_img.url}}`)
+     {% endif %}
    
     }
-    {% endif %}
+    
 
 
 
@@ -478,7 +482,7 @@
         responseType: 'blob'
       },
       success: function (response) {
-        $('.dropify-clear').eq(0).click();
+        //$('.dropify-clear').eq(0).click();
         const fileInput = document.getElementById('id_front_national_img');
         var filename = 'captured_image.jpg';
 
@@ -522,13 +526,7 @@
   });
 
 
-  function onModalClosed() {
-    $.ajax({
-      url: '/cameras/release',
-    });
-    //$("#video").attr("src","");
-  }
-  $(document).on('hidden.bs.modal', '.modal', onModalClosed);
+
 
   $("#uploadButton").click(function () {
     $('#uploadButton').hide()
@@ -689,5 +687,23 @@
     }
   }
   showOrhid(`{{form.type_register.value}}`)
+</script>
+<script>
+  function release() {
+    $.ajax({
+      url: "/cameras/release/",
+      type: "GET",
+      success: function (data) {
+
+      },
+      error: function (xhr, status, error) {
+
+        console.error(error);
+      }
+    });
+  }
+  
+release()
+  
 </script>
 {% endblock %}

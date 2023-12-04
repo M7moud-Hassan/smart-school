@@ -1388,22 +1388,7 @@
     <!-- Defaultmenu JS -->
     <script src="{% static 'dist/js/defaultmenu.min.js' %}"></script>
     <script src="{% static 'dist/js/crm-dashboard.js' %}"></script>
-<script>
-      function release() {
-        $.ajax({
-          url: "/cameras/release/",
-          type: "GET",
-          success: function (data) {
-    
-          },
-          error: function (xhr, status, error) {
-    
-            console.error(error);
-          }
-        });
-      }
-      release()
-</script>
+
     {% block scripts %}
     {% endblock %}
 </body>

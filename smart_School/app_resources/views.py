@@ -371,7 +371,7 @@ def capture_image(request):
 def release_resources(request):
     try:
         for camera in cameras:
-            camera['camera'].release()
+            camera['camera'].stream.release()
     
         
         pass
@@ -384,7 +384,7 @@ def release_camera(request, id):
     try:
         for camera in cameras:
             if camera['id'] == id:
-                camera['camera'].release()
+                camera['camera'].stream.release()
     except:
         pass
     return HttpResponse('done')

@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-c)(zz@e67e78vx$h9qy-i4h9(1$wd&a6yyg$x7-&mso*vwh+x5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -81,11 +81,11 @@ WSGI_APPLICATION = 'smart_School.wsgi.application'
 DATABASES = { 
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'test'),
-        'USER': os.getenv('POSTGRES_USER', 'postgres'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'mahm01142'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'NAME':'test',
+        'USER': 'postgres',
+        'PASSWORD': 'mahm01142',
+        'HOST':  'localhost',
+        'PORT': 5432,
     }
 }
 
@@ -114,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'EET'
 
 USE_I18N = True
 
@@ -137,8 +137,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 import face_recognition
 import numpy as np
-from PIL import Image, ImageDraw 
-
+from PIL import Image, ImageDraw
+DATA_UPLOAD_MAX_MEMORY_SIZE = 15242880
 # This is an example of running face recognition on a single image
 # and drawing a box around each person that was identified.
 
@@ -156,7 +156,7 @@ from PIL import Image
 import glob
 image_list = []
 for Imagename in glob.glob('./media/faces2/*.jpg'):
-   
+    
     image = face_recognition.load_image_file(Imagename)
     face_encoding = face_recognition.face_encodings(image)[0]
     KNOW_FACE_ENCODINGS.append(face_encoding)

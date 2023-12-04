@@ -178,13 +178,14 @@ def index(request):
     most_visitor_dep = most_visitor_dep.order_by('-visits')[:5]
 
     detected_today=PersonsDetect.objects.filter(
-    person_id__type_register='موظف',
-    detected_at__date=today
+    Q(person_id__type_register='موظف',
+    detected_at__date=today)|Q(outed_at__date=today,person_id__type_register='موظف', detected_at=None)
     )
+    #detected_today=filter_persons(detected_today)   
+
     detected_today = perform_detection(detected_today)
     
-    # detected_today=filter_persons(detected_today)   
-
+   
     return render(request, 'home/index.html', context={         
                                                        'active_Empolyee':activeEmpoly,
                                                        "detected_today":detected_today,

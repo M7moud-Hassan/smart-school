@@ -13,7 +13,7 @@ class Cameras(models.Model):
     status = models.CharField(max_length=100)
     description = models.CharField(max_length=500, blank=True, null=True)
     connection_string = models.CharField(max_length=500)
-    created_at = models.DateTimeField(default=datetime.now())
+    created_at = models.DateTimeField(default=timezone.now())
 
     def __str__(self):
         return self.name
@@ -63,7 +63,7 @@ class DetectReason(models.Model):
     note=models.CharField(max_length=200,null=True)
 
 class PersonsDetect(models.Model): 
-    detected_at = models.DateTimeField()
+    detected_at = models.DateTimeField(null=True,blank=True)
     outed_at = models.DateTimeField(null=True, blank=True)
     camera_id = models.ForeignKey(Cameras, on_delete=models.CASCADE)
     person_id = models.ForeignKey(Persons, on_delete=models.CASCADE)
@@ -72,17 +72,20 @@ class PersonsDetect(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.detected_at:
-            self.detected_at = datetime.now().replace(second=0, microsecond=0)
+            self.detected_at = timezone.now()
         if self.camera_id.camera_type == 'outdoor':
-            self.outed_at = datetime.now().replace(second=0, microsecond=0)
+            self.outed_at = timezone.now()
             indoor_detection = PersonsDetect.objects.filter(person_id=self.person_id,
                                                             camera_id__camera_type='indoor').last()
             if indoor_detection:
                 time_in = indoor_detection.detected_at
-                current_time = datetime.now().replace(second=0, microsecond=0, tzinfo=pytz.UTC)
+                current_time = timezone.now().replace(tzinfo=pytz.UTC)
+
+
                 time_in = time_in.replace(tzinfo=pytz.UTC)
                 self.spend_time = str(current_time - time_in)
             else:
+                self.detected_at=None
                 self.spend_time = None
         super().save(*args, **kwargs)
 

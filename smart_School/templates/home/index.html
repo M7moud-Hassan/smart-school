@@ -1628,4 +1628,22 @@ function on_show_d(id){
 }
 on_show_d(1)
     </script>
+<script>
+    function release() {
+      $.ajax({
+        url: "/cameras/release/",
+        type: "GET",
+        success: function (data) {
+  
+        },
+        error: function (xhr, status, error) {
+  
+          console.error(error);
+        }
+      });
+    }
+    console.log("ahmed");
+  release()
+    
+  </script>
 {% endblock %}

@@ -69,7 +69,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="team-groups">
         <div class="card custom-card">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <span class="card-title">{{camera.name}} <span class="small text-success">Live</span></span>
+                <span class="fs-4" id="counter">0</span> <span class="card-title">{{camera.name}} <span class="small text-success">Live</span></span>
             </div>
             <div class="card-body p-0 pb-4">
                 <div class="teams-nav" id="teams-nav">
@@ -190,6 +190,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                         </li>
                             `;
   if (!$("#resultCamera"+obj.id_camera+" #p"+obj.id_person).length > 0) {
+    $('#counter').text(Number($('#counter').text()) + 1);
       $("#resultCamera"+obj.id_camera).append(newDiv);
 
   }

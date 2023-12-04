@@ -44,7 +44,7 @@ def add_files(request):
                                     date_birth=None
                                 data=data+1
                                 Persons.objects.create(name=row[2]+' '+row[3],gender='Male' if row[8]=='ذكر' else 'Female',
-                                                    date_of_birth=date_birth,image='/faces/'+row[1]+'.jpg',
+                                                       date_of_birth=date_birth,image='/faces/'+row[1]+'.jpg',
                                                        front_national_img=row[12].replace('/media',''),back_national_img=row[13].replace('/media',''),id_national=row[1],
                                                        job_title=row[7],address=row[4]+' '+row[6],status='whitelist',created_at=row[15],
                                                        religion=row[9],status_person=row[10])
