@@ -111,7 +111,7 @@ def detect_unknown(top, right, bottom, left,frame):
 
 
 def save_image(id,frame):
-    folder_path = os.path.join('media', id)
+    folder_path = os.path.join('media/detections', id)
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
     existing_items = len(os.listdir(folder_path))

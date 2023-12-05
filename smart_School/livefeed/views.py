@@ -86,19 +86,7 @@ def video_feed(request, camera_id):
     cameras.append({"id":cam.id, "camera": camera})
 
     def generate():
-        index=0   
-        while True:
-                index=index+1
-                object_data.append({
-                "id_camera":camera_id,
-                "category":'green' ,
-                "sort":'white' , 
-                "id_person":index,
-                "id":"ejdj",
-                "name":index,
-                "img":"djkdkdj",
-                "des":"djdjdjdj"
-            })
+
                 frame = camera.read()
                 #frame = imutils.resize(frame, WIDTH_SCALE = 320)
                 if camera is None:
