@@ -380,10 +380,10 @@
         
     );
   single3= FilePond.create(
-        document.querySelector('.single-fileupload3'),
-        
+        document.querySelector('.single-fileupload3'),    
     );
-    {% if person.image %}
+   {% if person %}
+   {% if person.image %}
     if(`{{person}}`){
      single3.addFile(`{{person.image.url}}`)
      {% endif %}
@@ -398,9 +398,7 @@
      {% endif %}
    
     }
-    
-
-
+   {% endif %}
 
   })
 
