@@ -103,7 +103,7 @@ def detect_unknown(top, right, bottom, left,frame):
     cv2.rectangle(frame, (x, y-40), (x+w, y), (0, 255, 255), -1)
     font_size = 0.5
     font_thickness = 1
-    font = cv2.FONT_HERSHEY_COMPLEX 
+    font = cv2.FONT_HERSHEY_COMPLEX  
     text_size = cv2.getTextSize('unknown', font, font_size, font_thickness)[0]
     text_x = int((w - text_size[0]) / 2) + x
     text_y = y - 15
