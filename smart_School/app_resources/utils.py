@@ -1,11 +1,16 @@
 import asyncio
 from io import BytesIO
 import os
+
+import numpy as np
 from .models import PersonsDetect, Persons, Cameras
 from django.utils import timezone
 from PIL import Image
 from django.core.files.base import ContentFile
 import cv2
+import arabic_reshaper 
+from bidi.algorithm import get_display 
+from PIL import Image, ImageFont, ImageDraw 
 cameras = []
 object_data = []
 ids=[]
@@ -51,18 +56,7 @@ def detect_person(national_id,camera_id,top, right, bottom, left,frame):
             })
     
         color =(0, 255, 0) if person.status=='whitelist' else (55, 55, 255)
-        x, y, w, h = left, top, right - left, bottom - top
-        cv2.rectangle(frame, (x, y), (x+w, y+h), color, 1)
-        cv2.rectangle(frame, (x, y), (x+w, y+h), color, 2)
-        cv2.rectangle(frame, (x, y-40), (x+w, y),color, -1)
-        font_size = 0.5
-        font_thickness = 1
-        font = cv2.FONT_HERSHEY_COMPLEX 
-        text_size = cv2.getTextSize(person.name.split(' ')[0], font, font_size, font_thickness)[0]
-        text_x = int((w - text_size[0]) / 2) + x
-        text_y = y - 15
-        cv2.putText(frame, person.name.split(' ')[0], (text_x, text_y), font, font_size, (255, 255, 255), font_thickness)
- 
+        return draw_name(top, right, bottom, left,frame,person.name,color)
     except Exception as e:
         print("errr:=>",e)
 
@@ -97,18 +91,7 @@ def detect_unknown(top, right, bottom, left,frame):
     #                "img":person.image.url,
     #                "des":"description about person"
     #        })
-    x, y, w, h = left, top, right - left, bottom - top
-    cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 1)
-    cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
-    cv2.rectangle(frame, (x, y-40), (x+w, y), (0, 255, 255), -1)
-    font_size = 0.5
-    font_thickness = 1
-    font = cv2.FONT_HERSHEY_COMPLEX  
-    text_size = cv2.getTextSize('unknown', font, font_size, font_thickness)[0]
-    text_x = int((w - text_size[0]) / 2) + x
-    text_y = y - 15
-    cv2.putText(frame,'unknown', (text_x, text_y), font, font_size, (255, 255, 255), font_thickness)
-
+   return draw_name(top, right, bottom, left,frame,'الشخص غير موجود',(0, 255, 255))
 
 def save_image(id,frame):
     folder_path = os.path.join('media/detections', id)
@@ -119,3 +102,22 @@ def save_image(id,frame):
     image_path = os.path.join(folder_path, image_filename)
     pil_image = Image.fromarray(frame)
     pil_image.save(image_path)
+
+
+def draw_name(top, right, bottom, left,frame,text,color):
+    x, y, w, h = left, top, right - left, bottom - top
+    cv2.rectangle(frame, (x, y), (x+w, y+h), color, 1)
+    cv2.rectangle(frame, (x, y), (x+w, y+h), color, 2)
+    font_size = 0.1
+    font_thickness = 1
+    font = cv2.FONT_HERSHEY_COMPLEX 
+    text_size = cv2.getTextSize(text, font, font_size, font_thickness)[0]
+    text_x = int((w - text_size[0]) / 2) + x-30
+    text_y = y - 20
+    reshaped_text = arabic_reshaper.reshape(text)
+    bidi_text = get_display(reshaped_text) 
+    font = ImageFont.truetype("sahel.ttf", size=13)
+    im=Image.fromarray(frame)
+    d = ImageDraw.Draw(im)
+    d.multiline_text((text_x,text_y), bidi_text, font=font,fill=color, spacing=15, align="center")
+    return np.array(im)

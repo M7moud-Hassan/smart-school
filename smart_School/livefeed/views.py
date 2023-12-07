@@ -163,10 +163,10 @@ def video_feed(request, camera_id):
                                         #detect_person(settings.KNOW_FACE_NAMES[best_match_index],camera_id)
                                     ##print("////////////////////////////////////////////")
                                 else:
-                                    detect_unknown(top, right, bottom, left,frame)
+                                    frame=detect_unknown(top, right, bottom, left,frame)
                                     print("unknow !!!!!!!!!!!!!!!!!!!!!")
                             else:
-                                detect_unknown(top, right, bottom, left,frame)
+                                frame=detect_unknown(top, right, bottom, left,frame)
                                 print("unknow !!!!!!!!!!!!!!!!!!!!!")
 
                     
