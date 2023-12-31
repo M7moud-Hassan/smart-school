@@ -305,6 +305,11 @@
       {{form.registration_number}}
     
     </div>
+    <div class="form-group col-12 col-md-6 id_department_p">
+      <label for="">رقم الواتساب</label>
+      {{form.mobile_whatsapp}}
+    
+    </div>
     <div class="col-12 col-md-6 row align-items-center mt-4 ps-4 pt-2">
       
       {% for radio in form.type_register %}
@@ -637,8 +642,6 @@
      $('.dropify-clear').eq(index).css('display', 'block');
       $('.dropify-render').eq(index).append(imageElement);
     };
-
-    // Convert the File object to a data URL
     reader.readAsDataURL(file);
 
   }

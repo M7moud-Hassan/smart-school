@@ -32,7 +32,7 @@ class PersonsForm(forms.ModelForm):
         model = Persons
         fields = ['name', 'gender', 'date_of_birth', 'image', 'status', 'allowed_cameras', 'front_national_img',
                   'back_national_img',
-                  'id_national', 'address', 'job_title','type_register','department','registration_number']
+                  'id_national', 'address', 'job_title','type_register','department','registration_number','mobile_whatsapp']
         widgets = {
             'image': forms.ClearableFileInput(
                 attrs={'class': 'single-fileupload3', 'required': False,'accept':'image/png, image/jpeg, image/gif' }),
@@ -49,7 +49,8 @@ class PersonsForm(forms.ModelForm):
             'id_national': forms.TextInput(attrs={'class': 'form-control', 'required': False}),
             'job_title': forms.TextInput(attrs={'class': 'form-control', 'required': False}),
             'address': forms.TextInput(attrs={'class': 'form-control', 'required': False}),
-            'registration_number':forms.NumberInput(attrs={'class': 'form-control', 'required': False})
+            'registration_number':forms.NumberInput(attrs={'class': 'form-control', 'required': False}),
+            'mobile_whatsapp':forms.TextInput(attrs={'class': 'form-control', 'required': False})
         }
 
         
@@ -57,7 +58,8 @@ class PersonsForm(forms.ModelForm):
             'image': 'الصور الشخصية',
             'front_national_img': 'صورة البطاقة الامامية',
             'back_national_img': 'صورة البطاقة الخلفية',
-            'job_title': 'الاسم الوظيفة'
+            'job_title': 'الاسم الوظيفة',
+            'mobile_whatsapp':"رقم واتساب"
         }
         allowed_cameras = forms.ModelMultipleChoiceField(
             queryset=Cameras.objects.all(),

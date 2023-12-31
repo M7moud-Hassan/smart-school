@@ -1,5 +1,6 @@
 from django.db import models
-# Create your models here.
+
+from authentications.models import User
 
 class NationaId(models.Model):
     frontImage=models.ImageField(upload_to='national_id/')
@@ -8,6 +9,7 @@ class NationaId(models.Model):
 
 class Department(models.Model):
     name = models.CharField(max_length=500)
+    user_manager=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     def __str__(self) -> str:
         return self.name
 class Type(models.Model):

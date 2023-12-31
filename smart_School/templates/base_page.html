@@ -1088,11 +1088,10 @@
                 <!-- End::header-content-right -->
 
             </div>
-            <!-- End::main-header-container -->
+           
 
         </header>
-        <!-- /app-header -->
-        <!-- Start::app-sidebar -->
+      
         <aside class="app-sidebar sticky" id="sidebar">
 
             <!-- Start::main-sidebar-header -->
@@ -1140,12 +1139,12 @@
                         <li class="slide has-sub">
                             <a href="javascript:void(0);" class="side-menu__item">
                                 <i class="fe fe-eye side-menu__icon"></i>
-                                <span class="side-menu__label">رؤية الكاميرات</span>
+                                <span class="side-menu__label">الكاميرات للاشخاص</span>
                                 <i class="fe fe-chevron-right side-menu__angle"></i>
                             </a>
                             <ul class="slide-menu child1">
                                 <li class="slide side-menu__label1">
-                                    <a href="javascript:void(0)">رؤية الكاميرات</a>
+                                    <a href="javascript:void(0)">الكاميرات للاشخاص</a>
                                 </li>
                                 <!-- <li class="slide">
                                     <a href="{% url 'all' %}" class="side-menu__item">الكل</a>
@@ -1153,6 +1152,26 @@
                                 {% for cam in cameras %}
                                 <li class="slide">
                                     <a href="{% url 'open_camera' cam.id %}" class="side-menu__item">{{cam.name}}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                <i class="fe fe-eye side-menu__icon"></i>
+                                <span class="side-menu__label">الكاميرات للسيارات</span>
+                                <i class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child1">
+                                <li class="slide side-menu__label1">
+                                    <a href="javascript:void(0)">الكاميرات للسيارات</a>
+                                </li>
+                                <!-- <li class="slide">
+                                    <a href="{% url 'all' %}" class="side-menu__item">الكل</a>
+                                </li> -->
+                                {% for cam in cameras %}
+                                <li class="slide">
+                                    <a href="{% url 'vehicle_open_camera' cam.id %}" class="side-menu__item">{{cam.name}}</a>
                                 </li>
                                 {% endfor %}
                             </ul>
@@ -1236,12 +1255,46 @@
                                     <a href="{% url 'sheftat' %}" class="side-menu__item">الشفتات</a>
                                 </li>
                                 <li class="slide">
-                                    <a href="{% url 'reasons' %}" class="side-menu__item">اسباب الخروج والدخول</a>
+                                    <a href="{% url 'reasons' %}" class="side-menu__item">انواع التصاريح</a>
                                 </li>
                                 <li class="slide">
                                     <a href="{% url 'durations' %}" class="side-menu__item"> اضافة مدة اضافية</a>
                                 </li>
+                                <li class="slide">
+                                    <a href="{% url 'departments' %}" class="side-menu__item"> الاقسام</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{% url 'users' %}" class="side-menu__item"> المستخدمين</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{% url 'groups' %}" class="side-menu__item"> مجموعات المستخدمين</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{% url 'permissions_list' %}" class="side-menu__item"> السماحيات </a>
+                                </li>
                                
+                            </ul>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                <i class="ti ti-wave-square side-menu__icon"></i>
+                                <span class="side-menu__label"> التصاريح</span>
+                                <i class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child1">
+                                <li class="slide side-menu__label1">
+                                    <a href="javascript:void(0)"> التصاريح<a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{% url 'permissions' %}" class="side-menu__item">التصاريح</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{% url 'add_permission' %}" class="side-menu__item">اضافة  تصريح</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{% url 'add_permission' %}" class="side-menu__item">  اضافة  تصريح لي</a>
+                                </li>
+                              
                             </ul>
                         </li>
                         <!-- End::slide -->
@@ -1388,8 +1441,57 @@
     <!-- Defaultmenu JS -->
     <script src="{% static 'dist/js/defaultmenu.min.js' %}"></script>
     <script src="{% static 'dist/js/crm-dashboard.js' %}"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
+    <script>
+        var selectVideo=0
+        $(function(){
+            $('.modal').on('hidden.bs.modal', function () {
+                release()
+            });
+            const multipleCancelButton = new Choices(
+                '#assigned-team-members',
+                {
+                    allowHTML: true,
+                    removeItemButton: true,
+                }
+            );
+        });
+        function openCamera(id){
+            $(`#video_capture${id}`).attr('src',`/cameras/video/${id}`)
+            $(`#video_capture${selectVideo}`).attr('src','')
+            selectVideo=id
+        }    
+        function release() {
+            $.ajax({
+                url: "/cameras/release/",
+                type: "GET",
+                success: function (data) {
+    
+                },
+                error: function (xhr, status, error) {
+    
+                    console.error(error);
+                }
+            });
+        }
+        function convert_blob_to_file(blob){
+            var filename = 'captured_image.jpg';
+            var file = new File([blob], filename, { type: 'image/jpeg' });
+            return file;
+          }
+          
+    </script>
     {% block scripts %}
+
     {% endblock %}
 </body>
 

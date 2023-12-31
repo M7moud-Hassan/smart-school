@@ -3,6 +3,7 @@ from django.db import models
 from datetime import time
 
 from app_resources.models import Persons
+from authentications.models import User
 # Create your models here.
 
 class Config(models.Model):
@@ -11,6 +12,8 @@ class Config(models.Model):
     url_extract_data=models.URLField(default='http://24.144.84.0:9090/api/')
     url_image=models.URLField(default='http://24.144.84.0:9090/api/')
     url_extract_data_back=models.URLField(default='http://24.144.84.0:9090/api_back/')
+    token_access=models.CharField(max_length=500,null=True)
+    url_whatsapp=models.URLField(default='https://graph.facebook.com/v17.0/119791417748534/messages')
     @property
     def time_end_working(self):
         start_time = self.time_start_working
@@ -56,5 +59,18 @@ class Reasons(models.Model):
         choices=when_chooses,
         default='entry'
     )
+    def __str__(self):
+        return f'{self.name}---{self.when}'
 
     
+
+class Permission(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_by_permissions',null=True)
+    reason = models.ForeignKey(Reasons, on_delete=models.CASCADE)
+    is_accept=models.BooleanField(null=True)
+    for_emp = models.ManyToManyField(Persons,blank=True)
+    
+    def change_status(self,value):
+        self.is_accept=value
+        self.save()

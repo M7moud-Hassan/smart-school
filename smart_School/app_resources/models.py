@@ -1,19 +1,19 @@
-from datetime import datetime
+
 from django.utils import timezone
 import pytz
 from django.db import models
 from dashboard.models import *
+from authentications.models import Branch
 
 
 
 class Cameras(models.Model):
-    """Data model for cameras."""
     name = models.CharField(max_length=300)
     camera_type = models.CharField(max_length=100)
     status = models.CharField(max_length=100)
     description = models.CharField(max_length=500, blank=True, null=True)
     connection_string = models.CharField(max_length=500)
-    created_at = models.DateTimeField(default=timezone.now())
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.name
@@ -25,6 +25,7 @@ def get_upload_path(instance, filename):
 
 class ImagesPerson(models.Model):
     image=models.ImageField(upload_to='persons\\images', blank=True, null=True)
+
 
 class Persons(models.Model):
     name = models.CharField(max_length=300, null=True, blank=True)
@@ -42,20 +43,21 @@ class Persons(models.Model):
     status = models.CharField(max_length=100, default='whitelist')
     religion = models.CharField(max_length=100, default='مسلم')
     status_person = models.CharField(max_length=100, default='اعزب')
-    created_at = models.DateTimeField(default= timezone.now())
+    created_at = models.DateTimeField(default= timezone.now)
     allowed_cameras = models.ManyToManyField(Cameras, blank=True)
     info = models.ForeignKey(
         'Information', on_delete=models.CASCADE, null=True)
-    images = models.ManyToManyField(ImagesPerson,blank=True, null=True)
+    images = models.ManyToManyField(ImagesPerson,blank=True)
     registration_number=models.IntegerField(null=True,blank=True)
     department = models.ForeignKey(
         Department, on_delete=models.CASCADE, null=True)
+    mobile_whatsapp=models.CharField(max_length=100,null=True)
+    branch=models.ForeignKey(Branch,on_delete=models.CASCADE,null=True,related_name='register_branch')
 
     def __str__(self):
         return self.name
 
 
-# from config.models import Reasons
 class DetectReason(models.Model):
     reason=models.ForeignKey('config.Reasons',on_delete=models.CASCADE)
     date_time=models.DateTimeField(default=timezone.now)

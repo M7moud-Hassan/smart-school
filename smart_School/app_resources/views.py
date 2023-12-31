@@ -348,7 +348,7 @@ def view_person(request, id):
                             "cameras":Cameras.objects.all(),})
 
 @login_required
-def capture_image(request):
+def capture_image(request): 
     video = cameras[-1]['camera']
     frame = video.read()
     if frame is not None:
@@ -368,13 +368,10 @@ def capture_image(request):
         return HttpResponse(status=204)
 
 @login_required
-def release_resources(request):
+def release_resources(request): 
     try:
         for camera in cameras:
             camera['camera'].stream.release()
-    
-        
-        pass
     except:
         pass
     return HttpResponse('done')

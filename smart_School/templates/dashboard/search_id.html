@@ -17,7 +17,10 @@
 </style>
 {% endblock %}
 {% block content %}
-
+{% for camera in cameras %}
+            {% url 'capture_image_for_search' as capture_url %}
+            {% include 'models/camera_capture_model.html' with id=camera.id name=camera.name action=capture_url %}
+{% endfor %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb breadcrumb-example1 pt-2">
     <li class="breadcrumb-item"><a href="/">الرئسية</a></li>
@@ -28,10 +31,6 @@
   <div class="card-header justify-content-between">
     <div class="card-title">
        الحث عن الشخص
-    </div>
-    <div class="prism-toggle">
-      <!-- <button class="btn btn-sm btn-primary-light">Show Code<i
-          class="ri-code-line ms-2 d-inline-block align-middle"></i></button> -->
     </div>
   </div>
   <div class="card-body">
@@ -64,9 +63,12 @@
               <div class="card-body col-12 col-md-4">
                 <div class="form-group w-50 mx-auto">
                   <div class="card custom-card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between">
                         <div class="card-title">
                           {{form.frontImage.label_tag}}
+                        </div>
+                        <div class="">
+                            {% include 'widgets/camera_drop_down_list.html' %}
                         </div>
                     </div>
                     <div class="card-body w-100">
@@ -74,6 +76,7 @@
                     </div>
                 </div>
                 </div>
+                <p class='text-center'>OR</p>
                 <div class="form-group mt-3 w-50 mx-auto">
                   {{ form.National_id.label_tag }}
                   {{ form.National_id }}
@@ -121,10 +124,29 @@
         FilePondPluginImageResize,
         FilePondPluginImageTransform
     );
-    /* single upload */
-    FilePond.create(
+   const filePonf= FilePond.create(
         document.querySelector('.single-fileupload'),
        
     )
+
+    $('#captureImage').click(function (event) {
+      event.preventDefault();
+      $.ajax({
+        url: '/cameras/capture_image/',
+        type: 'GET',
+        xhrFields: {
+          responseType: 'blob'
+        },
+        success: function (response) {
+          file=convert_blob_to_file(response)
+          filePonf.addFile(file)
+        },
+        error: function (error) {
+          console.log(error);
+        }
+      });
+    });
+
+    
     </script>
 {% endblock %}

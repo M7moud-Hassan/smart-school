@@ -2,16 +2,22 @@ import copy
 import csv
 from datetime import datetime
 import io
-import sqlite3
+import cv2
 from django.http import HttpResponseBadRequest, JsonResponse
-from django.shortcuts import redirect, render
-
+from django.shortcuts import get_object_or_404, redirect, render
 from app_resources.models import Cameras, Persons
-from config.forms import AddDurationForm, AddSheftForm, ConfigForm,WhenForm
-from config.models import AddDuration, Config, Nabatshieh, Reasons
+from config.forms import AddDurationForm, AddSheftForm, ConfigForm, DepartmentForm, PermissionForm,WhenForm
+from config.models import AddDuration, Config, Nabatshieh, Permission, Reasons
 from dashboard.models import Department
 import xlrd
-
+from django.views import View
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView,UpdateView,DeleteView
+from django.views.generic.list import ListView
+from app_resources.views import cameras
+from livefeed.utils import search_by_image_person
 content_message=[]
 def result_files(request):
      temp=copy.deepcopy(content_message)
@@ -215,3 +221,142 @@ def delete_duration(request,pk):
     item=AddDuration.objects.get(id=pk)
     item.delete()
     return redirect('/config/durations')
+
+
+
+class AddPermission(View):
+    form_class=PermissionForm
+    template_name = "config/add_permission.html"
+    template_name_all='config/permissions.html'
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        form=self.form_class()
+        return render(request,self.template_name,context={"form":form})
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        form=self.form_class(request.POST)
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.created_by=request.user
+            instance.save()
+            form.save_m2m()
+        return render(request,self.template_name_all,context={"permissions":Permission.objects.all()})
+
+class Permissions(ListView):
+    model = Permission
+    template_name = 'config/permissions.html'
+    context_object_name = 'permissions'
+    
+    def __split_date(self,value):
+        if 'to' in value:
+            start,end=value.split(' to ')
+        else :
+            start,end=value,value
+        return start,end
+    
+    def __get_today_date(self):
+        today_date = datetime.now().strftime('%Y-%m-%d')
+        return today_date,today_date
+    
+    def get_queryset(self):
+        date =self.request.GET.get('date_range') 
+        if date:
+            start,end=self.__split_date(date)
+        else:
+            start,end=self.__get_today_date()
+        queryset = Permission.objects.filter(created_at__date__range=[start, end])
+        return queryset
+        
+    def get_context_data(self, **kwargs):
+         context = super().get_context_data(**kwargs)
+         context['cameras']=Cameras.objects.all()
+         return context
+     
+    
+
+class EditPermission(AddPermission):
+    @method_decorator(login_required)
+    def get(self, request, permission_id, *args, **kwargs):
+        permission = get_object_or_404(Permission, id=permission_id)
+        form = self.form_class(instance=permission)
+        return render(request, self.template_name, context={"form": form, "permission": permission})
+
+    @method_decorator(login_required)
+    def post(self, request, permission_id, *args, **kwargs):
+        permission = get_object_or_404(Permission, id=permission_id)
+        form = self.form_class(request.POST, instance=permission)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.save()
+            form.save_m2m()
+        return render(request, self.template_name_all, context={"permissions": Permission.objects.all()})
+
+
+class DeletePermission(AddPermission):
+    @method_decorator(login_required)
+    def get(self, request, permission_id, *args, **kwargs):
+        permission = get_object_or_404(Permission, id=permission_id)
+        permission.delete()
+        return render(request, self.template_name_all, context={"permissions": Permission.objects.all()})
+    
+
+@method_decorator(login_required, name='dispatch')
+class Deparments(ListView):
+    model = Department
+    template_name = 'config/departments.html'
+    context_object_name = 'departments'
+
+@method_decorator(login_required, name='dispatch')
+class AddDepartments(CreateView):
+    model = Department
+    template_name='config/add_department.html'
+    form_class=DepartmentForm
+    template_name_all='config/departments.html'
+    success_url = reverse_lazy('departments')
+
+@method_decorator(login_required, name='dispatch')
+class EditDepartments(UpdateView):
+    model = Department
+    template_name = 'config/add_department.html'
+    form_class = DepartmentForm
+    success_url = reverse_lazy('departments')
+
+@method_decorator(login_required, name='dispatch')
+class DeleteDepartments(DeleteView):
+    model = Department
+    template_name = 'config/department.html'
+    success_url = reverse_lazy('departments')
+
+    def get(self, request, *args, **kwargs):
+        department_id = self.kwargs.get('pk')
+        print(department_id)
+        department = get_object_or_404(Department, id=department_id)
+        department.delete()
+        return redirect('/config/departments')
+
+def accept_permission(request,pk):
+    permission=get_object_or_404(Permission,id=pk)
+    permission.change_status(value=True)
+    return redirect('/config/permissions/')
+
+def refuse_permission(request,pk):
+    permission=get_object_or_404(Permission,id=pk)
+    permission.change_status(value=False)
+    return redirect('/config/permissions/')
+
+def capture_image_for_search(request):
+    video = cameras[-1]['camera']
+    frame = video.read()
+    permissions=search_get_permissions(frame)
+    cameras_all=Cameras.objects.all()
+    return render(request,'config/permissions.html',context={'permissions':permissions,'cameras':cameras_all})
+
+        
+def search_get_permissions(frame):
+    if frame is not None:
+        id=search_by_image_person(frame)
+        if id:
+            permissions=Permission.objects.filter(id=id)
+            return permissions
+    return None
+    

@@ -1,7 +1,7 @@
 from datetime import datetime,timedelta
 
 from django.forms import model_to_dict
-from app_resources.models import Persons, PersonsDetect
+from app_resources.models import Persons
 from config.models import AddDuration, Config, Nabatshieh
 
 
