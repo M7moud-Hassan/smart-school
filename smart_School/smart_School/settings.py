@@ -145,7 +145,7 @@ from PIL import Image, ImageDraw
 
 # Load a sample picture and learn how to recognize it.
 # Create arrays of known face encodings and their names
-KNOW_FACE_ENCODINGS = [
+"""KNOW_FACE_ENCODINGS = [
     
 ]
 
@@ -158,11 +158,68 @@ image_list = []
 for Imagename in glob.glob('./media/faces2/*.jpg'):
    
     image = face_recognition.load_image_file(Imagename)
-    face_encoding = face_recognition.face_encodings(image)[0]
+    face_locations = face_recognition.face_locations(image, number_of_times_to_upsample=2)
+
+    face_encoding = face_recognition.face_encodings(image, known_face_locations=face_locations, num_jitters=100)[0]
     KNOW_FACE_ENCODINGS.append(face_encoding)
     KNOW_FACE_NAMES.append(Imagename.split('/')[-1].split('.')[0])
 print(KNOW_FACE_NAMES)    
 
 
 
+print('Learned encoding for', len(KNOW_FACE_ENCODINGS), 'images.')
+"""
+
+
+
+
+import json
+import face_recognition
+from PIL import Image
+import glob
+import os
+from json import JSONEncoder
+
+
+class NumpyArrayEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return JSONEncoder.default(self, obj)
+
+
+
+KNOW_FACE_ENCODINGS = []
+KNOW_FACE_NAMES = []
+
+# Process images and store face encodings
+for imagename in glob.glob('./media/faces2/*.jpg'):
+    # Create a unique JSON filename based on the image name
+    json_filename = imagename.replace('.jpg', '_encoding.json')
+
+    if os.path.exists(json_filename):
+        
+        with open(json_filename, "r") as read_file:
+            decodedArray = json.load(read_file)
+            face_encoding = np.array(decodedArray)
+
+            print(f'Loaded encoding for {loaded_name} from {json_filename}')
+            KNOW_FACE_ENODINGS.append(face_encoding)
+            KNOW_FACE_NAMES.append(imagename.split('/')[-1].split('.')[0])
+    else:
+        # Compute face encoding
+        image = face_recognition.load_image_file(imagename)
+        face_locations = face_recognition.face_locations(image, number_of_times_to_upsample=2)
+
+        face_encoding = face_recognition.face_encodings(image, known_face_locations=face_locations, num_jitters=100)[0]
+
+        # Save face encoding to JSON file
+        with open(json_filename, "w") as write_file:
+            json.dump(face_encoding, write_file, cls=NumpyArrayEncoder)
+        #save_face_encoding_to_json(face_encoding, imagename.split('/')[-1].split('.')[0], json_filename)
+        print(f'Processed: {imagename}')
+        KNOW_FACE_ENCODINGS.append(face_encoding)
+        KNOW_FACE_NAMES.append(imagename.split('/')[-1].split('.')[0])
+
+print(KNOW_FACE_NAMES)
 print('Learned encoding for', len(KNOW_FACE_ENCODINGS), 'images.')
