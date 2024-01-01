@@ -132,6 +132,7 @@ def search_by_image_white_filter(image_file):
 def search_by_image_known_filter(image_file):
     return PersonsDetect.objects.all()
 
+
 def search_by_image_all_filter(image_file):
     return PersonsDetect.objects.all()
 """def search_by_image_all_filter(image_file):
@@ -186,4 +187,6 @@ def search_by_image_all_filter(image_file):
 
 """
    
-
+#give you frame and you return id
+def search_by_image_person(frame):
+    return "234555"

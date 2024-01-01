@@ -11,6 +11,9 @@
 
 {% endblock %}
 {% block content %}
+{% for camera in cameras %}
+            {% include 'models/camera_capture_model.html' with id=camera.id name=camera.name %}
+{% endfor %}
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb breadcrumb-example1 pt-2">
       <li class="breadcrumb-item"><a href="/">الرئسية</a></li>
@@ -50,10 +53,11 @@
                   
                   <div class="col-xl-12">
                     <div class="card custom-card">
-                        <div class="card-header">
+                        <div class="card-header d-flex justify-content-between">
                             <div class="card-title">
                             صورة الشخص
                             </div>
+                            {% include 'widgets/camera_drop_down_list.html' %}
                         </div>
                         <div class="card-body">
                           {{form.frontImage}}
@@ -90,5 +94,48 @@
     <script src="{% static 'dist/libs/filepond-plugin-image-resize/filepond-plugin-image-resize.min.js' %}"></script>
     <script src="{% static 'dist/libs/filepond-plugin-image-transform/filepond-plugin-image-transform.min.js' %}"></script>
     <script src="{% static 'dist/libs/dropzone/dropzone-min.js' %}"></script>
-    <script src="{% static 'dist/js/fileupload.js' %}"></script>
+    {% comment %} <script src="{% static 'dist/js/fileupload.js' %}"></script> {% endcomment %}
+    <script>
+      FilePond.registerPlugin(
+        FilePondPluginImagePreview,
+        FilePondPluginImageExifOrientation,
+        FilePondPluginFileValidateSize,
+        FilePondPluginFileEncode,
+        FilePondPluginImageEdit,
+        FilePondPluginFileValidateType,
+        FilePondPluginImageCrop,
+        FilePondPluginImageResize,
+        FilePondPluginImageTransform
+    );
+   const filePond= FilePond.create(
+        document.querySelector('.single-fileupload'),
+        {
+            labelIdle: `Drag & Drop your picture or <span class="filepond--label-action">Browse</span>`,
+            imagePreviewHeight: 170,
+            imageCropAspectRatio: '1:1',
+            imageResizeTargetWidth: 200,
+            imageResizeTargetHeight: 200,
+            stylePanelLayout: 'compact circle',
+            styleLoadIndicatorPosition: 'center bottom',
+            styleButtonRemoveItemPosition: 'center bottom'
+        }
+    );
+      $('#captureImage').click(function (event) {
+        event.preventDefault();
+        $.ajax({
+          url: '/cameras/capture_image/',
+          type: 'GET',
+          xhrFields: {
+            responseType: 'blob'
+          },
+          success: function (response) {
+            file=convert_blob_to_file(response)
+            filePond.addFile(file)
+          },
+          error: function (error) {
+            console.log(error);
+          }
+        });
+      });
+    </script>
 {% endblock %}

@@ -1,0 +1,13 @@
+{% extends "livefeed/live_camera.html" %}
+{% load static %}
+{% block camera %}
+<img id="video" style="width: 100%; height: 100% !important;" src="/vehicle/detect/{{camera.id}}" alt="loading.."  class="border rounded mt-2">
+{% endblock camera %}
+{% block scripts %}
+<script src="{% static 'dist/js/team.js' %}"></script>
+{% endblock scripts %}
+{% block models %}
+{% endblock models %}
+
+
+

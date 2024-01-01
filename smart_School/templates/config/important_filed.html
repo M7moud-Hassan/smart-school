@@ -45,11 +45,39 @@
                 <label class="form-label">عنوان ip تحميل الصورة</label>
                 {{form.url_image}}
             </div>
-            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"></div>
             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+                <label class="form-label"> token whatsapp</label>
+                {{form.token_access}}
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+                <label class="form-label"> url whatapp</label>
+                {{form.url_whatsapp}}
+            </div>
+            <!-- <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"></div> -->
+            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12" style="margin-top: 40px;">
             <button type="submit" class="btn btn-primary">حفظ</button>
             </div>
            </form>
     </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script>
+    function release() {
+      $.ajax({
+        url: "/cameras/release/",
+        type: "GET",
+        success: function (data) {
+  
+        },
+        error: function (xhr, status, error) {
+  
+          console.error(error);
+        }
+      });
+    }
+    
+  release()
+    
+  </script>
 {% endblock %}

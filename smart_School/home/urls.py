@@ -21,5 +21,6 @@ urlpatterns = [
    path('',index,name="index"),
    path('result_cameras/<int:pk>/',result_cameras,name="result_cameras"),
    path('show/<int:pk>/',show_table,name="show_table"),
-   path('filter_camera/<str:filter_date>/<int:camera_id>',filter_camera,name="filter_camera")
+   path('filter_camera/<str:filter_date>/<int:camera_id>',filter_camera,name="filter_camera"),
+   path('logout/',logout_view,name="logout")
 ]

@@ -295,8 +295,19 @@
       <label for="">الحالة</label>
       {{form.status}}
     </div>
-    <div class="form-group col-12 col-md-6" id="id_department_p">
-      <!-- {{form.status.label_tag}} -->
+    <div class="form-group col-12 col-md-6 id_department_p">
+      <label for="">القسم</label>
+      {{form.department}}
+    
+    </div>
+    <div class="form-group col-12 col-md-6 id_department_p">
+      <label for="">رقم القيد</label>
+      {{form.registration_number}}
+    
+    </div>
+    <div class="form-group col-12 col-md-6 id_department_p">
+      <label for="">رقم الواتساب</label>
+      {{form.mobile_whatsapp}}
     
     </div>
     <div class="col-12 col-md-6 row align-items-center mt-4 ps-4 pt-2">
@@ -322,7 +333,6 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'js/dropify.min.js' %}"></script>
 <script src="{% static 'dist/js/validation.js' %}"></script>
 <script src="{% static 'dist/libs/flatpickr/flatpickr.min.js' %}"></script>
 <script src="{% static 'dist/js/date&time_pickers.js' %}"></script>
@@ -349,7 +359,7 @@
   FilePond.registerPlugin(
         FilePondPluginImagePreview,
         FilePondPluginImageExifOrientation,
-        FilePondPluginFileValidateSize,
+       
         FilePondPluginFileEncode,
         FilePondPluginImageEdit,
         FilePondPluginFileValidateType,
@@ -375,21 +385,25 @@
         
     );
   single3= FilePond.create(
-        document.querySelector('.single-fileupload3'),
-        
+        document.querySelector('.single-fileupload3'),    
     );
-
+   {% if person %}
+   {% if person.image %}
     if(`{{person}}`){
      single3.addFile(`{{person.image.url}}`)
+     {% endif %}
      {% for image in person.images.all %}
         pods.addFile('{{ image.image.url }}');
     {% endfor %}
+    {% if person.back_national_img %}
      single2.addFile(`{{person.back_national_img.url}}`)
+     {% endif %}
+     {% if person.front_national_img %}
      single1.addFile(`{{person.front_national_img.url}}`)
+     {% endif %}
    
     }
-
-
+   {% endif %}
 
   })
 
@@ -471,7 +485,7 @@
         responseType: 'blob'
       },
       success: function (response) {
-        $('.dropify-clear').eq(0).click();
+        //$('.dropify-clear').eq(0).click();
         const fileInput = document.getElementById('id_front_national_img');
         var filename = 'captured_image.jpg';
 
@@ -515,13 +529,7 @@
   });
 
 
-  function onModalClosed() {
-    $.ajax({
-      url: '/cameras/release',
-    });
-    //$("#video").attr("src","");
-  }
-  $(document).on('hidden.bs.modal', '.modal', onModalClosed);
+
 
   $("#uploadButton").click(function () {
     $('#uploadButton').hide()
@@ -634,24 +642,19 @@
      $('.dropify-clear').eq(index).css('display', 'block');
       $('.dropify-render').eq(index).append(imageElement);
     };
-
-    // Convert the File object to a data URL
     reader.readAsDataURL(file);
 
   }
 
 
   function showOrhid(value) {
-    // console.log(value);
+    console.log(value);
     if (value == 'موظف') {
-      $('#id_department_p').append(`
-      <label for="">القسم</label>
-      {{info_form.department}}
-      `)
+      $('.id_department_p').show();
       
       $('#info-employee').remove()
     } else {
-      $('#id_department_p').remove()
+      $('.id_department_p').hide()
       $('#employee').append(`
       <div id="info-employee" class="col-12 pt-4">
       <h3>معلومات الزائر</h3>
@@ -685,5 +688,23 @@
     }
   }
   showOrhid(`{{form.type_register.value}}`)
+</script>
+<script>
+  function release() {
+    $.ajax({
+      url: "/cameras/release/",
+      type: "GET",
+      success: function (data) {
+
+      },
+      error: function (xhr, status, error) {
+
+        console.error(error);
+      }
+    });
+  }
+  
+release()
+  
 </script>
 {% endblock %}

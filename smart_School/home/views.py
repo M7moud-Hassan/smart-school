@@ -3,7 +3,7 @@ from django.contrib.auth import logout
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from django.db.models import Q
 from datetime import time, timedelta, datetime
@@ -12,6 +12,7 @@ from config.models import Config
 from dashboard.models import Department
 from django.utils import timezone
 from reports.utils import filter_persons
+from home.utils import perform_detection
 
 
 # Create your views here.
@@ -171,19 +172,20 @@ def index(request):
     most_empolyee = most_empolyee.annotate(visits=Count('person_id'))
     most_empolyee = most_empolyee.order_by('-visits')[:5]
 
-    ####
     most_visitor_dep = PersonsDetect.objects.filter(person_id__type_register='زائر')
     most_visitor_dep = most_visitor_dep.values('person_id','person_id__name','person_id__image','person_id__job_title')
     most_visitor_dep = most_visitor_dep.annotate(visits=Count('person_id__info__department'))
     most_visitor_dep = most_visitor_dep.order_by('-visits')[:5]
 
-    
-    detected_today = PersonsDetect.objects.filter(
-    person_id__type_register='موظف',
-    detected_at__date=today
-)
-    detected_today=filter_persons(detected_today)   
+    detected_today=PersonsDetect.objects.filter(
+    Q(person_id__type_register='موظف',
+    detected_at__date=today)|Q(outed_at__date=today,person_id__type_register='موظف', detected_at=None)
+    )
+    #detected_today=filter_persons(detected_today)   
 
+    detected_today = perform_detection(detected_today)
+    
+   
     return render(request, 'home/index.html', context={         
                                                        'active_Empolyee':activeEmpoly,
                                                        "detected_today":detected_today,
@@ -309,3 +311,8 @@ def show_table(request,pk):
         title_all='  كل  الزوار بعد ساعات العمل السنة ' 
         all_visitor=PersonsDetect.objects.filter(person_id__type_register='زائر', detected_at__gte=one_year_ago,detected_at__time__gt=time_exit)
     return render(request,'home/view_all.html',context={"title_all":title_all,"all_visitor":all_visitor, "cameras":Cameras.objects.all(),})
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('/')
